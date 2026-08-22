@@ -12,9 +12,9 @@ Route::view('/forgot-password','frontend.pages.auth.forget-password')->name('for
 Route::view('/payment','frontend.pages.payment')->name('payment');
 Route::view('/faster-processing','frontend.pages.faster-processing')->name('faster-processing');
 Route::view('/copy-protection','frontend.pages.copy-protection')->name('copy-protection');
-Route::view('/pages/privacy-poliction','frontend.pages.privacy-policy')->name('privacy-policy');
-Route::view('/pages/imprint','frontend.pages.privacy-policy')->name('privacy-policy');
-Route::view('/pages/payment-participation','frontend.pages.payment-participation');
+Route::view('/pages/privacy-policy','frontend.pages.privacy-policy')->name('privacy-policy');
+Route::view('/pages/imprint','frontend.pages.imprint')->name('imprint');
+Route::view('/pages/payment-participation','frontend.pages.payment-participation')->name('payment-participation');
 
 //Course
 Route::view('/course/advanced','frontend.pages.course.advanced')->name('course-advanced');
