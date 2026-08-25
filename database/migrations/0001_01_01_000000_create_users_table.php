@@ -17,6 +17,17 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+
+            // Security code
+            $table->string('security_code_hash')->nullable();
+            $table->timestamp('security_code_expires_at')->nullable();
+
+            // One-device binding
+            $table->string('device_id')->nullable()->unique();
+            $table->string('device_name')->nullable();
+            $table->timestamp('device_bound_at')->nullable();
+            $table->timestamp('last_device_activity_at')->nullable();
+
             $table->rememberToken();
             $table->timestamps();
         });

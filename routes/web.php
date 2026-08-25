@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AuthController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/','frontend.pages.home')->name('home');
@@ -30,3 +31,13 @@ Route::view('/course/stress-resources','frontend.pages.course.stress-resources')
 Route::view('/course/successful‑startup','frontend.pages.course.successful‑startup')->name('successful‑startup');
 
 
+//admin site
+Route::prefix('admin')->name('admin.')->group(function(){
+    Route::get('/login',[AuthController::class,'loginPage'])->name('login');
+    Route::get('/forget-password',[AuthController::class,'forgetPage'])->name('forget-password');
+    Route::post('/loginStore',[AuthController::class,'loginStore'])->name('loginStore');
+    Route::post('/logout',[AuthController::class,'logout'])->name('logout');
+
+
+    Route::view('/dashboard','admin.pages.dashboard')->name('dashboard');
+});

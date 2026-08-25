@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charSet="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="{{ asset('admin') }}/assets/index-D96dYb_L.css" data-rsc-css-href="{{ asset('admin') }}//assets/index-D96dYb_L.css"
+          data-precedence="vite-rsc/importer-resources"/>
+    <link rel="modulepreload" href="{{ asset('admin') }}/assets/layout-segment-context-C4NyleVc.js" crossorigin=""/>
+    <link rel="modulepreload" href="{{ asset('admin') }}/assets/rolldown-runtime-S-ySWqyJ.js" crossorigin=""/>
+    <link rel="modulepreload" href="{{ asset('admin') }}/assets/index-BqyFDbzT.js" crossorigin=""/>
+    <link rel="modulepreload" href="{{ asset('admin') }}/assets/framework-CXnKph_e.js" crossorigin=""/>
+    <link rel="modulepreload" href="{{ asset('admin') }}/assets/link-BszFck6q.js" crossorigin=""/>
+    <link rel="modulepreload" href="{{ asset('admin') }}/assets/AdminLoginClient-CGPLAd8p.js" crossorigin=""/>
+    <link rel="modulepreload" href="{{ asset('admin') }}/assets/SupportAssistantClient-CfvETF3t.js" crossorigin=""/>
+    <link rel="modulepreload" href="{{ asset('admin') }}/assets/portalLinks-1EHtAtrv.js" crossorigin=""/>
+    <title>Hauptadministrator anmelden | Dennis Besseler Kursportal</title>
+    <meta name="description" content="Technisches Kursportal für bereits freigeschaltete Kunden."/>
+    <meta name="robots" content="noindex, nofollow"/>
+    <link rel="shortcut icon" href="/favicon.svg"/>
+    <link rel="icon" href="/favicon.svg"/>
+    <meta name="codex-preview" content="development"/>
+    <script>
+        self.__VINEXT_RSC_PARAMS__ = {}
+    </script>
+    <script>
+        self.__VINEXT_RSC_NAV__ = {
+            "pathname": "/verwaltung/anmelden",
+            "searchParams": []
+        }
+    </script>
+    <link rel="modulepreload" href="{{ asset('admin') }}/assets/index-BqyFDbzT.js"/>
+    <link rel="preload" href="{{ asset('admin') }}/assets/_vinext_fonts/geist-8ac0455e797f/geist-ff2310f5.woff2" as="font" type="font/woff2"
+          crossorigin/>
+    <link rel="preload" href="{{ asset('admin') }}/assets/_vinext_fonts/geist-8ac0455e797f/geist-875ccdd4.woff2" as="font" type="font/woff2"
+          crossorigin/>
+    <link rel="preload" href="{{ asset('admin') }}/assets/_vinext_fonts/geist-8ac0455e797f/geist-52306abf.woff2" as="font" type="font/woff2"
+          crossorigin/>
+    <link rel="preload" href="{{ asset('admin') }}/assets/_vinext_fonts/geist-8ac0455e797f/geist-001175b1.woff2" as="font" type="font/woff2"
+          crossorigin/>
+    <link rel="preload" href="{{ asset('admin') }}/assets/_vinext_fonts/geist-8ac0455e797f/geist-98bbbccb.woff2" as="font" type="font/woff2"
+          crossorigin/>
+    <link rel="preload" href="{{ asset('admin') }}/assets/_vinext_fonts/geist-mono-00e989178794/geist-mono-f6b33328.woff2" as="font"
+          type="font/woff2" crossorigin/>
+    <link rel="preload" href="{{ asset('admin') }}/assets/_vinext_fonts/geist-mono-00e989178794/geist-mono-44e03052.woff2" as="font"
+          type="font/woff2" crossorigin/>
+    <link rel="preload" href="{{ asset('admin') }}/assets/_vinext_fonts/geist-mono-00e989178794/geist-mono-0638449e.woff2" as="font"
+          type="font/woff2" crossorigin/>
+    <link rel="preload" href="{{ asset('admin') }}/assets/_vinext_fonts/geist-mono-00e989178794/geist-mono-971fb274.woff2" as="font"
+          type="font/woff2" crossorigin/>
+    <link rel="preload" href="{{ asset('admin') }}/assets/_vinext_fonts/geist-mono-00e989178794/geist-mono-44745446.woff2" as="font"
+          type="font/woff2" crossorigin/>
+    <link rel="preload" href="{{ asset('admin') }}/assets/_vinext_fonts/geist-mono-00e989178794/geist-mono-013b2f2f.woff2" as="font"
+          type="font/woff2" crossorigin/>
+    <style data-vinext-fonts>
+        /* cyrillic-ext */
+
+        @font-face {
+            font-family: 'Geist';
+            font-style: normal;
+            font-weight: 100 900;
+            font-display: swap;
+            src: url(/assets/_vinext_fonts/geist-8ac0455e797f/geist-ff2310f5.woff2) format('woff2');
+            unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+        }
+
+        /* cyrillic */
+
+        @font-face {
+            font-family: 'Geist';
+            font-style: normal;
+            font-weight: 100 900;
+            font-display: swap;
+            src: url(/assets/_vinext_fonts/geist-8ac0455e797f/geist-875ccdd4.woff2) format('woff2');
+            unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+        }
+
+        /* vietnamese */
+
+        @font-face {
+            font-family: 'Geist';
+            font-style: normal;
+            font-weight: 100 900;
+            font-display: swap;
+            src: url(/assets/_vinext_fonts/geist-8ac0455e797f/geist-52306abf.woff2) format('woff2');
+            unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+        }
+
+        /* latin-ext */
+
+        @font-face {
+            font-family: 'Geist';
+            font-style: normal;
+            font-weight: 100 900;
+            font-display: swap;
+            src: url(/assets/_vinext_fonts/geist-8ac0455e797f/geist-001175b1.woff2) format('woff2');
+            unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+        }
+
+        /* latin */
+
+        @font-face {
+            font-family: 'Geist';
+            font-style: normal;
+            font-weight: 100 900;
+            font-display: swap;
+            src: url(/assets/_vinext_fonts/geist-8ac0455e797f/geist-98bbbccb.woff2) format('woff2');
+            unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+        }
+
+        .__font_geist_0tvmz3h {
+            font-family: 'Geist', sans-serif;
+        }
+
+        .__variable_geist_0tvmz3h {
+            --font-geist-sans: 'Geist', sans-serif;
+        }
+
+        /* cyrillic-ext */
+
+        @font-face {
+            font-family: 'Geist Mono';
+            font-style: normal;
+            font-weight: 100 900;
+            font-display: swap;
+            src: url(/assets/_vinext_fonts/geist-mono-00e989178794/geist-mono-f6b33328.woff2) format('woff2');
+            unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+        }
+
+        /* cyrillic */
+
+        @font-face {
+            font-family: 'Geist Mono';
+            font-style: normal;
+            font-weight: 100 900;
+            font-display: swap;
+            src: url(/assets/_vinext_fonts/geist-mono-00e989178794/geist-mono-44e03052.woff2) format('woff2');
+            unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+        }
+
+        /* symbols2 */
+
+        @font-face {
+            font-family: 'Geist Mono';
+            font-style: normal;
+            font-weight: 100 900;
+            font-display: swap;
+            src: url(/assets/_vinext_fonts/geist-mono-00e989178794/geist-mono-0638449e.woff2) format('woff2');
+            unicode-range: U+2000-2001, U+2004-2008, U+200A, U+23B8-23BD, U+2500-259F;
+        }
+
+        /* vietnamese */
+
+        @font-face {
+            font-family: 'Geist Mono';
+            font-style: normal;
+            font-weight: 100 900;
+            font-display: swap;
+            src: url(/assets/_vinext_fonts/geist-mono-00e989178794/geist-mono-971fb274.woff2) format('woff2');
+            unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+        }
+
+        /* latin-ext */
+
+        @font-face {
+            font-family: 'Geist Mono';
+            font-style: normal;
+            font-weight: 100 900;
+            font-display: swap;
+            src: url(/assets/_vinext_fonts/geist-mono-00e989178794/geist-mono-44745446.woff2) format('woff2');
+            unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+        }
+
+        /* latin */
+
+        @font-face {
+            font-family: 'Geist Mono';
+            font-style: normal;
+            font-weight: 100 900;
+            font-display: swap;
+            src: url(/assets/_vinext_fonts/geist-mono-00e989178794/geist-mono-013b2f2f.woff2) format('woff2');
+            unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+        }
+
+        .__font_geist_mono_1diim1n {
+            font-family: 'Geist Mono', sans-serif;
+        }
+
+        .__variable_geist_mono_1diim1n {
+            --font-geist-mono: 'Geist Mono', sans-serif;
+        }
+    </style>
+</head>
+
+<body class="__variable_geist_0tvmz3h __variable_geist_mono_1diim1n antialiased">
+@yield('contents')
+
+<aside class="support-assistant" aria-label="Support">
+    <button type="button" class="support-assistant__toggle" aria-expanded="false"
+            aria-controls="support-assistant-panel">Support
+    </button>
+</aside>
+<script id="_R_">
+    import ("{{ asset('admin') }}/assets/index-BqyFDbzT.js")
+</script>
+</body>
+
+</html>
+<script>
+    self.__VINEXT_RSC_CHUNKS__ = self.__VINEXT_RSC_CHUNKS__ || [];
+    self.__VINEXT_RSC_CHUNKS__.push("2:I[\"8c0f216c4604\",[],\"Children\",1]\n3:I[\"6850e077b5a4\",[],\"default\",1]\n4:I[\"15c18cfaeeff\",[],\"LayoutSegmentProvider\",1]\n5:I[\"8c0f216c4604\",[],\"Slot\",1]\n6:I[\"593f344dc510\",[],\"RedirectBoundary\",1]\n:HL[\"/assets/index-D96dYb_L.css\",\"style\"]\n")
+</script>
+<script>
+    self.__VINEXT_RSC_CHUNKS__ = self.__VINEXT_RSC_CHUNKS__ || [];
+    self.__VINEXT_RSC_CHUNKS__.push("0:{\"__route\":\"route:/verwaltung/anmelden\",\"__interceptionContext\":null,\"__layoutIds\":[\"layout:/\"],\"__rootLayout\":\"/\",\"page:/verwaltung/anmelden\":\"$L1\",\"layout:/\":[[[[\"$\",\"link\",\"css:/assets/index-D96dYb_L.css\",{\"rel\":\"stylesheet\",\"precedence\":\"vite-rsc/importer-resources\",\"href\":\"/assets/index-D96dYb_L.css\",\"data-rsc-css-href\":\"/assets/index-D96dYb_L.css\"}],\"$undefined\"],[\"$\",\"html\",null,{\"lang\":\"de\",\"children\":[\"$\",\"body\",null,{\"className\":\"__variable_geist_0tvmz3h __variable_geist_mono_1diim1n antialiased\",\"children\":[[\"$\",\"$L2\",null,{}],[\"$\",\"$L3\",null,{\"supportEmail\":\"mail@besseler.de\",\"personalEmail\":\"dennis@besseler.de\"}]]}]}]],null],\"route:/verwaltung/anmelden\":[[[\"$\",\"meta\",null,{\"charSet\":\"utf-8\"}],[[\"$\",\"title\",\"0\",{\"children\":\"Hauptadministrator anmelden | Dennis Besseler Kursportal\"}],[\"$\",\"meta\",\"1\",{\"name\":\"description\",\"content\":\"Technisches Kursportal für bereits freigeschaltete Kunden.\"}],[\"$\",\"meta\",\"2\",{\"name\":\"robots\",\"content\":\"noindex, nofollow\"}],[\"$\",\"link\",\"3\",{\"rel\":\"shortcut icon\",\"href\":\"/favicon.svg\"}],[\"$\",\"link\",\"4\",{\"rel\":\"icon\",\"href\":\"/favicon.svg\"}],[\"$\",\"meta\",\"5\",{\"name\":\"codex-preview\",\"content\":\"development\"}]],[[\"$\",\"meta\",\"0\",{\"name\":\"viewport\",\"content\":\"width=device-width, initial-scale=1\"}]]],[\"$\",\"$L4\",null,{\"segmentMap\":{\"children\":[\"verwaltung\",\"anmelden\"]},\"children\":[\"$\",\"$L5\",null,{\"id\":\"layout:/\",\"parallelSlots\":\"$undefined\",\"children\":[\"$\",\"$L6\",null,{\"children\":[\"$\",\"$L4\",null,{\"segmentMap\":{\"children\":[]},\"children\":[\"$\",\"$L5\",null,{\"id\":\"page:/verwaltung/anmelden\"}]}]}]}]}]],\"__layoutFlags\":{\"layout:/\":\"s\"},\"__artifactCompatibility\":{\"schemaVersion\":1,\"graphVersion\":\"app-route-graph:z8qkbc9ke5e8\",\"deploymentVersion\":\"492af054-c2d3-49b8-8cd5-2c9830f1169b\",\"appElementsSchemaVersion\":1,\"rscPayloadSchemaVersion\":1,\"rootBoundaryId\":\"/\",\"renderEpoch\":null}}\n7:I[\"c2747888630f\",[],\"default\",1]\n8:I[\"12779dcc5c49\",[],\"default\",1]\n1:[\"$\",\"main\",null,{\"className\":\"admin-login-page\",\"children\":[[\"$\",\"header\",null,{\"children\":[\"$\",\"$L7\",null,{\"href\":\"/login\",\"children\":[[\"$\",\"strong\",null,{\"children\":\"DENNIS BESSELER\"}],[\"$\",\"span\",null,{\"children\":\"Kursportal\"}]]}]}],[\"$\",\"section\",null,{\"children\":[[\"$\",\"div\",null,{\"children\":[[\"$\",\"p\",null,{\"className\":\"eyebrow\",\"children\":\"Persönlicher Hauptzugang\"}],[\"$\",\"h1\",null,{\"children\":[\"admin-\",[\"$\",\"br\",null,{}],\"anmeldung.\"]}],[\"$\",\"p\",null,{\"children\":\"Dieser Zugang ist ausschließlich für das wichtigste Hauptadministratorkonto bestimmt. Mitarbeiter- und Kundenkonten melden sich weiterhin über ihre eigenen Zugänge an.\"}]]}],[\"$\",\"div\",null,{\"className\":\"admin-login-form-column\",\"children\":[[\"$\",\"$L8\",null,{}],[\"$\",\"$L7\",null,{\"className\":\"admin-code-recovery-link\",\"href\":\"/verwaltung/passwort-vergessen\",\"children\":\"Passwort vergessen?\"}]]}]]}]]}]\n")
+</script>
+<script>
+    self.__VINEXT_RSC_DONE__ = true
+</script>
