@@ -2,20 +2,29 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
     protected $fillable = [
         'name',
+        'first_name',
+        'username',
         'email',
         'password',
+        'role',
+        'invoice_number',
+        'is_active',
+        'occupation',
+        'access_from',
+        'access_until',
+        'permissions',
         'security_code_hash',
         'security_code_expires_at',
         'device_id',
@@ -37,7 +46,70 @@ class User extends Authenticatable
             'security_code_expires_at' => 'datetime',
             'device_bound_at' => 'datetime',
             'last_device_activity_at' => 'datetime',
+            'access_from' => 'date',
+            'access_until' => 'date',
+            'permissions' => 'array',
+            'is_active' => 'boolean',
             'password' => 'hashed',
         ];
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    public function isMember(): bool
+    {
+        return $this->role === 'member';
+    }
+
+    public function isStaff(): bool
+    {
+        return $this->role === 'staff';
+    }
+
+    public function enrollments(): HasMany
+    {
+        return $this->hasMany(Enrollment::class);
+    }
+
+    public function courses(): BelongsToMany
+    {
+        return $this->belongsToMany(Course::class, 'enrollments')
+            ->withPivot(['id', 'invoice_number', 'started_at', 'expires_at', 'is_active', 'early_start_agreed'])
+            ->withTimestamps();
+    }
+
+    public function lessonProgresses(): HasMany
+    {
+        return $this->hasMany(LessonProgress::class);
+    }
+
+    public function adminNotes(): HasMany
+    {
+        return $this->hasMany(AdminNote::class);
+    }
+
+    public function versionNotes(): HasMany
+    {
+        return $this->hasMany(VersionNote::class);
+    }
+
+    /**
+     * Check if user is actively enrolled in a course
+     */
+    public function isEnrolledIn(Course $course): bool
+    {
+        if ($this->isAdmin()) {
+            return true;
+        }
+
+        return $this->enrollments()
+            ->where('course_id', $course->id)
+            ->where('is_active', true)
+            ->where('started_at', '<=', now()->toDateString())
+            ->where('expires_at', '>=', now()->toDateString())
+            ->exists();
     }
 }

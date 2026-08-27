@@ -14,16 +14,27 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('email')->unique();
+            $table->string('first_name')->nullable();
+            $table->string('username')->nullable()->unique();
+            $table->string('email')->nullable()->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('role')->default('member'); // 'admin', 'member', 'staff'
+            $table->string('invoice_number')->nullable();
+            $table->boolean('is_active')->default(true);
+
+            // Staff specific fields
+            $table->string('occupation')->nullable();
+            $table->date('access_from')->nullable();
+            $table->date('access_until')->nullable();
+            $table->json('permissions')->nullable();
 
             // Security code
             $table->string('security_code_hash')->nullable();
             $table->timestamp('security_code_expires_at')->nullable();
 
             // One-device binding
-            $table->string('device_id')->nullable()->unique();
+            $table->string('device_id')->nullable();
             $table->string('device_name')->nullable();
             $table->timestamp('device_bound_at')->nullable();
             $table->timestamp('last_device_activity_at')->nullable();
