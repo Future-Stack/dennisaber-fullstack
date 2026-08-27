@@ -5,11 +5,7 @@
         <div class="portal-notice"><strong>Technisches Kursportal</strong><span>Keine Bestellung auf dieser Website. <a
                     href="../besseler-kursvorschau.dennis-bes.chatgpt.site/angebote/index.html">Kurse im Verkaufsportal ansehen →</a></span>
         </div>
-        <header class="portal-header"><a href="index.html" class="portal-brand"><strong>DENNIS BESSELER</strong><span>Kursportal</span></a>
-            <nav><a href="index.html">Alle Kurse</a><a href="login.html">Kundenlogin</a><a href="service/rio-negro.html">Schnellere
-                    Bearbeitung</a><a href="../besseler-kursvorschau.dennis-bes.chatgpt.site/angebote/index.html">Zum
-                    Verkaufsportal</a></nav>
-        </header>
+       @include('frontend.components.header')
         <section class="payment-info-hero"><p class="eyebrow">Information · keine Bestellmöglichkeit</p>
             <h1>Zahlung und Freischaltung.</h1>
             <p>Hier sehen Sie, wie die spätere Zahlung per Überweisung abläuft. Eine Bestellung oder Zahlung kann auf dieser
