@@ -19,9 +19,9 @@ class AdminAuthSeeder extends Seeder
                 'email' => 'dennis@besseler.de',
             ],
             [
-            'name' => 'Dennis',
-            'password' => Hash::make('password123'),
-            'security_code_hash' => Hash::make('1234'),
-        ]);
+                'name' => 'Dennis',
+                'password' => Hash::make('password123'),
+                'security_code_hash' => Hash::make('1234'),
+            ]);
     }
 }
