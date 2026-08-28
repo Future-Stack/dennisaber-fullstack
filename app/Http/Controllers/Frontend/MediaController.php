@@ -30,55 +30,19 @@ class MediaController extends Controller
         switch ($type) {
             case 'pdf':
                 $filename = $lesson->pdf_attachment_name ?: "{$lesson->slug}-arbeitsblatt.pdf";
-                
-                // If uploaded file exists in storage, deliver it with protected headers
-                if ($lesson->pdf_attachment_path && Storage::disk('public')->exists($lesson->pdf_attachment_path)) {
-                    return response()->file(Storage::disk('public')->path($lesson->pdf_attachment_path), [
-                        'Content-Type' => 'application/pdf',
-                        'Content-Disposition' => 'inline; filename="' . $filename . '"',
-                        'Cache-Control' => 'private, no-cache, no-store, must-revalidate',
-                        'Pragma' => 'no-cache',
-                        'Expires' => '0',
-                        'X-Content-Type-Options' => 'nosniff',
-                    ]);
+                if (!str_ends_with(strtolower($filename), '.pdf')) {
+                    $filename .= '.pdf';
                 }
 
-                // Return a clean inline PDF document with watermarking info
-                $pdfContent = "%PDF-1.4\n" .
-                    "1 0 obj << /Type /Catalog /Pages 2 0 R >> endobj\n" .
-                    "2 0 obj << /Type /Pages /Kids [3 0 R] /Count 1 >> endobj\n" .
-                    "3 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >> endobj\n" .
-                    "4 0 obj << /Length 200 >> stream\n" .
-                    "BT\n" .
-                    "/F1 18 Tf\n" .
-                    "50 720 Td\n" .
-                    "(" . addcslashes($course->title, "()") . ") Tj\n" .
-                    "/F1 14 Tf\n" .
-                    "0 -30 Td\n" .
-                    "(" . addcslashes($lesson->title, "()") . ") Tj\n" .
-                    "/F1 10 Tf\n" .
-                    "0 -40 Td\n" .
-                    "(Geschuetztes Kursmaterial - Dennis Besseler Kursportal) Tj\n" .
-                    "0 -20 Td\n" .
-                    "(Ausgestellt fuer: " . addcslashes($user->first_name ?: $user->name, "()") . " - Rechnungs-Nr: " . addcslashes($user->invoice_number ?: 'N/A', "()") . ") Tj\n" .
-                    "ET\n" .
-                    "endstream\n" .
-                    "endobj\n" .
-                    "5 0 obj << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> endobj\n" .
-                    "xref\n" .
-                    "0 6\n" .
-                    "0000000000 65535 f \n" .
-                    "0000000009 00000 n \n" .
-                    "0000000058 00000 n \n" .
-                    "0000000115 00000 n \n" .
-                    "0000000234 00000 n \n" .
-                    "0000000485 00000 n \n" .
-                    "trailer << /Size 6 /Root 1 0 R >>\n" .
-                    "startxref\n" .
-                    "556\n" .
-                    "%%EOF";
+                $sourcePath = null;
+                if ($lesson->pdf_attachment_path && Storage::disk('public')->exists($lesson->pdf_attachment_path)) {
+                    $sourcePath = Storage::disk('public')->path($lesson->pdf_attachment_path);
+                }
 
-                return response($pdfContent, 200, [
+                $watermarkService = new \App\Services\PdfWatermarkService();
+                $watermarkedPdfBinary = $watermarkService->generateWatermarkedPdf($user, $course, $lesson, $sourcePath);
+
+                return response($watermarkedPdfBinary, 200, [
                     'Content-Type' => 'application/pdf',
                     'Content-Disposition' => 'inline; filename="' . $filename . '"',
                     'Cache-Control' => 'private, no-cache, no-store, must-revalidate',

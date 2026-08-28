@@ -187,36 +187,63 @@
 </aside>
 <script id="_R_" src="{{ asset('frontend/assets/index-DMSICxnM.js') }}"></script>
 
-<script>(function () {
-        function c() {
-            var b = a.contentDocument || (a.contentWindow && a.contentWindow.document);
-            if (b) {
-                var d = b.createElement('script');
-                d.innerHTML = "window.__CF$cv$params={r:'a227a4e50947993b',t:'MTc4NTI4MTEzNw=='};var a=document.createElement('script');a.src='cdn-cgi/challenge-platform/h/g/scripts/jsd/b0da9f4911ba/maind41d.js';document.getElementsByTagName('head')[0].appendChild(a);";
-                b.getElementsByTagName('head')[0].appendChild(d)
-            }
-        }
+{{-- Global Language & Translation Script --}}
+<div id="google_translate_element" style="display:none;"></div>
+<script type="text/javascript">
+    function googleTranslateElementInit() {
+        new google.translate.TranslateElement({
+            pageLanguage: 'de',
+            includedLanguages: 'de,en,fr,es,it',
+            autoDisplay: false
+        }, 'google_translate_element');
+    }
 
-        if (document.body) {
-            var a = document.createElement('iframe');
-            a.height = 1;
-            a.width = 1;
-            a.style.position = 'absolute';
-            a.style.top = 0;
-            a.style.left = 0;
-            a.style.border = 'none';
-            a.style.visibility = 'hidden';
-            document.body.appendChild(a);
-            if ('loading' !== document.readyState) c(); else if (window.addEventListener) document.addEventListener('DOMContentLoaded', c); else {
-                var e = document.onreadystatechange || function () {
-                };
-                document.onreadystatechange = function (b) {
-                    e(b);
-                    'loading' !== document.readyState && (document.onreadystatechange = e, c())
+    function setGlobalPortalLanguage(lang) {
+        localStorage.setItem('portal_lang', lang);
+        const isEn = lang === 'en';
+
+        // Update Button States
+        document.querySelectorAll('#global-lang-btn-de, #lang-btn-de').forEach(btn => {
+            btn.style.background = isEn ? 'transparent' : '#0284c7';
+            btn.style.color = isEn ? '#94a3b8' : '#fff';
+        });
+        document.querySelectorAll('#global-lang-btn-en, #lang-btn-en').forEach(btn => {
+            btn.style.background = isEn ? '#0284c7' : 'transparent';
+            btn.style.color = isEn ? '#fff' : '#94a3b8';
+        });
+
+        // Trigger Google Translate cookie
+        document.cookie = "googtrans=" + (isEn ? "/de/en" : "/de/de") + "; path=/; domain=" + window.location.hostname;
+        document.cookie = "googtrans=" + (isEn ? "/de/en" : "/de/de") + "; path=/;";
+
+        // Translate data-i18n attributes if available
+        document.querySelectorAll('[data-i18n-de]').forEach(el => {
+            const text = isEn ? el.getAttribute('data-i18n-en') : el.getAttribute('data-i18n-de');
+            if (text) {
+                if (text.includes('<br/>') || text.includes('<strong>') || text.includes('<span>')) {
+                    el.innerHTML = text;
+                } else {
+                    el.innerText = text;
                 }
             }
+        });
+
+        // If Google translate select is available in DOM, change it
+        const select = document.querySelector('.goog-te-combo');
+        if (select) {
+            select.value = isEn ? 'en' : 'de';
+            select.dispatchEvent(new Event('change'));
         }
-    })();</script>
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const savedLang = localStorage.getItem('portal_lang') || 'de';
+        if (savedLang === 'en') {
+            setGlobalPortalLanguage('en');
+        }
+    });
+</script>
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 </html>
 <script>self.__VINEXT_RSC_CHUNKS__ = self.__VINEXT_RSC_CHUNKS__ || [];
