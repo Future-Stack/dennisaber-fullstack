@@ -128,6 +128,16 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('/access-requests/{accessRequest}/resolve', [AdminDashboardController::class, 'resolveAccessRequest'])->name('access-requests.resolve');
     Route::delete('/access-requests/{accessRequest}', [AdminDashboardController::class, 'deleteAccessRequest'])->name('access-requests.delete');
 
+    // Course Management
+    Route::post('/courses', [AdminDashboardController::class, 'storeCourse'])->name('courses.store');
+    Route::post('/courses/{course}/update', [AdminDashboardController::class, 'updateCourse'])->name('courses.update');
+    Route::delete('/courses/{course}', [AdminDashboardController::class, 'deleteCourse'])->name('courses.delete');
+
+    // Lesson & Media Management
+    Route::post('/courses/{course}/lessons', [AdminDashboardController::class, 'storeLesson'])->name('lessons.store');
+    Route::post('/lessons/{lesson}/update', [AdminDashboardController::class, 'updateLesson'])->name('lessons.update');
+    Route::delete('/lessons/{lesson}', [AdminDashboardController::class, 'deleteLesson'])->name('lessons.delete');
+
     // Admin Security Settings
     Route::post('/change-password', [AdminAuthController::class, 'changePassword'])->name('change-password');
 });

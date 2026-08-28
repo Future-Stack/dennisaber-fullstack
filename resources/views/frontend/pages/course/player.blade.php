@@ -47,17 +47,32 @@
                     <h1 style="color: #f8fafc; font-size: 1.75rem; margin: 0.35rem 0 0.5rem 0; line-height: 1.3;">
                         {{ $lesson->title }}
                     </h1>
-                    <div style="display: flex; gap: 1rem; color: #94a3b8; font-size: 0.85rem;">
-                        <span>⏱ Dauer: {{ $lesson->duration_minutes }} Minuten</span>
+                    <div style="display: flex; gap: 0.75rem; color: #94a3b8; font-size: 0.85rem; flex-wrap: wrap; align-items: center;">
+                        <span id="lesson-duration-display" style="color: #f8fafc; font-weight: 600;">⏱ Dauer: {{ $lesson->duration_minutes }} Minuten</span>
+                        <div style="display: inline-flex; gap: 0.4rem; flex-wrap: wrap;">
+                            @if($lesson->video_path || $lesson->video_url)
+                                <span style="background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); padding: 0.15rem 0.45rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">🎬 Video</span>
+                            @endif
+                            @if($lesson->pdf_attachment_name || $lesson->pdf_attachment_path)
+                                <span style="background: rgba(192, 132, 252, 0.15); color: #c084fc; border: 1px solid rgba(192, 132, 252, 0.3); padding: 0.15rem 0.45rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">📄 PDF-Material</span>
+                            @endif
+                            @if($lesson->audio_path)
+                                <span style="background: rgba(74, 222, 128, 0.15); color: #4ade80; border: 1px solid rgba(74, 222, 128, 0.3); padding: 0.15rem 0.45rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">🎧 Audio-Übung</span>
+                            @endif
+                        </div>
                         <span>🔒 Geschütztes Medium</span>
                     </div>
                 </div>
 
                 {{-- Video Player Container --}}
                 <div style="background: #020617; border-radius: 8px; overflow: hidden; position: relative; aspect-ratio: 16/9; margin-bottom: 1.5rem; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5); border: 1px solid #1e293b;">
-                    @if($lesson->video_url)
-                        <video controls style="width: 100%; height: 100%; object-fit: cover;" poster="/frontend/assets/video-poster.jpg">
-                            <source src="{{ $lesson->video_url }}" type="video/mp4">
+                    @if($lesson->video_path || $lesson->video_url)
+                        <video id="lesson-video" controls style="width: 100%; height: 100%; object-fit: cover;" poster="/frontend/assets/video-poster.jpg" preload="metadata">
+                            @if($lesson->video_path)
+                                <source src="{{ route('media.stream', ['courseSlug' => $course->slug, 'lessonSlug' => $lesson->slug, 'type' => 'video']) }}" type="video/mp4">
+                            @elseif($lesson->video_url)
+                                <source src="{{ $lesson->video_url }}" type="video/mp4">
+                            @endif
                             Ihr Browser unterstützt das Video-Tag leider nicht.
                         </video>
                     @else
@@ -130,7 +145,7 @@
                                 <span style="color: #94a3b8; font-size: 0.8rem;">Geführte Audio-Sequenz für die praktische Umsetzung</span>
                             </div>
                         </div>
-                        <audio controls style="width: 100%; border-radius: 4px;">
+                        <audio id="lesson-audio" controls style="width: 100%; border-radius: 4px;" preload="metadata">
                             <source src="{{ route('media.stream', ['courseSlug' => $course->slug, 'lessonSlug' => $lesson->slug, 'type' => 'audio']) }}" type="audio/mpeg">
                             Ihr Browser unterstützt das Audio-Element nicht.
                         </audio>
@@ -166,7 +181,7 @@
                                                 {{ $item->lesson_number }}. {{ $item->title }}
                                             </span>
                                         </div>
-                                        <span style="color: #64748b; font-size: 0.75rem;">{{ $item->duration_minutes }}m</span>
+                                        <span id="sidebar-duration-{{ $item->id }}" style="color: #64748b; font-size: 0.75rem;">{{ $item->duration_minutes }}m</span>
                                     </a>
                                 @endforeach
                             </div>
@@ -191,8 +206,48 @@
         </footer>
     </main>
 
-    {{-- Interactive AJAX completion script --}}
+    {{-- Interactive AJAX completion script & Dynamic Duration Detector --}}
     <script>
+        // 1. Dynamic Video / Audio Media Duration Detection
+        document.addEventListener('DOMContentLoaded', () => {
+            const videoEl = document.getElementById('lesson-video');
+            const audioEl = document.getElementById('lesson-audio');
+            const mediaEl = videoEl || audioEl;
+
+            if (mediaEl) {
+                function updateMediaDuration() {
+                    if (mediaEl.duration && !isNaN(mediaEl.duration) && mediaEl.duration > 0 && isFinite(mediaEl.duration)) {
+                        const totalSec = Math.round(mediaEl.duration);
+                        const mins = Math.floor(totalSec / 60);
+                        const secs = totalSec % 60;
+                        
+                        const formattedLong = mins > 0 
+                            ? (secs > 0 ? `${mins} Min. ${secs} Sek.` : `${mins} Minuten`) 
+                            : `${secs} Sekunden`;
+                        const formattedShort = mins > 0 ? `${mins}m` : `${secs}s`;
+
+                        const mainDisplay = document.getElementById('lesson-duration-display');
+                        if (mainDisplay) {
+                            mainDisplay.innerHTML = `⏱ Dauer: ${formattedLong}`;
+                        }
+
+                        const currentSidebar = document.getElementById('sidebar-duration-{{ $lesson->id }}');
+                        if (currentSidebar) {
+                            currentSidebar.innerText = formattedShort;
+                        }
+                    }
+                }
+
+                mediaEl.addEventListener('loadedmetadata', updateMediaDuration);
+                mediaEl.addEventListener('durationchange', updateMediaDuration);
+                mediaEl.addEventListener('canplay', updateMediaDuration);
+                if (mediaEl.readyState >= 1) {
+                    updateMediaDuration();
+                }
+            }
+        });
+
+        // 2. Toggle Complete
         function toggleLessonComplete() {
             const btn = document.getElementById('toggle-complete-btn');
             const icon = document.getElementById('btn-icon');

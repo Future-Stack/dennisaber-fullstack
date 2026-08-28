@@ -289,4 +289,117 @@ class DennisCoursePortalTest extends TestCase
             'body',
         ]);
     }
+
+    /**
+     * Test Admin Lesson Creation with Media
+     */
+    public function test_admin_can_create_update_and_delete_lesson(): void
+    {
+        $admin = User::where('role', 'admin')->first();
+        $course = Course::first();
+
+        // 1. Create Lesson
+        $response = $this->actingAs($admin)->post(route('admin.lessons.store', $course->id), [
+            'chapter_name' => 'Modul 99: Testmodul',
+            'title' => 'Testlektion mit Medien',
+            'lesson_number' => 99,
+            'duration_minutes' => 30,
+            'video_url' => 'https://example.com/test-video.mp4',
+            'pdf_attachment_name' => 'Test_Material.pdf',
+            'content_html' => '<p>Testinhalt der Lektion</p>',
+            'is_preview' => true,
+            'order' => 99,
+        ]);
+
+        $response->assertRedirect(route('admin.dashboard', ['#medien']));
+        $this->assertDatabaseHas('lessons', [
+            'course_id' => $course->id,
+            'title' => 'Testlektion mit Medien',
+            'lesson_number' => 99,
+        ]);
+
+        $lesson = Lesson::where('title', 'Testlektion mit Medien')->first();
+
+        // 2. Update Lesson
+        $response = $this->actingAs($admin)->post(route('admin.lessons.update', $lesson->id), [
+            'chapter_name' => 'Modul 99: Aktualisiertes Modul',
+            'title' => 'Testlektion Aktualisiert',
+            'lesson_number' => 99,
+            'duration_minutes' => 45,
+            'video_url' => 'https://example.com/updated-video.mp4',
+            'content_html' => '<p>Aktualisierter Inhalt</p>',
+            'is_preview' => false,
+            'order' => 99,
+        ]);
+
+        $response->assertRedirect(route('admin.dashboard', ['#medien']));
+        $this->assertDatabaseHas('lessons', [
+            'id' => $lesson->id,
+            'title' => 'Testlektion Aktualisiert',
+            'duration_minutes' => 45,
+        ]);
+
+        // 3. Delete Lesson
+        $response = $this->actingAs($admin)->delete(route('admin.lessons.delete', $lesson->id));
+        $response->assertRedirect(route('admin.dashboard', ['#medien']));
+        $this->assertDatabaseMissing('lessons', [
+            'id' => $lesson->id,
+        ]);
+    }
+
+    public function test_admin_can_create_update_and_delete_course(): void
+    {
+        $admin = User::where('role', 'admin')->first();
+
+        // 1. Create Course
+        $response = $this->actingAs($admin)->post(route('admin.courses.store'), [
+            'title' => 'Neuer Admin Testkurs',
+            'category' => 'Akademie / Führung',
+            'subtitle' => 'Untertitel für Testkurs',
+            'duration_days' => 60,
+            'total_hours' => '45 Unterrichtsstunden',
+            'description' => 'Ausführliche Beschreibung des Testkurses',
+            'public_url' => 'https://example.com/kurs-landingpage',
+            'order' => 15,
+            'is_published' => true,
+        ]);
+
+        $response->assertRedirect(route('admin.dashboard', ['#medien']));
+        $this->assertDatabaseHas('courses', [
+            'title' => 'Neuer Admin Testkurs',
+            'slug' => 'neuer-admin-testkurs',
+            'category' => 'Akademie / Führung',
+            'duration_days' => 60,
+        ]);
+
+        $course = Course::where('slug', 'neuer-admin-testkurs')->first();
+
+        // 2. Update Course
+        $response = $this->actingAs($admin)->post(route('admin.courses.update', $course->id), [
+            'title' => 'Neuer Admin Testkurs Aktualisiert',
+            'category' => 'Business',
+            'subtitle' => 'Aktualisierter Untertitel',
+            'duration_days' => 90,
+            'total_hours' => '50 Unterrichtsstunden',
+            'description' => 'Aktualisierte Beschreibung',
+            'public_url' => 'https://example.com/kurs-landingpage-neu',
+            'order' => 16,
+            'is_published' => true,
+        ]);
+
+        $response->assertRedirect(route('admin.dashboard', ['#medien']));
+        $this->assertDatabaseHas('courses', [
+            'id' => $course->id,
+            'title' => 'Neuer Admin Testkurs Aktualisiert',
+            'category' => 'Business',
+            'duration_days' => 90,
+        ]);
+
+        // 3. Delete Course
+        $response = $this->actingAs($admin)->delete(route('admin.courses.delete', $course->id));
+        $response->assertRedirect(route('admin.dashboard', ['#medien']));
+        $this->assertDatabaseMissing('courses', [
+            'id' => $course->id,
+        ]);
+    }
 }

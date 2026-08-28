@@ -8,6 +8,7 @@ use App\Models\Lesson;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Storage;
 
 class MediaController extends Controller
 {
@@ -30,6 +31,18 @@ class MediaController extends Controller
             case 'pdf':
                 $filename = $lesson->pdf_attachment_name ?: "{$lesson->slug}-arbeitsblatt.pdf";
                 
+                // If uploaded file exists in storage, deliver it with protected headers
+                if ($lesson->pdf_attachment_path && Storage::disk('public')->exists($lesson->pdf_attachment_path)) {
+                    return response()->file(Storage::disk('public')->path($lesson->pdf_attachment_path), [
+                        'Content-Type' => 'application/pdf',
+                        'Content-Disposition' => 'inline; filename="' . $filename . '"',
+                        'Cache-Control' => 'private, no-cache, no-store, must-revalidate',
+                        'Pragma' => 'no-cache',
+                        'Expires' => '0',
+                        'X-Content-Type-Options' => 'nosniff',
+                    ]);
+                }
+
                 // Return a clean inline PDF document with watermarking info
                 $pdfContent = "%PDF-1.4\n" .
                     "1 0 obj << /Type /Catalog /Pages 2 0 R >> endobj\n" .
@@ -75,13 +88,30 @@ class MediaController extends Controller
                 ]);
 
             case 'video':
-                // In production, stream video chunks from storage or signed URL
+                // Check if local uploaded video exists
+                if ($lesson->video_path && Storage::disk('public')->exists($lesson->video_path)) {
+                    return response()->file(Storage::disk('public')->path($lesson->video_path), [
+                        'Content-Type' => 'video/mp4',
+                        'Accept-Ranges' => 'bytes',
+                        'Cache-Control' => 'private, no-cache, no-store, must-revalidate',
+                    ]);
+                }
+
                 if ($lesson->video_url) {
                     return redirect()->away($lesson->video_url);
                 }
                 return response()->json(['error' => 'Keine Videoquelle hinterlegt'], 404);
 
             case 'audio':
+                // Check if local uploaded audio exists
+                if ($lesson->audio_path && Storage::disk('public')->exists($lesson->audio_path)) {
+                    return response()->file(Storage::disk('public')->path($lesson->audio_path), [
+                        'Content-Type' => 'audio/mpeg',
+                        'Accept-Ranges' => 'bytes',
+                        'Cache-Control' => 'private, no-cache, no-store, must-revalidate',
+                    ]);
+                }
+
                 if ($lesson->audio_path) {
                     return response()->json(['status' => 'audio_ready', 'path' => $lesson->audio_path]);
                 }

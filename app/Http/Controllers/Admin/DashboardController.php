@@ -7,12 +7,14 @@ use App\Models\AccessRequest;
 use App\Models\AdminNote;
 use App\Models\Course;
 use App\Models\Enrollment;
+use App\Models\Lesson;
 use App\Models\User;
 use App\Models\VersionNote;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class DashboardController extends Controller
@@ -52,8 +54,8 @@ class DashboardController extends Controller
         // Access Requests
         $accessRequests = AccessRequest::where('status', 'open')->latest()->get();
 
-        // Courses
-        $courses = Course::withCount('lessons')->orderBy('order')->get();
+        // Courses with all their lessons
+        $courses = Course::with(['lessons'])->withCount('lessons')->orderBy('order')->get();
 
         return view('admin.pages.dashboard', compact(
             'customers',
@@ -266,5 +268,271 @@ class DashboardController extends Controller
     {
         $accessRequest->delete();
         return back()->with('success', 'Zugangsanfrage gelöscht.');
+    }
+
+    public function storeCourse(Request $request)
+    {
+        $request->validate([
+            'title' => ['required', 'string', 'max:255', 'unique:courses,title'],
+            'category' => ['nullable', 'string', 'max:255'],
+            'subtitle' => ['nullable', 'string', 'max:255'],
+            'description' => ['nullable', 'string'],
+            'duration_days' => ['required', 'integer', 'min:1'],
+            'total_hours' => ['nullable', 'string', 'max:100'],
+            'public_url' => ['nullable', 'url', 'max:500'],
+            'thumbnail_file' => ['nullable', 'image', 'max:10240'],
+            'order' => ['nullable', 'integer'],
+            'is_published' => ['nullable', 'boolean'],
+        ]);
+
+        $slug = Str::slug($request->title);
+        $originalSlug = $slug;
+        $counter = 1;
+        while (Course::where('slug', $slug)->exists()) {
+            $slug = $originalSlug . '-' . $counter++;
+        }
+
+        $thumbnailPath = null;
+        if ($request->hasFile('thumbnail_file')) {
+            $thumbnailPath = '/storage/' . $request->file('thumbnail_file')->store('thumbnails', 'public');
+        }
+
+        $order = $request->filled('order')
+            ? (int) $request->order
+            : (Course::count() + 1);
+
+        $course = Course::create([
+            'title' => $request->title,
+            'slug' => $slug,
+            'category' => $request->category ?: 'Akademie',
+            'subtitle' => $request->subtitle,
+            'description' => $request->description,
+            'thumbnail' => $thumbnailPath ?: '/frontend/assets/kompakt-thumb.jpg',
+            'duration_days' => (int) $request->duration_days,
+            'total_hours' => $request->total_hours ?: '30 Unterrichtsstunden',
+            'public_url' => $request->public_url,
+            'order' => $order,
+            'is_published' => $request->boolean('is_published', true),
+        ]);
+
+        return redirect()->route('admin.dashboard', ['#medien'])
+            ->with('success', "Neuer Kurs '{$course->title}' erfolgreich angelegt.");
+    }
+
+    public function updateCourse(Request $request, Course $course)
+    {
+        $request->validate([
+            'title' => ['required', 'string', 'max:255'],
+            'category' => ['nullable', 'string', 'max:255'],
+            'subtitle' => ['nullable', 'string', 'max:255'],
+            'description' => ['nullable', 'string'],
+            'duration_days' => ['required', 'integer', 'min:1'],
+            'total_hours' => ['nullable', 'string', 'max:100'],
+            'public_url' => ['nullable', 'url', 'max:500'],
+            'thumbnail_file' => ['nullable', 'image', 'max:10240'],
+            'order' => ['nullable', 'integer'],
+            'is_published' => ['nullable', 'boolean'],
+        ]);
+
+        $data = [
+            'title' => $request->title,
+            'category' => $request->category ?: $course->category,
+            'subtitle' => $request->subtitle,
+            'description' => $request->description,
+            'duration_days' => (int) $request->duration_days,
+            'total_hours' => $request->total_hours ?: $course->total_hours,
+            'public_url' => $request->public_url,
+            'order' => $request->filled('order') ? (int) $request->order : $course->order,
+            'is_published' => $request->boolean('is_published', true),
+        ];
+
+        if ($request->hasFile('thumbnail_file')) {
+            $data['thumbnail'] = '/storage/' . $request->file('thumbnail_file')->store('thumbnails', 'public');
+        }
+
+        $course->update($data);
+
+        return redirect()->route('admin.dashboard', ['#medien'])
+            ->with('success', "Kurs '{$course->title}' wurde erfolgreich aktualisiert.");
+    }
+
+    public function deleteCourse(Course $course)
+    {
+        $title = $course->title;
+
+        // Cleanup all attached lesson files
+        foreach ($course->lessons as $lesson) {
+            if ($lesson->video_path && Storage::disk('public')->exists($lesson->video_path)) {
+                Storage::disk('public')->delete($lesson->video_path);
+            }
+            if ($lesson->audio_path && Storage::disk('public')->exists($lesson->audio_path)) {
+                Storage::disk('public')->delete($lesson->audio_path);
+            }
+            if ($lesson->pdf_attachment_path && Storage::disk('public')->exists($lesson->pdf_attachment_path)) {
+                Storage::disk('public')->delete($lesson->pdf_attachment_path);
+            }
+            $lesson->delete();
+        }
+
+        $course->delete();
+
+        return redirect()->route('admin.dashboard', ['#medien'])
+            ->with('success', "Kurs '{$title}' und alle zugehörigen Lektionen wurden erfolgreich gelöscht.");
+    }
+
+    public function storeLesson(Request $request, Course $course)
+    {
+        $request->validate([
+            'title' => ['required', 'string', 'max:255'],
+            'chapter_name' => ['nullable', 'string', 'max:255'],
+            'lesson_number' => ['nullable', 'integer'],
+            'duration_minutes' => ['nullable', 'integer'],
+            'video_file' => ['nullable', 'file', 'mimes:mp4,mov,webm,ogg,mkv', 'max:512000'],
+            'video_url' => ['nullable', 'string', 'max:500'],
+            'audio_file' => ['nullable', 'file', 'mimes:mp3,wav,m4a,ogg,aac', 'max:102400'],
+            'pdf_file' => ['nullable', 'file', 'mimes:pdf', 'max:51200'],
+            'pdf_attachment_name' => ['nullable', 'string', 'max:255'],
+            'content_html' => ['nullable', 'string'],
+            'is_preview' => ['nullable', 'boolean'],
+            'order' => ['nullable', 'integer'],
+        ]);
+
+        $slug = Str::slug($request->title);
+        $originalSlug = $slug;
+        $counter = 1;
+        while ($course->lessons()->where('slug', $slug)->exists()) {
+            $slug = $originalSlug . '-' . $counter++;
+        }
+
+        $lessonNumber = $request->filled('lesson_number')
+            ? (int) $request->lesson_number
+            : ($course->lessons()->count() + 1);
+
+        $order = $request->filled('order')
+            ? (int) $request->order
+            : $lessonNumber;
+
+        $videoPath = null;
+        if ($request->hasFile('video_file')) {
+            $videoPath = $request->file('video_file')->store('videos', 'public');
+        }
+
+        $audioPath = null;
+        if ($request->hasFile('audio_file')) {
+            $audioPath = $request->file('audio_file')->store('audio', 'public');
+        }
+
+        $pdfPath = null;
+        $pdfName = $request->pdf_attachment_name;
+        if ($request->hasFile('pdf_file')) {
+            $pdfFile = $request->file('pdf_file');
+            $pdfPath = $pdfFile->store('materials', 'public');
+            if (blank($pdfName)) {
+                $pdfName = $pdfFile->getClientOriginalName();
+            }
+        }
+
+        $lesson = $course->lessons()->create([
+            'chapter_name' => $request->chapter_name ?: 'Hauptmodul',
+            'title' => $request->title,
+            'slug' => $slug,
+            'lesson_number' => $lessonNumber,
+            'duration_minutes' => (int) ($request->duration_minutes ?: 15),
+            'video_url' => $request->video_url,
+            'video_path' => $videoPath,
+            'audio_path' => $audioPath,
+            'pdf_attachment_path' => $pdfPath,
+            'pdf_attachment_name' => $pdfName,
+            'content_html' => $request->content_html,
+            'is_preview' => $request->boolean('is_preview'),
+            'order' => $order,
+        ]);
+
+        return redirect()->route('admin.dashboard', ['#medien'])
+            ->with('success', "Lektion '{$lesson->title}' erfolgreich für den Kurs '{$course->title}' angelegt.");
+    }
+
+    public function updateLesson(Request $request, Lesson $lesson)
+    {
+        $request->validate([
+            'title' => ['required', 'string', 'max:255'],
+            'chapter_name' => ['nullable', 'string', 'max:255'],
+            'lesson_number' => ['nullable', 'integer'],
+            'duration_minutes' => ['nullable', 'integer'],
+            'video_file' => ['nullable', 'file', 'mimes:mp4,mov,webm,ogg,mkv', 'max:512000'],
+            'video_url' => ['nullable', 'string', 'max:500'],
+            'audio_file' => ['nullable', 'file', 'mimes:mp3,wav,m4a,ogg,aac', 'max:102400'],
+            'pdf_file' => ['nullable', 'file', 'mimes:pdf', 'max:51200'],
+            'pdf_attachment_name' => ['nullable', 'string', 'max:255'],
+            'content_html' => ['nullable', 'string'],
+            'is_preview' => ['nullable', 'boolean'],
+            'order' => ['nullable', 'integer'],
+        ]);
+
+        $data = [
+            'chapter_name' => $request->chapter_name ?: $lesson->chapter_name,
+            'title' => $request->title,
+            'lesson_number' => $request->filled('lesson_number') ? (int) $request->lesson_number : $lesson->lesson_number,
+            'duration_minutes' => $request->filled('duration_minutes') ? (int) $request->duration_minutes : $lesson->duration_minutes,
+            'video_url' => $request->video_url,
+            'content_html' => $request->content_html,
+            'is_preview' => $request->boolean('is_preview'),
+            'order' => $request->filled('order') ? (int) $request->order : $lesson->order,
+        ];
+
+        if ($request->hasFile('video_file')) {
+            if ($lesson->video_path && Storage::disk('public')->exists($lesson->video_path)) {
+                Storage::disk('public')->delete($lesson->video_path);
+            }
+            $data['video_path'] = $request->file('video_file')->store('videos', 'public');
+        }
+
+        if ($request->hasFile('audio_file')) {
+            if ($lesson->audio_path && Storage::disk('public')->exists($lesson->audio_path)) {
+                Storage::disk('public')->delete($lesson->audio_path);
+            }
+            $data['audio_path'] = $request->file('audio_file')->store('audio', 'public');
+        }
+
+        if ($request->hasFile('pdf_file')) {
+            if ($lesson->pdf_attachment_path && Storage::disk('public')->exists($lesson->pdf_attachment_path)) {
+                Storage::disk('public')->delete($lesson->pdf_attachment_path);
+            }
+            $pdfFile = $request->file('pdf_file');
+            $data['pdf_attachment_path'] = $pdfFile->store('materials', 'public');
+            if (blank($request->pdf_attachment_name)) {
+                $data['pdf_attachment_name'] = $pdfFile->getClientOriginalName();
+            } else {
+                $data['pdf_attachment_name'] = $request->pdf_attachment_name;
+            }
+        } elseif ($request->filled('pdf_attachment_name')) {
+            $data['pdf_attachment_name'] = $request->pdf_attachment_name;
+        }
+
+        $lesson->update($data);
+
+        return redirect()->route('admin.dashboard', ['#medien'])
+            ->with('success', "Lektion '{$lesson->title}' wurde erfolgreich aktualisiert.");
+    }
+
+    public function deleteLesson(Lesson $lesson)
+    {
+        $title = $lesson->title;
+
+        // Cleanup storage files if present
+        if ($lesson->video_path && Storage::disk('public')->exists($lesson->video_path)) {
+            Storage::disk('public')->delete($lesson->video_path);
+        }
+        if ($lesson->audio_path && Storage::disk('public')->exists($lesson->audio_path)) {
+            Storage::disk('public')->delete($lesson->audio_path);
+        }
+        if ($lesson->pdf_attachment_path && Storage::disk('public')->exists($lesson->pdf_attachment_path)) {
+            Storage::disk('public')->delete($lesson->pdf_attachment_path);
+        }
+
+        $lesson->delete();
+
+        return redirect()->route('admin.dashboard', ['#medien'])
+            ->with('success', "Lektion '{$title}' und zugehörige Mediendateien wurden erfolgreich gelöscht.");
     }
 }
