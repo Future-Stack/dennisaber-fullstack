@@ -92,13 +92,6 @@
                 <p>Zahlungsprüfung täglich zwischen 13 und 16 Uhr</p><span>5</span>
                 <p>Persönliche Freischaltung per E-Mail</p></div>
         </section>
-        <footer class="site-footer">
-            <div><strong>DENNIS BESSELER</strong>
-                <p>Persönliche Kurszugänge · einmalige Zahlung · kein Abonnement</p></div>
-            <nav aria-label="Rechtliche Hinweise"><a href="login.html">Kundenlogin</a><a href="kopierschutz.html">Kopierschutz</a><a
-                    href="zahlung.html">Zahlung</a><a href="service/rio-negro.html">Schnellere Bearbeitung</a><a
-                    href="impressum.html">Impressum</a><a href="datenschutz.html">Datenschutz</a><a
-                    href="zahlungsbedingungen.html">Zahlungsbedingungen</a></nav>
-        </footer>
+       @include('frontend.components.footer')
     </main>
 @endsection
