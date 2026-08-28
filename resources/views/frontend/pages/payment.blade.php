@@ -5,11 +5,7 @@
         <div class="portal-notice"><strong>Technisches Kursportal</strong><span>Keine Bestellung auf dieser Website. <a
                     href="../besseler-kursvorschau.dennis-bes.chatgpt.site/angebote/index.html">Kurse im Verkaufsportal ansehen →</a></span>
         </div>
-        <header class="portal-header"><a href="index.html" class="portal-brand"><strong>DENNIS BESSELER</strong><span>Kursportal</span></a>
-            <nav><a href="index.html">Alle Kurse</a><a href="login.html">Kundenlogin</a><a href="service/rio-negro.html">Schnellere
-                    Bearbeitung</a><a href="../besseler-kursvorschau.dennis-bes.chatgpt.site/angebote/index.html">Zum
-                    Verkaufsportal</a></nav>
-        </header>
+       @include('frontend.components.header')
         <section class="payment-info-hero"><p class="eyebrow">Information · keine Bestellmöglichkeit</p>
             <h1>Zahlung und Freischaltung.</h1>
             <p>Hier sehen Sie, wie die spätere Zahlung per Überweisung abläuft. Eine Bestellung oder Zahlung kann auf dieser
@@ -96,13 +92,6 @@
                 <p>Zahlungsprüfung täglich zwischen 13 und 16 Uhr</p><span>5</span>
                 <p>Persönliche Freischaltung per E-Mail</p></div>
         </section>
-        <footer class="site-footer">
-            <div><strong>DENNIS BESSELER</strong>
-                <p>Persönliche Kurszugänge · einmalige Zahlung · kein Abonnement</p></div>
-            <nav aria-label="Rechtliche Hinweise"><a href="login.html">Kundenlogin</a><a href="kopierschutz.html">Kopierschutz</a><a
-                    href="zahlung.html">Zahlung</a><a href="service/rio-negro.html">Schnellere Bearbeitung</a><a
-                    href="impressum.html">Impressum</a><a href="datenschutz.html">Datenschutz</a><a
-                    href="zahlungsbedingungen.html">Zahlungsbedingungen</a></nav>
-        </footer>
+       @include('frontend.components.footer')
     </main>
 @endsection
