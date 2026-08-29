@@ -61,8 +61,9 @@ class AuthController extends Controller
         }
 
         /**
-         * Dynamic One-Device Binding
+         * Dynamic One-Device Binding (temporarily commented out for HTTP testing)
          */
+        /*
         $deviceId = $request->device_id;
         $deviceName = $request->device_name ?: 'Webbrowser';
 
@@ -85,6 +86,7 @@ class AuthController extends Controller
                 'device_name' => $deviceName,
             ]);
         }
+        */
 
         Auth::login($user, true);
         $request->session()->regenerate();
