@@ -29,8 +29,8 @@ class AuthController extends Controller
         $request->validate([
             'login' => ['required', 'string'],
             'password' => ['required', 'string'],
-            'device_id' => ['required', 'string', 'max:255'],
-            'device_name' => ['nullable', 'string', 'max:255'],
+            // 'device_id' => ['required', 'string', 'max:255'],
+            // 'device_name' => ['nullable', 'string', 'max:255'],
         ]);
 
         $login = $request->login;
@@ -68,8 +68,9 @@ class AuthController extends Controller
         }
 
         /**
-         * Dynamic One-Device Binding for Members & Staff
+         * Dynamic One-Device Binding for Members & Staff (temporarily commented out for HTTP testing)
          */
+        /*
         $deviceId = $request->device_id;
         $deviceName = $request->device_name ?: 'Kundenbrowser';
 
@@ -91,6 +92,7 @@ class AuthController extends Controller
                 'device_name' => $deviceName,
             ]);
         }
+        */
 
         Auth::login($user, true);
         $request->session()->regenerate();
