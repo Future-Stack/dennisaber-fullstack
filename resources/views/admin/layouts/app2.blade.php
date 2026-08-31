@@ -201,29 +201,8 @@
 
 <body class="__variable_geist_0tvmz3h __variable_geist_mono_1diim1n antialiased">
 @yield('contents')
-<aside class="support-assistant" aria-label="Support">
-    <button type="button" class="support-assistant__toggle" aria-expanded="false"
-            aria-controls="support-assistant-panel">Support
-    </button>
-</aside>
-<script id="_R_">
-    import ("{{ asset('admin') }}/assets/index-BqyFDbzT.js")
-</script>
+
+@include('frontend.components.support-assistant')
 </body>
 
 </html>
-<script>
-    self.__VINEXT_RSC_CHUNKS__ = self.__VINEXT_RSC_CHUNKS__ || [];
-    self.__VINEXT_RSC_CHUNKS__.push("2:I[\"8c0f216c4604\",[],\"Children\",1]\n3:I[\"6850e077b5a4\",[],\"default\",1]\n4:I[\"15c18cfaeeff\",[],\"LayoutSegmentProvider\",1]\n5:I[\"8c0f216c4604\",[],\"Slot\",1]\n6:I[\"593f344dc510\",[],\"RedirectBoundary\",1]\n:HL[\"/assets/index-D96dYb_L.css\",\"style\"]\n")
-</script>
-<script>
-    self.__VINEXT_RSC_CHUNKS__ = self.__VINEXT_RSC_CHUNKS__ || [];
-    self.__VINEXT_RSC_CHUNKS__.push("0:{\"__route\":\"route:/verwaltung\",\"__interceptionContext\":null,\"__layoutIds\":[\"layout:/\"],\"__rootLayout\":\"/\",\"page:/verwaltung\":\"$L1\",\"layout:/\":[[[[\"$\",\"link\",\"css:/assets/index-D96dYb_L.css\",{\"rel\":\"stylesheet\",\"precedence\":\"vite-rsc/importer-resources\",\"href\":\"/assets/index-D96dYb_L.css\",\"data-rsc-css-href\":\"/assets/index-D96dYb_L.css\"}],\"$undefined\"],[\"$\",\"html\",null,{\"lang\":\"de\",\"children\":[\"$\",\"body\",null,{\"className\":\"__variable_geist_0tvmz3h __variable_geist_mono_1diim1n antialiased\",\"children\":[[\"$\",\"$L2\",null,{}],[\"$\",\"$L3\",null,{\"supportEmail\":\"mail@besseler.de\",\"personalEmail\":\"dennis@besseler.de\"}]]}]}]],null],\"route:/verwaltung\":[[[\"$\",\"meta\",null,{\"charSet\":\"utf-8\"}],[[\"$\",\"title\",\"0\",{\"children\":\"Dennis Besseler Kursportal\"}],[\"$\",\"meta\",\"1\",{\"name\":\"description\",\"content\":\"Technisches Kursportal für bereits freigeschaltete Kunden.\"}],[\"$\",\"meta\",\"2\",{\"name\":\"robots\",\"content\":\"noindex, nofollow, noarchive\"}],[\"$\",\"meta\",\"3\",{\"name\":\"googlebot\",\"content\":\"noindex, nofollow, noarchive, noimageindex\"}],[\"$\",\"link\",\"4\",{\"rel\":\"shortcut icon\",\"href\":\"/favicon.svg\"}],[\"$\",\"link\",\"5\",{\"rel\":\"icon\",\"href\":\"/favicon.svg\"}],[\"$\",\"meta\",\"6\",{\"name\":\"codex-preview\",\"content\":\"development\"}]],[[\"$\",\"meta\",\"0\",{\"name\":\"viewport\",\"content\":\"width=device-width, initial-scale=1\"}]]],[\"$\",\"$L4\",null,{\"segmentMap\":{\"children\":[\"verwaltung\"]},\"children\":[\"$\",\"$L5\",null,{\"id\":\"layout:/\",\"parallelSlots\":\"$undefined\",\"children\":[\"$\",\"$L6\",null,{\"children\":[\"$\",\"$L4\",null,{\"segmentMap\":{\"children\":[]},\"children\":[\"$\",\"$L5\",null,{\"id\":\"page:/verwaltung\"}]}]}]}]}]],\"__layoutFlags\":{\"layout:/\":\"s\"},\"__artifactCompatibility\":{\"schemaVersion\":1,\"graphVersion\":\"app-route-graph:bwmsr01noej20\",\"deploymentVersion\":\"492af054-c2d3-49b8-8cd5-2c9830f1169b\",\"appElementsSchemaVersion\":1,\"rscPayloadSchemaVersion\":1,\"rootBoundaryId\":\"/\",\"renderEpoch\":null}}\n")
-</script>
-<script>
-    self.__VINEXT_RSC_CHUNKS__ = self.__VINEXT_RSC_CHUNKS__ || [];
-    self.__VINEXT_RSC_CHUNKS__.push("7:I[\"c2747888630f\",[],\"default\",1]\n8:I[\"769eb1d006d5\",[],\"default\",1]\n9:I[\"f914d6809ea0\",[],\"default\",1]\na:I[\"bfe663dd8365\",[],\"default\",1]\nb:I[\"f7eae7219e24\",[],\"default\",1]\n1:[\"$\",\"main\",null,{\"className\":\"admin-workspace\",\"id\":\"admin-page-top\",\"children\":[[\"$\",\"header\",null,{\"className\":\"admin-topbar\",\"children\":[[\"$\",\"div\",null,{\"children\":[[\"$\",\"span\",null,{\"className\":\"account-role-badge is-admin\",\"children\":\"ADMIN-KONTO\"}],[\"$\",\"strong\",null,{\"children\":\"DENNIS BESSELER · KUNDENZUGÄNGE\"}]]}],[\"$\",\"nav\",null,{\"children\":[[\"$\",\"$L7\",null,{\"href\":\"/\",\"children\":\"Kursportal öffnen\"}],[\"$\",\"$L8\",null,{}]]}]]}],[\"$\",\"$L9\",null,{}],[\"$\",\"$La\",null,{}],[\"$\",\"div\",null,{\"className\":\"portal-bottom-navigation\",\"id\":\"admin-page-end\",\"children\":[\"$\",\"$Lb\",null,{\"direction\":\"up\",\"label\":\"Zurück zum Seitenanfang\",\"targetId\":\"admin-page-top\"}]}]]}]\n")
-</script>
-<script>
-    self.__VINEXT_RSC_DONE__ = true
-</script>

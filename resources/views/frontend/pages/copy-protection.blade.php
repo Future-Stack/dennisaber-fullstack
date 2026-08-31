@@ -88,16 +88,10 @@
                     <h3 data-i18n-de="Klar entscheiden" data-i18n-en="Decide clearly">Klar entscheiden</h3>
                 </aside>
 
-                <article style="position: relative;">
-                    {{-- Watermark Layer --}}
-                    <div class="media-license-watermark" style="color: rgba(56, 189, 248, 0.45); pointer-events: none; text-shadow: 0 1px #ffffffbf;">
-                        <div class="license-line license-line-1" style="transform: rotate(-18deg); font-weight: 750; font-size: 0.82rem; letter-spacing: 0.08em;" data-i18n-de="PERSÖNLICHE PRIVAT-LIZENZ · ALEX · KUNDEN-/RECHNUNGS-NR. RN-7X4K-2026 · KEINE WEITERGABE" data-i18n-en="PERSONAL PRIVATE LICENSE · ALEX · CUSTOMER/INVOICE NO. RN-7X4K-2026 · NO DISTRIBUTION">
-                            PERSÖNLICHE PRIVAT-LIZENZ · ALEX · KUNDEN-/RECHNUNGS-NR. RN-7X4K-2026 · KEINE WEITERGABE
-                        </div>
-                        <div class="license-line license-line-2" style="transform: rotate(-18deg); font-weight: 750; font-size: 0.82rem; letter-spacing: 0.08em;" data-i18n-de="PERSÖNLICHE PRIVAT-LIZENZ · ALEX · KUNDEN-/RECHNUNGS-NR. RN-7X4K-2026 · KEINE WEITERGABE" data-i18n-en="PERSONAL PRIVATE LICENSE · ALEX · CUSTOMER/INVOICE NO. RN-7X4K-2026 · NO DISTRIBUTION">
-                            PERSÖNLICHE PRIVAT-LIZENZ · ALEX · KUNDEN-/RECHNUNGS-NR. RN-7X4K-2026 · KEINE WEITERGABE
-                        </div>
-                        <div class="license-line license-line-3" style="transform: rotate(-18deg); font-weight: 750; font-size: 0.82rem; letter-spacing: 0.08em;" data-i18n-de="PERSÖNLICHE PRIVAT-LIZENZ · ALEX · KUNDEN-/RECHNUNGS-NR. RN-7X4K-2026 · KEINE WEITERGABE" data-i18n-en="PERSONAL PRIVATE LICENSE · ALEX · CUSTOMER/INVOICE NO. RN-7X4K-2026 · NO DISTRIBUTION">
+                <article style="position: relative; overflow: hidden;">
+                    {{-- Watermark Layer: Exact single narrow diagonal stripe across display --}}
+                    <div class="media-license-watermark" style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; z-index: 5; color: rgba(56, 189, 248, 0.45); text-shadow: 0 1px #ffffffbf; overflow: hidden;">
+                        <div class="license-line" style="transform: rotate(-18deg); font-weight: 750; font-size: 0.82rem; letter-spacing: 0.08em; white-space: nowrap; width: 120%; text-align: center;" data-i18n-de="PERSÖNLICHE PRIVAT-LIZENZ · ALEX · KUNDEN-/RECHNUNGS-NR. RN-7X4K-2026 · KEINE WEITERGABE" data-i18n-en="PERSONAL PRIVATE LICENSE · ALEX · CUSTOMER/INVOICE NO. RN-7X4K-2026 · NO DISTRIBUTION">
                             PERSÖNLICHE PRIVAT-LIZENZ · ALEX · KUNDEN-/RECHNUNGS-NR. RN-7X4K-2026 · KEINE WEITERGABE
                         </div>
                     </div>
