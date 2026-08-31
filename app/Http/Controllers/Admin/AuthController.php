@@ -60,33 +60,31 @@ class AuthController extends Controller
             ]);
         }
 
-        /**
-         * Dynamic One-Device Binding (temporarily commented out for HTTP testing)
-         */
-        /*
+        // Dynamic One-Device Binding
         $deviceId = $request->device_id;
         $deviceName = $request->device_name ?: 'Webbrowser';
 
-        if (blank($user->device_id)) {
-            // First login → dynamically bind device
-            $user->update([
-                'device_id' => $deviceId,
-                'device_name' => $deviceName,
-                'device_bound_at' => now(),
-                'last_device_activity_at' => now(),
-            ]);
-        } elseif ($user->device_id !== $deviceId) {
-            // Check if device matches
-            throw ValidationException::withMessages([
-                'email' => __('Dieses Administratorkonto ist bereits an ein anderes registriertes Gerät gebunden. Aus Sicherheitsgründen ist eine Anmeldung von diesem Gerät nicht möglich.'),
-            ]);
-        } else {
-            $user->update([
-                'last_device_activity_at' => now(),
-                'device_name' => $deviceName,
-            ]);
+        if ($deviceId) {
+            if (blank($user->device_id)) {
+                // First login → dynamically bind device
+                $user->update([
+                    'device_id' => $deviceId,
+                    'device_name' => $deviceName,
+                    'device_bound_at' => now(),
+                    'last_device_activity_at' => now(),
+                ]);
+            } elseif ($user->device_id !== $deviceId) {
+                // Check if device matches
+                throw ValidationException::withMessages([
+                    'email' => __('Dieses Administratorkonto ist bereits an ein anderes registriertes Gerät gebunden. Aus Sicherheitsgründen ist eine Anmeldung von diesem Gerät nicht möglich.'),
+                ]);
+            } else {
+                $user->update([
+                    'last_device_activity_at' => now(),
+                    'device_name' => $deviceName,
+                ]);
+            }
         }
-        */
 
         Auth::login($user, true);
         $request->session()->regenerate();

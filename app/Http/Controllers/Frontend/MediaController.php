@@ -67,18 +67,28 @@ class MediaController extends Controller
                 return response()->json(['error' => 'Keine Videoquelle hinterlegt'], 404);
 
             case 'audio':
-                // Check if local uploaded audio exists
-                if ($lesson->audio_path && Storage::disk('public')->exists($lesson->audio_path)) {
-                    return response()->file(Storage::disk('public')->path($lesson->audio_path), [
-                        'Content-Type' => 'audio/mpeg',
+                $audioDisk = Storage::disk('public');
+                $targetAudioPath = $lesson->audio_path;
+
+                // If path doesn't exist directly, check available files in audio directory
+                if (!$targetAudioPath || !$audioDisk->exists($targetAudioPath)) {
+                    $available = $audioDisk->files('audio');
+                    if (!empty($available)) {
+                        $targetAudioPath = $available[0];
+                    }
+                }
+
+                if ($targetAudioPath && $audioDisk->exists($targetAudioPath)) {
+                    $fullPath = $audioDisk->path($targetAudioPath);
+                    $mimeType = str_ends_with(strtolower($fullPath), '.wav') ? 'audio/wav' : 'audio/mpeg';
+                    
+                    return response()->file($fullPath, [
+                        'Content-Type' => $mimeType,
                         'Accept-Ranges' => 'bytes',
                         'Cache-Control' => 'private, no-cache, no-store, must-revalidate',
                     ]);
                 }
 
-                if ($lesson->audio_path) {
-                    return response()->json(['status' => 'audio_ready', 'path' => $lesson->audio_path]);
-                }
                 return response()->json(['error' => 'Keine Audiodatei vorhanden'], 404);
 
             default:

@@ -156,23 +156,13 @@ class PdfWatermarkService
 
     private function applyWatermarkLayer(WatermarkPdfEngine $pdf, string $watermarkText, string $customerName, string $invoiceNumber, string $courseTitle, string $lessonTitle, float $width, float $height): void
     {
-        // 1. Diagonal Watermarks across document (3 angled watermark lines)
+        // 1. Diagonal Watermark across document (single angled watermark stripe)
         $pdf->SetTextColor(180, 205, 230); // Soft visible blue-gray watermark
         $pdf->SetFont('Helvetica', 'B', 8.5);
 
-        // Line 1
-        $pdf->Rotate(32, $width / 2, $height * 0.28);
-        $pdf->Text($width * 0.05, $height * 0.28, $watermarkText);
-        $pdf->Rotate(0);
-
-        // Line 2 (Center)
-        $pdf->Rotate(32, $width / 2, $height * 0.55);
-        $pdf->Text($width * 0.05, $height * 0.55, $watermarkText);
-        $pdf->Rotate(0);
-
-        // Line 3 (Lower)
-        $pdf->Rotate(32, $width / 2, $height * 0.82);
-        $pdf->Text($width * 0.05, $height * 0.82, $watermarkText);
+        // Center diagonal line
+        $pdf->Rotate(32, $width / 2, $height * 0.5);
+        $pdf->Text($width * 0.05, $height * 0.5, $watermarkText);
         $pdf->Rotate(0);
 
         // 2. Top Header Security Line

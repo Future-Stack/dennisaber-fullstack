@@ -360,7 +360,7 @@ class DatabaseSeeder extends Seeder
             'video_path' => 'videos/stress-lektion-1.mp4',
             'pdf_attachment_name' => 'Stress_Selbstanalyse_Bogen.pdf',
             'pdf_attachment_path' => 'materials/Stress_Selbstanalyse_Bogen.pdf',
-            'audio_path' => null,
+            'audio_path' => 'audio/SMdGRmsH0Z5eaFJnHcOo3VWWz9FLpT1drtPy8Ccc.wav',
             'is_preview' => true,
             'order' => 1,
             'content_html' => '<p>Wie wirkt Stress auf Körper und Geist? Erfahren Sie die biochemischen Abläufe der Stressachse.</p>',
@@ -377,7 +377,7 @@ class DatabaseSeeder extends Seeder
             'video_path' => 'videos/stress-lektion-2.mp4',
             'pdf_attachment_name' => 'Innere_Antreiber_Test.pdf',
             'pdf_attachment_path' => 'materials/Innere_Antreiber_Test.pdf',
-            'audio_path' => null,
+            'audio_path' => 'audio/w5RTq6i8FMgDxZC9UAeEUsgnk1IS2hl0L8aodp2T.wav',
             'is_preview' => false,
             'order' => 2,
             'content_html' => '<p>Die 5 inneren Antreiber: Sei perfekt, sei schnell, streng dich an, mach es allen recht, sei stark.</p>',
@@ -394,19 +394,109 @@ class DatabaseSeeder extends Seeder
             'video_path' => 'videos/stress-lektion-3.mp4',
             'pdf_attachment_name' => 'Atemtechniken_Uebersicht.pdf',
             'pdf_attachment_path' => 'materials/Atemtechniken_Uebersicht.pdf',
-            'audio_path' => 'audio/sos-atemfuehrung.mp3',
+            'audio_path' => 'audio/SMdGRmsH0Z5eaFJnHcOo3VWWz9FLpT1drtPy8Ccc.wav',
             'is_preview' => false,
             'order' => 3,
             'content_html' => '<p>Gezielte Atem- und Körperübungen zur schnellen Senkung des Herzschlags und Cortisolspiegels.</p>',
         ]);
 
-        // 7. Enroll Test Member in Test Course & Seed Initial Progress
+        // 6.b Seed Audio Adventure Lessons for Rio Negro 2002
+        $rioCourse = $courses['rio-negro-2002'];
+        Lesson::create([
+            'course_id' => $rioCourse->id,
+            'chapter_name' => 'Teil 1: Die Expedition beginnt',
+            'title' => '1. Einführung in das Audio-Abenteuer Rio Negro',
+            'slug' => 'einfuehrung-audio-abenteuer',
+            'lesson_number' => 1,
+            'duration_minutes' => 14,
+            'video_url' => null,
+            'video_path' => null,
+            'pdf_attachment_name' => 'Rio_Negro_Expeditionsbuch.pdf',
+            'pdf_attachment_path' => 'materials/DjtP2gYwdR7gFgq6mB3z3LpeCymMZms5WmWxli5h.pdf',
+            'audio_path' => 'audio/SMdGRmsH0Z5eaFJnHcOo3VWWz9FLpT1drtPy8Ccc.wav',
+            'is_preview' => true,
+            'order' => 1,
+            'content_html' => '<h3>Das Rio Negro Audio-Abenteuer</h3><p>Hören Sie die Einführung und bereiten Sie Ihr persönliches Expeditionsbuch für die Reise vor.</p>',
+        ]);
+
+        Lesson::create([
+            'course_id' => $rioCourse->id,
+            'chapter_name' => 'Teil 1: Die Expedition beginnt',
+            'title' => '2. Die erste Etappe – Aufbruch in Manaus',
+            'slug' => 'die-erste-etappe-manaus',
+            'lesson_number' => 2,
+            'duration_minutes' => 22,
+            'video_url' => null,
+            'video_path' => null,
+            'pdf_attachment_name' => 'Etappe_1_Entscheidungskarte.pdf',
+            'pdf_attachment_path' => 'materials/DjtP2gYwdR7gFgq6mB3z3LpeCymMZms5WmWxli5h.pdf',
+            'audio_path' => 'audio/w5RTq6i8FMgDxZC9UAeEUsgnk1IS2hl0L8aodp2T.wav',
+            'is_preview' => false,
+            'order' => 2,
+            'content_html' => '<h3>Erste Etappe: Manaus</h3><p>Hören Sie die Originalaufnahmen der ersten Station und treffen Sie Ihre erste Richtungsentscheidung.</p>',
+        ]);
+
+        Lesson::create([
+            'course_id' => $rioCourse->id,
+            'chapter_name' => 'Teil 2: Tiefer in den Dschungel',
+            'title' => '3. Die Fortsetzung – Unerwartete Hindernisse',
+            'slug' => 'die-fortsetzung-hindernisse',
+            'lesson_number' => 3,
+            'duration_minutes' => 19,
+            'video_url' => null,
+            'video_path' => null,
+            'pdf_attachment_name' => 'Etappe_2_Tagebuch.pdf',
+            'pdf_attachment_path' => 'materials/DjtP2gYwdR7gFgq6mB3z3LpeCymMZms5WmWxli5h.pdf',
+            'audio_path' => 'audio/SMdGRmsH0Z5eaFJnHcOo3VWWz9FLpT1drtPy8Ccc.wav',
+            'is_preview' => false,
+            'order' => 3,
+            'content_html' => '<h3>Zweite Etappe: Der Flusslauf</h3><p>Erleben Sie die dynamische Fortsetzung der Reise auf dem Rio Negro.</p>',
+        ]);
+
+        Lesson::create([
+            'course_id' => $rioCourse->id,
+            'chapter_name' => 'Teil 3: Das Fazit',
+            'title' => '4. Der Abschluss – Erkenntnisse für eigene Entscheidungen',
+            'slug' => 'der-abschluss-erkenntnisse',
+            'lesson_number' => 4,
+            'duration_minutes' => 26,
+            'video_url' => null,
+            'video_path' => null,
+            'pdf_attachment_name' => 'Expeditions_Fazit_Leitfaden.pdf',
+            'pdf_attachment_path' => 'materials/DjtP2gYwdR7gFgq6mB3z3LpeCymMZms5WmWxli5h.pdf',
+            'audio_path' => 'audio/w5RTq6i8FMgDxZC9UAeEUsgnk1IS2hl0L8aodp2T.wav',
+            'is_preview' => false,
+            'order' => 4,
+            'content_html' => '<h3>Abschluss & Erkenntnisse</h3><p>Wie Dennis tatsächlich handelte und welche Prinzipien für reale Lebensentscheidungen daraus folgen.</p>',
+        ]);
+
+        // 7. Enroll Test Member in Test Courses & Seed Initial Progress
         Enrollment::create([
             'user_id' => $member->id,
             'course_id' => $kompaktCourse->id,
             'invoice_number' => 'RE-2026-001',
             'started_at' => now()->subDays(5)->toDateString(),
             'expires_at' => now()->addDays(85)->toDateString(),
+            'is_active' => true,
+            'early_start_agreed' => true,
+        ]);
+
+        Enrollment::create([
+            'user_id' => $member->id,
+            'course_id' => $stressCourse->id,
+            'invoice_number' => 'RE-2026-002',
+            'started_at' => now()->subDays(3)->toDateString(),
+            'expires_at' => now()->addDays(87)->toDateString(),
+            'is_active' => true,
+            'early_start_agreed' => true,
+        ]);
+
+        Enrollment::create([
+            'user_id' => $member->id,
+            'course_id' => $rioCourse->id,
+            'invoice_number' => 'RE-2026-003',
+            'started_at' => now()->subDays(2)->toDateString(),
+            'expires_at' => now()->addDays(28)->toDateString(),
             'is_active' => true,
             'early_start_agreed' => true,
         ]);
