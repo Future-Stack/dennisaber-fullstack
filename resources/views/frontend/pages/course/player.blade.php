@@ -14,45 +14,46 @@
         </div>
 
         {{-- Course Top Navigation (Aligned with Portal Reference) --}}
-        <header class="portal-header course-header" style="border-bottom: 1px solid #1e293b; background: #0f172a; position: sticky; top: 0; z-index: 40;">
-            <a href="{{ route('member.dashboard') }}" class="portal-brand">
-                <strong>DENNIS BESSELER</strong>
-                <span>Kursportal</span>
-            </a>
-            <nav style="display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap;">
-                <a href="{{ route('member.dashboard') }}" style="color: #94a3b8; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 0.35rem;">
-                    ← Alle Kurse
+        <header class="portal-header course-header" style="border-bottom: 1px solid #1e293b; background: #0f172a; position: sticky; top: 0; z-index: 40; padding: 0.85rem 1.5rem;">
+            <div style="max-width: 1400px; width: 100%; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                <a href="{{ route('member.dashboard') }}" class="portal-brand" style="text-decoration: none;">
+                    <strong>DENNIS BESSELER</strong>
+                    <span>Kursportal</span>
                 </a>
-                <a href="{{ route('copy-protection') }}" style="color: #94a3b8; font-weight: 500; text-decoration: none;">
-                    Kopierschutz
-                </a>
-                <a href="{{ route('payment') }}" style="color: #94a3b8; font-weight: 500; text-decoration: none;">
-                    Zahlung
-                </a>
-                <a href="{{ route('faster-processing') }}" style="color: #94a3b8; font-weight: 500; text-decoration: none;">
-                    Schnellere Bearbeitung
-                </a>
-                
-                {{-- Course Progress Pill --}}
-                <div style="background: #1e293b; padding: 0.35rem 0.85rem; border-radius: 20px; font-size: 0.85rem; color: #38bdf8; font-weight: 700; border: 1px solid #334155; display: inline-flex; align-items: center; gap: 0.5rem;">
-                    <span id="progress-percent-display">{{ $progressPercent }}%</span>
-                    <span style="color: #64748b; font-weight: 400;">abgeschlossen</span>
-                </div>
+                <nav style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+                    <a href="{{ route('member.dashboard') }}" style="color: #cbd5e1; font-weight: 600; font-size: 0.9rem; text-decoration: none; display: inline-flex; align-items: center; gap: 0.35rem; background: #1e293b; padding: 0.4rem 0.85rem; border-radius: 6px; border: 1px solid #334155;">
+                        ← Mein Lernbereich
+                    </a>
+                    
+                    {{-- Course Progress Pill --}}
+                    <div style="background: #0f172a; padding: 0.35rem 0.85rem; border-radius: 20px; font-size: 0.85rem; color: #38bdf8; font-weight: 700; border: 1px solid #334155; display: inline-flex; align-items: center; gap: 0.5rem;">
+                        <span id="progress-percent-display">{{ $progressPercent }}%</span>
+                        <span style="color: #64748b; font-weight: 400;">abgeschlossen</span>
+                    </div>
 
-                {{-- Logout Button --}}
-                <form method="POST" action="{{ route('logout') }}" style="display:inline; margin-left: 0.5rem;">
-                    @csrf
-                    <button type="submit" style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.25); color: #f87171; cursor: pointer; font-weight: 600; font-size: 0.82rem; padding: 0.35rem 0.75rem; border-radius: 6px; transition: background 0.2s;">
-                        Abmelden
-                    </button>
-                </form>
-            </nav>
+                    {{-- Customer Identity Pill --}}
+                    <div style="background: #1e293b; padding: 0.35rem 0.75rem; border-radius: 6px; font-size: 0.82rem; color: #94a3b8; border: 1px solid #334155;">
+                        <span style="color: #f8fafc; font-weight: 600;">{{ Auth::user()->first_name ?: Auth::user()->name }}</span>
+                        @if(Auth::user()->invoice_number)
+                            <span style="color: #64748b;">· {{ Auth::user()->invoice_number }}</span>
+                        @endif
+                    </div>
+
+                    {{-- Logout Button --}}
+                    <form method="POST" action="{{ route('logout') }}" style="display:inline;">
+                        @csrf
+                        <button type="submit" style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.25); color: #f87171; cursor: pointer; font-weight: 600; font-size: 0.82rem; padding: 0.4rem 0.75rem; border-radius: 6px; transition: background 0.2s;">
+                            Abmelden
+                        </button>
+                    </form>
+                </nav>
+            </div>
         </header>
 
         {{-- Breadcrumb Navigation --}}
-        <div style="background: #0f172a; border-bottom: 1px solid #1e293b; padding: 0.6rem 1.5rem;">
+        <div style="background: #0b1120; border-bottom: 1px solid #1e293b; padding: 0.6rem 1.5rem;">
             <div style="max-width: 1400px; margin: 0 auto; display: flex; align-items: center; gap: 0.5rem; font-size: 0.82rem; color: #64748b; flex-wrap: wrap;">
-                <a href="{{ route('member.dashboard') }}" style="color: #94a3b8; text-decoration: none;">Kursportal</a>
+                <a href="{{ route('member.dashboard') }}" style="color: #94a3b8; text-decoration: none;">Mein Lernbereich</a>
                 <span>/</span>
                 <span style="color: #cbd5e1; font-weight: 600;">{{ $course->title }}</span>
                 <span>/</span>
@@ -87,7 +88,7 @@
                                 <span style="background: rgba(74, 222, 128, 0.15); color: #4ade80; border: 1px solid rgba(74, 222, 128, 0.3); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 700;">🎧 Audio-Lektion</span>
                             @endif
                             @if($lesson->pdf_attachment_name || $lesson->pdf_attachment_path)
-                                <span style="background: rgba(192, 132, 252, 0.15); color: #c084fc; border: 1px solid rgba(192, 132, 252, 0.3); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 700;">📄 Eingebettetes PDF</span>
+                                <span style="background: rgba(192, 132, 252, 0.15); color: #c084fc; border: 1px solid rgba(192, 132, 252, 0.3); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 700;">📄 Eingebettetes Arbeitsbuch</span>
                             @endif
                         </div>
                     </div>
@@ -98,15 +99,28 @@
                     </div>
                 </div>
 
-                {{-- MEDIA DISPLAY SECTION (Audio-first or Video based on lesson type) --}}
+                {{-- MEDIA DISPLAY SECTION --}}
                 @php
                     $hasVideo = !empty($lesson->video_path) || !empty($lesson->video_url);
                     $hasAudio = !empty($lesson->audio_path);
-                    $isAudioFirst = $hasAudio && (!$hasVideo || str_contains(strtolower($course->slug), 'rio-negro') || str_contains(strtolower($course->category), 'audio'));
                 @endphp
 
-                {{-- Case 1: Audio Primary Player (for Audio Courses / Lessons) --}}
-                @if($isAudioFirst)
+                {{-- 1. Video Player (renders whenever lesson has a video uploaded or linked) --}}
+                @if($hasVideo)
+                    <div style="background: #020617; border-radius: 12px; overflow: hidden; position: relative; aspect-ratio: 16/9; margin-bottom: 2rem; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5); border: 1px solid #1e293b;">
+                        <video id="lesson-video" controls style="width: 100%; height: 100%; object-fit: cover;" poster="/frontend/assets/video-poster.jpg" preload="metadata">
+                            @if($lesson->video_path)
+                                <source src="{{ route('media.stream', ['courseSlug' => $course->slug, 'lessonSlug' => $lesson->slug, 'type' => 'video']) }}" type="video/mp4">
+                            @elseif($lesson->video_url)
+                                <source src="{{ $lesson->video_url }}" type="video/mp4">
+                            @endif
+                            Ihr Browser unterstützt das Video-Tag leider nicht.
+                        </video>
+                    </div>
+                @endif
+
+                {{-- 2. Audio Player (renders whenever lesson has an audio track or when no video is present) --}}
+                @if($hasAudio || !$hasVideo)
                     <div style="background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%); border-radius: 12px; padding: 2rem; border: 1px solid #334155; margin-bottom: 2rem; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5); position: relative; overflow: hidden;">
                         {{-- Audio Badge & Track Meta --}}
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 1rem;">
@@ -158,36 +172,6 @@
                             </div>
                         </div>
                     </div>
-
-                {{-- Case 2: Video Player (for Video Lessons) --}}
-                @elseif($hasVideo)
-                    <div style="background: #020617; border-radius: 8px; overflow: hidden; position: relative; aspect-ratio: 16/9; margin-bottom: 2rem; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5); border: 1px solid #1e293b;">
-                        <video id="lesson-video" controls style="width: 100%; height: 100%; object-fit: cover;" poster="/frontend/assets/video-poster.jpg" preload="metadata">
-                            @if($lesson->video_path)
-                                <source src="{{ route('media.stream', ['courseSlug' => $course->slug, 'lessonSlug' => $lesson->slug, 'type' => 'video']) }}" type="video/mp4">
-                            @elseif($lesson->video_url)
-                                <source src="{{ $lesson->video_url }}" type="video/mp4">
-                            @endif
-                            Ihr Browser unterstützt das Video-Tag leider nicht.
-                        </video>
-                    </div>
-
-                    {{-- Secondary Audio Player (if video lesson also has audio meditation) --}}
-                    @if($hasAudio)
-                        <div style="background: #0f172a; border-radius: 8px; padding: 1.25rem; border: 1px solid #334155; margin-bottom: 2rem;">
-                            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
-                                <span style="font-size: 1.75rem;">🎧</span>
-                                <div>
-                                    <strong style="color: #f8fafc; display: block; font-size: 0.95rem;">Begleitende Audio-Reflexionsübung</strong>
-                                    <span style="color: #94a3b8; font-size: 0.8rem;">Geführte Audio-Sequenz zur Lektion</span>
-                                </div>
-                            </div>
-                            <audio id="lesson-audio" controls style="width: 100%; border-radius: 4px;" preload="metadata">
-                                <source src="{{ route('media.stream', ['courseSlug' => $course->slug, 'lessonSlug' => $lesson->slug, 'type' => 'audio']) }}" type="audio/mpeg">
-                                Ihr Browser unterstützt das Audio-Element nicht.
-                            </audio>
-                        </div>
-                    @endif
                 @endif
 
                 {{-- Lesson Completion & Action Bar --}}
@@ -218,7 +202,7 @@
                 {{-- Lesson Content & Reading Material --}}
                 <div style="color: #cbd5e1; font-size: 1.05rem; line-height: 1.75; margin-bottom: 2.5rem; background: #0f172a; padding: 1.5rem; border-radius: 8px; border: 1px solid #1e293b;" class="lesson-rich-text">
                     <h3 style="color: #f8fafc; font-size: 1.15rem; margin-top: 0; margin-bottom: 0.75rem; border-bottom: 1px solid #1e293b; padding-bottom: 0.5rem;">
-                        Lektionsinhalte & Übungsleitfaden
+                        Lektionsinhalte &amp; Übungsleitfaden
                     </h3>
                     @if($lesson->content_html)
                         {!! $lesson->content_html !!}
@@ -227,7 +211,7 @@
                     @endif
                 </div>
 
-                {{-- IN-PAGE EMBEDDED PDF WORKBOOK VIEWER (Requirement 3: PDF Embedded in Portal) --}}
+                {{-- IN-PAGE EMBEDDED PDF WORKBOOK VIEWER (Requirement 3: PDF Strictly Embedded In-Portal Without Downloads) --}}
                 @if($lesson->pdf_attachment_name || $lesson->pdf_attachment_path)
                     <div style="background: #0f172a; border-radius: 10px; border: 1px solid #334155; overflow: hidden; margin-top: 2rem;">
                         {{-- PDF Viewer Header Bar --}}
@@ -239,22 +223,19 @@
                                         {{ $lesson->pdf_attachment_name ?: 'Begleitendes Arbeitsbuch (PDF)' }}
                                     </strong>
                                     <span style="color: #94a3b8; font-size: 0.78rem;">
-                                        Eingebettetes Dokument mit persönlichem Wasserzeichen (Kopierschutz)
+                                        Direkt eingebundenes Arbeitsmaterial mit persönlichem Wasserzeichen
                                     </span>
                                 </div>
                             </div>
                             <div style="display: flex; align-items: center; gap: 0.6rem;">
-                                <button type="button" onclick="togglePdfFullscreen()" style="background: #334155; color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.4); padding: 0.4rem 0.8rem; border-radius: 4px; font-size: 0.8rem; font-weight: 700; cursor: pointer;">
-                                    ⛶ Vollbild
+                                <button type="button" onclick="togglePdfFullscreen()" style="background: #334155; color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.4); padding: 0.4rem 0.85rem; border-radius: 4px; font-size: 0.82rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 0.35rem;">
+                                    <span>⛶</span> Vollbild-Ansicht
                                 </button>
-                                <a href="{{ route('media.stream', ['courseSlug' => $course->slug, 'lessonSlug' => $lesson->slug, 'type' => 'pdf']) }}" target="_blank" style="background: transparent; color: #94a3b8; border: 1px solid #475569; padding: 0.4rem 0.8rem; border-radius: 4px; font-size: 0.8rem; text-decoration: none;">
-                                    Separates Fenster ↗
-                                </a>
                             </div>
                         </div>
 
-                        {{-- Embedded PDF Viewer Iframe --}}
-                        <div id="pdf-viewer-wrapper" style="position: relative; width: 100%; height: 720px; background: #0b1120;">
+                        {{-- Embedded PDF Viewer Iframe (No toolbar, in-portal viewing only) --}}
+                        <div id="pdf-viewer-wrapper" style="position: relative; width: 100%; height: 750px; background: #0b1120;">
                             <iframe 
                                 id="embedded-pdf-frame"
                                 src="{{ route('media.stream', ['courseSlug' => $course->slug, 'lessonSlug' => $lesson->slug, 'type' => 'pdf']) }}#toolbar=0&navpanes=0" 
@@ -265,9 +246,9 @@
                         </div>
 
                         {{-- PDF Viewer Footer Note --}}
-                        <div style="padding: 0.65rem 1.25rem; background: #131d31; border-top: 1px solid #1e293b; display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; color: #64748b;">
-                            <span>🔒 Technischer Kopierschutz aktiv · Direkt im Kursportal eingebettet</span>
-                            <span>Lizenz: {{ Auth::user()->first_name ?: Auth::user()->name }}</span>
+                        <div style="padding: 0.65rem 1.25rem; background: #131d31; border-top: 1px solid #1e293b; display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; color: #64748b; flex-wrap: wrap; gap: 0.5rem;">
+                            <span>🔒 Urheberrechtlich geschützt · Nur zur persönlichen Bearbeitung im Kursportal</span>
+                            <span>Lizenznehmer: {{ Auth::user()->first_name ?: Auth::user()->name }} ({{ Auth::user()->invoice_number ?: 'RN-7X4K' }})</span>
                         </div>
                     </div>
                 @endif
@@ -301,11 +282,12 @@
                                                 <span style="color: {{ $isItemActive ? '#f8fafc' : ($isItemCompleted ? '#cbd5e1' : '#94a3b8') }}; font-size: 0.88rem; font-weight: {{ $isItemActive ? '700' : 'normal' }}; display: block; overflow: hidden; text-overflow: ellipsis;">
                                                     {{ $item->lesson_number }}. {{ $item->title }}
                                                 </span>
-                                                <div style="display: flex; gap: 0.4rem; font-size: 0.7rem; color: #64748b; margin-top: 0.15rem;">
+                                                <div style="display: flex; gap: 0.4rem; font-size: 0.7rem; color: #64748b; margin-top: 0.15rem; flex-wrap: wrap;">
+                                                    @if($item->video_path || $item->video_url)
+                                                        <span style="color: #38bdf8;">🎬 Video</span>
+                                                    @endif
                                                     @if($item->audio_path)
                                                         <span style="color: #4ade80;">🎧 Audio</span>
-                                                    @elseif($item->video_path || $item->video_url)
-                                                        <span style="color: #38bdf8;">🎬 Video</span>
                                                     @endif
                                                     @if($item->pdf_attachment_name || $item->pdf_attachment_path)
                                                         <span style="color: #c084fc;">📄 PDF</span>
