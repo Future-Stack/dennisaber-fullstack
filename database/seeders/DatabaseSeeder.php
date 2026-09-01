@@ -228,11 +228,11 @@ class DatabaseSeeder extends Seeder
                 'slug' => 'einfuehrung-und-orientierung',
                 'lesson_number' => 1,
                 'duration_minutes' => 18,
-                'video_url' => 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-                'video_path' => 'videos/dnl-kompakt-lektion-1.mp4',
+                'video_url' => null,
+                'video_path' => null,
                 'pdf_attachment_name' => '01_Uebersicht_und_Lernleitfaden.pdf',
-                'pdf_attachment_path' => 'materials/01_Uebersicht_und_Lernleitfaden.pdf',
-                'audio_path' => null,
+                'pdf_attachment_path' => 'materials/DjtP2gYwdR7gFgq6mB3z3LpeCymMZms5WmWxli5h.pdf',
+                'audio_path' => 'audio/SMdGRmsH0Z5eaFJnHcOo3VWWz9FLpT1drtPy8Ccc.wav',
                 'is_preview' => true,
                 'order' => 1,
                 'content_html' => '<h3>Willkommen zum 5-Tage-Kompaktlehrgang</h3>
@@ -244,8 +244,8 @@ class DatabaseSeeder extends Seeder
     <li>Einrichtung Ihres persönlichen Studienarbeitsplatzes</li>
     <li>Nutzung der begleitenden Arbeitsblätter und Reflexionsbögen</li>
 </ul>
-<div class="note-box">
-    <strong>Wichtiger Hinweis:</strong> Bitte laden Sie vor dem Start das begleitende Arbeitsblatt herunter und legen Sie es für die praktischen Übungen bereit.
+<div class="note-box" style="background: rgba(56, 189, 248, 0.1); border-left: 4px solid #38bdf8; padding: 1rem; border-radius: 4px; margin: 1rem 0;">
+    <strong>Wichtiger Hinweis:</strong> Bitte nutzen Sie das direkt unten eingebettete Arbeitsbuch für Ihre praktischen Notizen und Reflexionsübungen.
 </div>',
             ],
             [
@@ -255,11 +255,11 @@ class DatabaseSeeder extends Seeder
                 'slug' => 'wahrnehmung-und-rapport',
                 'lesson_number' => 2,
                 'duration_minutes' => 25,
-                'video_url' => 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
-                'video_path' => 'videos/dnl-kompakt-lektion-2.mp4',
+                'video_url' => null,
+                'video_path' => null,
                 'pdf_attachment_name' => '02_Arbeitsblatt_Rapport_und_Wahrnehmung.pdf',
-                'pdf_attachment_path' => 'materials/02_Arbeitsblatt_Rapport_und_Wahrnehmung.pdf',
-                'audio_path' => null,
+                'pdf_attachment_path' => 'materials/K88JPYZ8688tNOe3K7n6O0tzk5jN8FM0RutZaZd5.pdf',
+                'audio_path' => 'audio/w5RTq6i8FMgDxZC9UAeEUsgnk1IS2hl0L8aodp2T.wav',
                 'is_preview' => false,
                 'order' => 2,
                 'content_html' => '<h3>Wahrnehmung und Rapport in der Praxis</h3>
@@ -278,11 +278,11 @@ class DatabaseSeeder extends Seeder
                 'slug' => 'stressregulation-und-ressourcen',
                 'lesson_number' => 3,
                 'duration_minutes' => 22,
-                'video_url' => 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
-                'video_path' => 'videos/dnl-kompakt-lektion-3.mp4',
+                'video_url' => null,
+                'video_path' => null,
                 'pdf_attachment_name' => '03_Uebungsblatt_Ressourcen_Anker.pdf',
-                'pdf_attachment_path' => 'materials/03_Uebungsblatt_Ressourcen_Anker.pdf',
-                'audio_path' => 'audio/ressourcen-meditation.mp3',
+                'pdf_attachment_path' => 'materials/DjtP2gYwdR7gFgq6mB3z3LpeCymMZms5WmWxli5h.pdf',
+                'audio_path' => 'audio/6rdxBBAcSuOaEy2NuoqQYOqxIBcBLTJha5NsxDnY.wav',
                 'is_preview' => false,
                 'order' => 3,
                 'content_html' => '<h3>Stressregulation & mentale Ressourcen</h3>
@@ -301,11 +301,11 @@ class DatabaseSeeder extends Seeder
                 'slug' => 'fragetechniken-und-reframing',
                 'lesson_number' => 4,
                 'duration_minutes' => 28,
-                'video_url' => 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
-                'video_path' => 'videos/dnl-kompakt-lektion-4.mp4',
+                'video_url' => null,
+                'video_path' => null,
                 'pdf_attachment_name' => '04_Checkliste_Systemische_Fragen.pdf',
-                'pdf_attachment_path' => 'materials/04_Checkliste_Systemische_Fragen.pdf',
-                'audio_path' => null,
+                'pdf_attachment_path' => 'materials/K88JPYZ8688tNOe3K7n6O0tzk5jN8FM0RutZaZd5.pdf',
+                'audio_path' => 'audio/SMdGRmsH0Z5eaFJnHcOo3VWWz9FLpT1drtPy8Ccc.wav',
                 'is_preview' => false,
                 'order' => 4,
                 'content_html' => '<h3>Systemische Fragetechniken & Umdeutung</h3>
@@ -324,11 +324,11 @@ class DatabaseSeeder extends Seeder
                 'slug' => 'praxistransfer-und-abschluss',
                 'lesson_number' => 5,
                 'duration_minutes' => 20,
-                'video_url' => 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4',
-                'video_path' => 'videos/dnl-kompakt-lektion-5.mp4',
+                'video_url' => null,
+                'video_path' => null,
                 'pdf_attachment_name' => '05_Leitfaden_Praxistransfer.pdf',
-                'pdf_attachment_path' => 'materials/05_Leitfaden_Praxistransfer.pdf',
-                'audio_path' => null,
+                'pdf_attachment_path' => 'materials/DjtP2gYwdR7gFgq6mB3z3LpeCymMZms5WmWxli5h.pdf',
+                'audio_path' => 'audio/w5RTq6i8FMgDxZC9UAeEUsgnk1IS2hl0L8aodp2T.wav',
                 'is_preview' => false,
                 'order' => 5,
                 'content_html' => '<h3>Abschluss und Umsetzung in den Berufsalltag</h3>
