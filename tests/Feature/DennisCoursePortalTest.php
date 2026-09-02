@@ -467,9 +467,10 @@ class DennisCoursePortalTest extends TestCase
             'lessonSlug' => $videoWithAudioLesson->slug,
         ]));
         $response->assertStatus(200);
-        $response->assertSee('Videolektion');
-        $response->assertSee('id="lesson-video"', false);
+        $response->assertSee('Audiolektion');
+        $response->assertSee('Video inklusive');
         $response->assertSee('id="audio-play-btn"', false);
+        $response->assertSee('id="lesson-video"', false);
 
         // 3. Create & Test Pure PDF Lesson
         $pdfLesson = Lesson::create([
