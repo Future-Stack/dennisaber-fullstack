@@ -154,6 +154,82 @@ class PdfWatermarkService
         return $pdf->Output('S');
     }
 
+    /**
+     * Generate clean branded Lesson Workbook PDF without stamped FPDI watermarks (for direct clean in-portal viewing).
+     */
+    public function generateCleanPdf(Course $course, Lesson $lesson): string
+    {
+        $pdf = new \setasign\Fpdi\Fpdi();
+        $pdf->SetAutoPageBreak(false);
+        $pdf->SetCompression(true);
+
+        $pdf->AddPage('P', [210, 297]); // A4
+        $width = 210;
+        $height = 297;
+
+        // Background decorative header
+        $pdf->SetFillColor(15, 23, 42); // #0f172a
+        $pdf->Rect(0, 0, 210, 45, 'F');
+
+        // Course Title in Header
+        $pdf->SetTextColor(248, 250, 252);
+        $pdf->SetFont('Helvetica', 'B', 14);
+        $pdf->SetXY(15, 12);
+        $pdf->Cell(180, 8, @iconv('UTF-8', 'windows-1252//TRANSLIT', $course->title), 0, 1, 'L');
+
+        // Lesson Title in Header
+        $pdf->SetTextColor(56, 189, 248); // #38bdf8
+        $pdf->SetFont('Helvetica', '', 10);
+        $pdf->SetXY(15, 22);
+        $pdf->Cell(180, 6, @iconv('UTF-8', 'windows-1252//TRANSLIT', ($lesson->chapter_name ? $lesson->chapter_name . ' - ' : '') . $lesson->title), 0, 1, 'L');
+
+        // Body Content
+        $pdf->SetTextColor(30, 41, 59);
+        $pdf->SetFont('Helvetica', 'B', 16);
+        $pdf->SetXY(15, 55);
+        $pdf->Cell(180, 10, @iconv('UTF-8', 'windows-1252//TRANSLIT', 'Begleitendes Arbeitsblatt & Lernleitfaden'), 0, 1, 'L');
+
+        $pdf->SetFont('Helvetica', '', 11);
+        $pdf->SetTextColor(51, 65, 85);
+        $pdf->SetXY(15, 70);
+        
+        $bodyText = "Dieses Arbeitsmaterial gehoert zur Lektion: " . $lesson->title . ".\n\n" .
+            "1. Kernfragen zur Selbstreflexion:\n" .
+            "   - Welche konkreten Erkenntnisse aus dieser Lektion lassen sich heute umsetzen?\n" .
+            "   - Welche internen und externen Ressourcen stehen dafuer bereit?\n" .
+            "   - Welche ersten Schritte sind in den naechsten 48 Stunden erforderlich?\n\n" .
+            "2. Notizen und Aktionspunkte:\n" .
+            "   ..........................................................................................................................\n\n" .
+            "   ..........................................................................................................................\n\n" .
+            "   ..........................................................................................................................\n\n" .
+            "   ..........................................................................................................................\n\n" .
+            "3. Verbindliche Umsetzungsvorgaben:\n" .
+            "   - Dokumentation des persoenlichen Transferplans.\n" .
+            "   - Regelmaessige Reflexion der Fortschritte im Kursportal.";
+
+        $pdf->MultiCell(180, 7, @iconv('UTF-8', 'windows-1252//TRANSLIT', $bodyText));
+
+        // License Information Box
+        $pdf->SetFillColor(241, 245, 249);
+        $pdf->SetDrawColor(203, 213, 225);
+        $pdf->Rect(15, 230, 180, 40, 'DF');
+
+        $pdf->SetFont('Helvetica', 'B', 9);
+        $pdf->SetTextColor(15, 23, 42);
+        $pdf->SetXY(20, 234);
+        $pdf->Cell(170, 5, @iconv('UTF-8', 'windows-1252//TRANSLIT', 'DENNIS BESSELER - KURSMATERIAL'), 0, 1);
+
+        $pdf->SetFont('Helvetica', '', 8);
+        $pdf->SetTextColor(71, 85, 105);
+        $pdf->SetXY(20, 241);
+        $licenseInfo = "Urheberrechtlich geschuetztes Kursmaterial von Dennis Besseler.\n" .
+            "Ausschliesslich zur persoenlichen Bearbeitung innerhalb des geschuetzten Kursportals bestimmt.\n" .
+            "Vervielfaeltigung, Weitergabe oder Veroeffentlichung sind untersagt.";
+        $pdf->MultiCell(170, 4.5, @iconv('UTF-8', 'windows-1252//TRANSLIT', $licenseInfo));
+
+        return $pdf->Output('S');
+    }
+
     private function applyWatermarkLayer(WatermarkPdfEngine $pdf, string $watermarkText, string $customerName, string $invoiceNumber, string $courseTitle, string $lessonTitle, float $width, float $height): void
     {
         // 1. Diagonal Watermark across document (single angled watermark stripe)

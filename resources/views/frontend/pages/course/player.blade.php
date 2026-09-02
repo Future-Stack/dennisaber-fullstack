@@ -13,7 +13,7 @@
             @endif
         </div>
 
-        {{-- Course Top Navigation (Aligned with Portal Reference) --}}
+        {{-- Course Top Navigation --}}
         <header class="portal-header course-header" style="border-bottom: 1px solid #1e293b; background: #0f172a; position: sticky; top: 0; z-index: 40; padding: 0.85rem 1.5rem;">
             <div style="max-width: 1400px; width: 100%; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
                 <a href="{{ route('member.dashboard') }}" class="portal-brand" style="text-decoration: none;">
@@ -63,11 +63,30 @@
             </div>
         </div>
 
+        {{-- Media Type Detection & Preparation --}}
+        @php
+            $hasVideo = !empty($lesson->video_path) || !empty($lesson->video_url);
+            $hasAudio = !empty($lesson->audio_path);
+            $hasPdf = !empty($lesson->pdf_attachment_name) || !empty($lesson->pdf_attachment_path);
+
+            if ($hasVideo) {
+                $primaryType = 'video';
+            } elseif ($hasAudio) {
+                $primaryType = 'audio';
+            } elseif ($hasPdf) {
+                $primaryType = 'pdf';
+            } else {
+                $primaryType = 'text';
+            }
+
+            $userIdentString = 'PERSÖNLICHE LIZENZ: ' . (Auth::user()->first_name ?: Auth::user()->name) . ' (' . (Auth::user()->username ?: Auth::user()->email) . ') · RECHNUNG: ' . (Auth::user()->invoice_number ?: 'RN-7X4K-2026') . ' · KEINE WEITERGABE';
+        @endphp
+
         {{-- Main Player & Curriculum Layout --}}
         <div style="max-width: 1400px; width: 100%; margin: 1.5rem auto; padding: 0 1.5rem; flex: 1; display: grid; grid-template-columns: 1fr 360px; gap: 2rem; align-items: start;">
             
-            {{-- Left Column: Active Lesson Media, Embedded Content, and Controls --}}
-            <div style="background: #131d31; border-radius: 12px; border: 1px solid #1e293b; overflow: hidden; padding: 1.75rem;">
+            {{-- Left Column: Active Lesson Content, Media Player & Dynamic Overlay --}}
+            <div style="background: #131d31; border-radius: 12px; border: 1px solid #1e293b; overflow: hidden; padding: 1.75rem; position: relative;">
                 
                 {{-- Module & Lesson Title Header --}}
                 <div style="margin-bottom: 1.5rem;">
@@ -80,34 +99,55 @@
                                 {{ $lesson->title }}
                             </h1>
                         </div>
-                        <div style="display: inline-flex; gap: 0.4rem; flex-wrap: wrap;">
-                            @if($lesson->video_path || $lesson->video_url)
-                                <span style="background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 700;">🎬 Video</span>
+
+                        {{-- Systematic Badges by Content Type --}}
+                        <div style="display: inline-flex; gap: 0.4rem; flex-wrap: wrap; align-items: center;">
+                            @if($primaryType === 'video')
+                                <span style="background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); padding: 0.25rem 0.65rem; border-radius: 6px; font-size: 0.78rem; font-weight: 700; display: inline-flex; align-items: center; gap: 0.35rem;">
+                                    🎬 Videolektion
+                                </span>
+                            @elseif($primaryType === 'audio')
+                                <span style="background: rgba(74, 222, 128, 0.15); color: #4ade80; border: 1px solid rgba(74, 222, 128, 0.3); padding: 0.25rem 0.65rem; border-radius: 6px; font-size: 0.78rem; font-weight: 700; display: inline-flex; align-items: center; gap: 0.35rem;">
+                                    🎧 Audiolektion
+                                </span>
+                            @elseif($primaryType === 'pdf')
+                                <span style="background: rgba(192, 132, 252, 0.15); color: #c084fc; border: 1px solid rgba(192, 132, 252, 0.3); padding: 0.25rem 0.65rem; border-radius: 6px; font-size: 0.78rem; font-weight: 700; display: inline-flex; align-items: center; gap: 0.35rem;">
+                                    📄 PDF-Arbeitsbuch
+                                </span>
+                            @else
+                                <span style="background: rgba(148, 163, 184, 0.15); color: #94a3b8; border: 1px solid rgba(148, 163, 184, 0.3); padding: 0.25rem 0.65rem; border-radius: 6px; font-size: 0.78rem; font-weight: 700; display: inline-flex; align-items: center; gap: 0.35rem;">
+                                    📝 Textlektion
+                                </span>
                             @endif
-                            @if($lesson->audio_path)
-                                <span style="background: rgba(74, 222, 128, 0.15); color: #4ade80; border: 1px solid rgba(74, 222, 128, 0.3); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 700;">🎧 Audio-Lektion</span>
-                            @endif
-                            @if($lesson->pdf_attachment_name || $lesson->pdf_attachment_path)
-                                <span style="background: rgba(192, 132, 252, 0.15); color: #c084fc; border: 1px solid rgba(192, 132, 252, 0.3); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 700;">📄 Eingebettetes Arbeitsbuch</span>
+
+                            @if($primaryType !== 'pdf' && $hasPdf)
+                                <span style="background: rgba(192, 132, 252, 0.12); color: #c084fc; border: 1px solid rgba(192, 132, 252, 0.25); padding: 0.25rem 0.65rem; border-radius: 6px; font-size: 0.78rem; font-weight: 600; display: inline-flex; align-items: center; gap: 0.35rem;">
+                                    📄 Arbeitsmaterial inkl.
+                                </span>
                             @endif
                         </div>
                     </div>
 
                     <div style="display: flex; gap: 1rem; color: #94a3b8; font-size: 0.85rem; flex-wrap: wrap; align-items: center; margin-top: 0.5rem;">
                         <span id="lesson-duration-display" style="color: #f8fafc; font-weight: 600;">⏱ Dauer: {{ $lesson->duration_minutes }} Minuten</span>
-                        <span>🔒 Geschütztes Kursmedium (Kopierschutz aktiv)</span>
+                        <span style="color: #64748b;">🔒 Dynamischer Kopierschutz aktiv</span>
                     </div>
                 </div>
 
-                {{-- MEDIA DISPLAY SECTION --}}
-                @php
-                    $hasVideo = !empty($lesson->video_path) || !empty($lesson->video_url);
-                    $hasAudio = !empty($lesson->audio_path);
-                @endphp
-
-                {{-- 1. Video Player (renders whenever lesson has a video uploaded or linked) --}}
-                @if($hasVideo)
+                {{-- ========================================================= --}}
+                {{-- 1. VIDEO LESSON DISPLAY                                   --}}
+                {{-- ========================================================= --}}
+                @if($primaryType === 'video')
                     <div style="background: #020617; border-radius: 12px; overflow: hidden; position: relative; aspect-ratio: 16/9; margin-bottom: 2rem; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5); border: 1px solid #1e293b;">
+                        {{-- Single Diagonal Watermark Overlay Strip --}}
+                        <div class="watermark-overlay-layer" aria-hidden="true" style="position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 10; border-radius: 12px;">
+                            <div style="position: absolute; top: 50%; left: 50%; width: 220%; transform: translate(-50%, -50%) rotate(-24deg); background: rgba(255, 255, 255, 0.035); border-top: 1px solid rgba(255, 255, 255, 0.07); border-bottom: 1px solid rgba(255, 255, 255, 0.07); padding: 6px 0; display: flex; justify-content: center; user-select: none;">
+                                <span style="color: rgba(255, 255, 255, 0.16); font-size: 0.76rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; white-space: nowrap;">
+                                    {{ $userIdentString }} &nbsp;&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;&nbsp; {{ $userIdentString }}
+                                </span>
+                            </div>
+                        </div>
+
                         <video id="lesson-video" controls style="width: 100%; height: 100%; object-fit: cover;" poster="/frontend/assets/video-poster.jpg" preload="metadata">
                             @if($lesson->video_path)
                                 <source src="{{ route('media.stream', ['courseSlug' => $course->slug, 'lessonSlug' => $lesson->slug, 'type' => 'video']) }}" type="video/mp4">
@@ -117,64 +157,136 @@
                             Ihr Browser unterstützt das Video-Tag leider nicht.
                         </video>
                     </div>
-                @endif
 
-                {{-- 2. Audio Player (renders whenever lesson has an audio track or when no video is present) --}}
-                @if($hasAudio || !$hasVideo)
-                    <div style="background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%); border-radius: 12px; padding: 2rem; border: 1px solid #334155; margin-bottom: 2rem; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5); position: relative; overflow: hidden;">
-                        {{-- Audio Badge & Track Meta --}}
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 1rem;">
-                            <div style="display: flex; align-items: center; gap: 0.75rem;">
-                                <span style="font-size: 2.2rem; background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 50%; width: 52px; height: 52px; display: flex; align-items: center; justify-content: center;">🎧</span>
+                {{-- ========================================================= --}}
+                {{-- 2. AUDIO LESSON DISPLAY (Compact Pure Audio Player)       --}}
+                {{-- ========================================================= --}}
+                @elseif($primaryType === 'audio')
+                    <div style="background: linear-gradient(135deg, #0f172a 0%, #172554 100%); border-radius: 12px; padding: 1.25rem 1.5rem; border: 1px solid #334155; margin-bottom: 2rem; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4); position: relative; overflow: hidden;">
+                        {{-- Single Diagonal Watermark Overlay Strip --}}
+                        <div class="watermark-overlay-layer" aria-hidden="true" style="position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 10; border-radius: 12px;">
+                            <div style="position: absolute; top: 50%; left: 50%; width: 220%; transform: translate(-50%, -50%) rotate(-24deg); background: rgba(255, 255, 255, 0.025); border-top: 1px solid rgba(255, 255, 255, 0.05); border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding: 5px 0; display: flex; justify-content: center; user-select: none;">
+                                <span style="color: rgba(255, 255, 255, 0.13); font-size: 0.74rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; white-space: nowrap;">
+                                    {{ $userIdentString }} &nbsp;&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;&nbsp; {{ $userIdentString }}
+                                </span>
+                            </div>
+                        </div>
+
+                        {{-- Compact Audio Top: Track Meta & Format Status --}}
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.9rem; flex-wrap: wrap; gap: 0.5rem; position: relative; z-index: 2;">
+                            <div style="display: flex; align-items: center; gap: 0.6rem;">
+                                <span style="font-size: 1.25rem; color: #38bdf8;">🎧</span>
                                 <div>
-                                    <span style="font-size: 0.75rem; color: #38bdf8; text-transform: uppercase; font-weight: 800; letter-spacing: 0.08em; display: block;">
+                                    <span style="font-size: 0.72rem; color: #38bdf8; text-transform: uppercase; font-weight: 800; letter-spacing: 0.08em; display: block;">
                                         Original-Audioaufzeichnung · Dennis Besseler
                                     </span>
-                                    <strong style="color: #f8fafc; font-size: 1.1rem; display: block;">
+                                    <strong style="color: #f8fafc; font-size: 0.98rem; display: block;">
                                         {{ $lesson->title }}
                                     </strong>
                                 </div>
                             </div>
-                            <span style="background: rgba(74, 222, 128, 0.15); color: #4ade80; border: 1px solid rgba(74, 222, 128, 0.3); padding: 0.25rem 0.6rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700;">
-                                ● MP3 Stream bereit
+                            <span style="background: rgba(74, 222, 128, 0.15); color: #4ade80; border: 1px solid rgba(74, 222, 128, 0.3); padding: 0.2rem 0.55rem; border-radius: 20px; font-size: 0.72rem; font-weight: 700;">
+                                ● Audio bereit
                             </span>
                         </div>
 
-                        {{-- Simulated Waveform Visualizer --}}
-                        <div style="display: flex; align-items: center; gap: 3px; height: 45px; margin-bottom: 1.5rem; padding: 0 0.5rem; justify-content: space-between;">
-                            @for ($i = 0; $i < 36; $i++)
-                                @php $barHeight = rand(20, 95); @endphp
-                                <div style="flex: 1; height: {{ $barHeight }}%; background: {{ $i < 12 ? '#38bdf8' : '#334155' }}; border-radius: 2px; transition: height 0.2s, background 0.2s;" class="audio-waveform-bar" data-index="{{ $i }}"></div>
-                            @endfor
+                        {{-- Compact Audio Controls Bar --}}
+                        <div style="display: flex; align-items: center; gap: 1rem; background: #020617; padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid #1e293b; position: relative; z-index: 2; flex-wrap: wrap;">
+                            {{-- Play / Pause Button --}}
+                            <button type="button" id="audio-play-btn" onclick="toggleAudioPlay()" style="width: 42px; height: 42px; border-radius: 50%; background: #38bdf8; color: #0b1120; border: none; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; cursor: pointer; font-weight: bold; flex-shrink: 0; box-shadow: 0 0 15px rgba(56, 189, 248, 0.4); transition: transform 0.15s, background 0.15s;">
+                                <span id="audio-play-icon">▶</span>
+                            </button>
+
+                            {{-- Time & Interactive Scrubber --}}
+                            <div style="flex: 1; min-width: 180px; display: flex; flex-direction: column; gap: 0.3rem;">
+                                <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: #94a3b8; font-family: monospace;">
+                                    <span id="audio-current-time">00:00</span>
+                                    <span id="audio-total-time">{{ sprintf('%02d:00', $lesson->duration_minutes) }}</span>
+                                </div>
+                                <input type="range" id="audio-scrubber" min="0" max="100" value="0" step="0.1" oninput="onScrubberInput(this.value)" onchange="onScrubberChange(this.value)" style="width: 100%; cursor: pointer; accent-color: #38bdf8; height: 5px;">
+                            </div>
+
+                            {{-- Skip ±10s Buttons --}}
+                            <div style="display: flex; align-items: center; gap: 0.35rem;">
+                                <button type="button" onclick="skipAudio(-10)" title="10 Sekunden zurück" style="background: #1e293b; color: #cbd5e1; border: 1px solid #334155; padding: 0.35rem 0.6rem; border-radius: 4px; cursor: pointer; font-size: 0.75rem; font-weight: 600;">
+                                    ↺ -10s
+                                </button>
+                                <button type="button" onclick="skipAudio(10)" title="10 Sekunden vor" style="background: #1e293b; color: #cbd5e1; border: 1px solid #334155; padding: 0.35rem 0.6rem; border-radius: 4px; cursor: pointer; font-size: 0.75rem; font-weight: 600;">
+                                    ↻ +10s
+                                </button>
+                            </div>
+
+                            {{-- Playback Speed Switcher --}}
+                            <div style="display: flex; align-items: center; gap: 0.25rem;">
+                                <button type="button" onclick="setAudioSpeed(1.0, this)" class="speed-btn active" style="background: #38bdf8; color: #0f172a; border: none; padding: 0.3rem 0.5rem; border-radius: 4px; font-size: 0.72rem; font-weight: bold; cursor: pointer;">1.0x</button>
+                                <button type="button" onclick="setAudioSpeed(1.25, this)" class="speed-btn" style="background: #1e293b; color: #cbd5e1; border: 1px solid #334155; padding: 0.3rem 0.5rem; border-radius: 4px; font-size: 0.72rem; font-weight: 600; cursor: pointer;">1.25x</button>
+                                <button type="button" onclick="setAudioSpeed(1.5, this)" class="speed-btn" style="background: #1e293b; color: #cbd5e1; border: 1px solid #334155; padding: 0.3rem 0.5rem; border-radius: 4px; font-size: 0.72rem; font-weight: 600; cursor: pointer;">1.5x</button>
+                            </div>
                         </div>
 
-                        {{-- HTML5 Audio Element with Protected Stream URL --}}
-                        <audio id="lesson-audio" controls style="width: 100%; border-radius: 8px; outline: none; background: #020617;" preload="metadata">
+                        {{-- Hidden Native HTML5 Audio Element --}}
+                        <audio id="lesson-audio" preload="metadata" style="display: none;">
                             <source src="{{ route('media.stream', ['courseSlug' => $course->slug, 'lessonSlug' => $lesson->slug, 'type' => 'audio']) }}" type="audio/mpeg">
-                            Ihr Browser unterstützt das Audio-Element leider nicht.
                         </audio>
+                    </div>
 
-                        {{-- Audio Player Quick Controls Bar --}}
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; flex-wrap: wrap; gap: 0.75rem; font-size: 0.85rem; color: #94a3b8;">
-                            <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                <button type="button" onclick="skipAudio(-10)" style="background: #1e293b; color: #cbd5e1; border: 1px solid #334155; padding: 0.35rem 0.65rem; border-radius: 4px; cursor: pointer; font-size: 0.8rem; font-weight: 600;">
-                                    ↺ 10s zurück
-                                </button>
-                                <button type="button" onclick="skipAudio(10)" style="background: #1e293b; color: #cbd5e1; border: 1px solid #334155; padding: 0.35rem 0.65rem; border-radius: 4px; cursor: pointer; font-size: 0.8rem; font-weight: 600;">
-                                    ↻ 10s vor
-                                </button>
+                {{-- ========================================================= --}}
+                {{-- 3. PURE PDF LESSON DISPLAY (Primary Embedded PDF Viewer)   --}}
+                {{-- ========================================================= --}}
+                @elseif($primaryType === 'pdf')
+                    <div style="background: #0f172a; border-radius: 10px; border: 1px solid #334155; overflow: hidden; margin-bottom: 2rem; position: relative;">
+                        {{-- PDF Viewer Header Bar --}}
+                        <div style="padding: 0.85rem 1.25rem; background: #1e293b; border-bottom: 1px solid #334155; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                            <div style="display: flex; align-items: center; gap: 0.65rem;">
+                                <span style="font-size: 1.4rem; color: #c084fc;">📄</span>
+                                <div>
+                                    <strong style="color: #f8fafc; font-size: 0.95rem; display: block;">
+                                        {{ $lesson->pdf_attachment_name ?: 'Lektionsdokument & Arbeitsbuch (PDF)' }}
+                                    </strong>
+                                    <span style="color: #94a3b8; font-size: 0.75rem;">
+                                        Direkt eingebundenes Arbeitsmaterial zur Lektion
+                                    </span>
+                                </div>
                             </div>
-                            <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                <span style="font-size: 0.78rem;">Geschwindigkeit:</span>
-                                <button type="button" onclick="setAudioSpeed(1.0, this)" class="speed-btn active" style="background: #38bdf8; color: #0f172a; border: none; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.78rem; font-weight: bold; cursor: pointer;">1.0x</button>
-                                <button type="button" onclick="setAudioSpeed(1.25, this)" class="speed-btn" style="background: #1e293b; color: #cbd5e1; border: 1px solid #334155; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.78rem; font-weight: 600; cursor: pointer;">1.25x</button>
-                                <button type="button" onclick="setAudioSpeed(1.5, this)" class="speed-btn" style="background: #1e293b; color: #cbd5e1; border: 1px solid #334155; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.78rem; font-weight: 600; cursor: pointer;">1.5x</button>
+                            <button type="button" onclick="togglePdfFullscreen('primary-pdf-wrapper')" style="background: #334155; color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.4); padding: 0.35rem 0.75rem; border-radius: 4px; font-size: 0.8rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 0.35rem;">
+                                <span>⛶</span> Vollbild-Ansicht
+                            </button>
+                        </div>
+
+                        {{-- Embedded PDF Viewer Iframe with Dynamic Watermark Overlay --}}
+                        <div id="primary-pdf-wrapper" style="position: relative; width: 100%; height: 750px; background: #0b1120;">
+                            {{-- Single Diagonal Watermark Overlay Strip --}}
+                            <div class="watermark-overlay-layer" aria-hidden="true" style="position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 10;">
+                                <div style="position: absolute; top: 50%; left: 50%; width: 220%; transform: translate(-50%, -50%) rotate(-24deg); background: rgba(255, 255, 255, 0.035); border-top: 1px solid rgba(255, 255, 255, 0.07); border-bottom: 1px solid rgba(255, 255, 255, 0.07); padding: 6px 0; display: flex; justify-content: center; user-select: none;">
+                                    <span style="color: rgba(255, 255, 255, 0.16); font-size: 0.76rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; white-space: nowrap;">
+                                        {{ $userIdentString }} &nbsp;&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;&nbsp; {{ $userIdentString }}
+                                    </span>
+                                </div>
                             </div>
+
+                            <iframe 
+                                src="{{ route('media.stream', ['courseSlug' => $course->slug, 'lessonSlug' => $lesson->slug, 'type' => 'pdf']) }}#toolbar=0&navpanes=0" 
+                                style="width: 100%; height: 100%; border: none;"
+                                title="{{ $lesson->pdf_attachment_name ?: 'PDF-Dokument' }}"
+                                loading="lazy">
+                            </iframe>
+                        </div>
+
+                        {{-- PDF Viewer Footer Note --}}
+                        <div style="padding: 0.65rem 1.25rem; background: #131d31; border-top: 1px solid #1e293b; display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; color: #64748b; flex-wrap: wrap; gap: 0.5rem;">
+                            <span>🔒 Urheberrechtlich geschützt · Nur zur persönlichen Bearbeitung im Kursportal</span>
+                            <span>Lizenznehmer: {{ Auth::user()->first_name ?: Auth::user()->name }} ({{ Auth::user()->invoice_number ?: 'RN-7X4K' }})</span>
                         </div>
                     </div>
+
+                {{-- ========================================================= --}}
+                {{-- 4. PURE TEXT LESSON (No unnecessary media player boxes)   --}}
+                {{-- ========================================================= --}}
+                @else
+                    {{-- Pure text lessons start directly with the formatted content --}}
                 @endif
 
-                {{-- Lesson Completion & Action Bar --}}
+                {{-- Lesson Completion & Navigation Action Bar --}}
                 <div style="background: #0f172a; padding: 1.15rem 1.35rem; border-radius: 8px; border: 1px solid #1e293b; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem;">
                     
                     {{-- Toggle Completed Button (AJAX) --}}
@@ -199,45 +311,64 @@
                     </div>
                 </div>
 
-                {{-- Lesson Content & Reading Material --}}
-                <div style="color: #cbd5e1; font-size: 1.05rem; line-height: 1.75; margin-bottom: 2.5rem; background: #0f172a; padding: 1.5rem; border-radius: 8px; border: 1px solid #1e293b;" class="lesson-rich-text">
-                    <h3 style="color: #f8fafc; font-size: 1.15rem; margin-top: 0; margin-bottom: 0.75rem; border-bottom: 1px solid #1e293b; padding-bottom: 0.5rem;">
+                {{-- Lesson Content & Reading Material (with dynamic watermark overlay) --}}
+                <div style="position: relative; color: #cbd5e1; font-size: 1.05rem; line-height: 1.75; margin-bottom: 2.5rem; background: #0f172a; padding: 1.5rem; border-radius: 8px; border: 1px solid #1e293b; overflow: hidden;" class="lesson-rich-text">
+                    {{-- Single Diagonal Watermark Overlay Strip for Text Area --}}
+                    <div class="watermark-overlay-layer" aria-hidden="true" style="position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 5; border-radius: 8px;">
+                        <div style="position: absolute; top: 50%; left: 50%; width: 220%; transform: translate(-50%, -50%) rotate(-24deg); background: rgba(255, 255, 255, 0.02); border-top: 1px solid rgba(255, 255, 255, 0.04); border-bottom: 1px solid rgba(255, 255, 255, 0.04); padding: 5px 0; display: flex; justify-content: center; user-select: none;">
+                            <span style="color: rgba(255, 255, 255, 0.1); font-size: 0.74rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; white-space: nowrap;">
+                                {{ $userIdentString }} &nbsp;&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;&nbsp; {{ $userIdentString }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <h3 style="color: #f8fafc; font-size: 1.15rem; margin-top: 0; margin-bottom: 0.75rem; border-bottom: 1px solid #1e293b; padding-bottom: 0.5rem; position: relative; z-index: 6;">
                         Lektionsinhalte &amp; Übungsleitfaden
                     </h3>
-                    @if($lesson->content_html)
-                        {!! $lesson->content_html !!}
-                    @else
-                        <p>Bearbeiten Sie die Lektion und führen Sie die begleitenden Reflexionsübungen durch.</p>
-                    @endif
+                    <div style="position: relative; z-index: 6;">
+                        @if($lesson->content_html)
+                            {!! $lesson->content_html !!}
+                        @else
+                            <p>Bearbeiten Sie die Lektion und führen Sie die begleitenden Reflexionsübungen durch.</p>
+                        @endif
+                    </div>
                 </div>
 
-                {{-- IN-PAGE EMBEDDED PDF WORKBOOK VIEWER (Requirement 3: PDF Strictly Embedded In-Portal Without Downloads) --}}
-                @if($lesson->pdf_attachment_name || $lesson->pdf_attachment_path)
-                    <div style="background: #0f172a; border-radius: 10px; border: 1px solid #334155; overflow: hidden; margin-top: 2rem;">
+                {{-- ========================================================================= --}}
+                {{-- 5. SUPPLEMENTAL EMBEDDED PDF WORKBOOK (For Audio/Video lessons with PDF)  --}}
+                {{-- ========================================================================= --}}
+                @if($primaryType !== 'pdf' && $hasPdf)
+                    <div style="background: #0f172a; border-radius: 10px; border: 1px solid #334155; overflow: hidden; margin-top: 2rem; position: relative;">
                         {{-- PDF Viewer Header Bar --}}
-                        <div style="padding: 1rem 1.25rem; background: #1e293b; border-bottom: 1px solid #334155; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-                            <div style="display: flex; align-items: center; gap: 0.75rem;">
-                                <span style="font-size: 1.6rem; color: #c084fc;">📄</span>
+                        <div style="padding: 0.85rem 1.25rem; background: #1e293b; border-bottom: 1px solid #334155; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                            <div style="display: flex; align-items: center; gap: 0.65rem;">
+                                <span style="font-size: 1.4rem; color: #c084fc;">📄</span>
                                 <div>
-                                    <strong style="color: #f8fafc; font-size: 0.98rem; display: block;">
+                                    <strong style="color: #f8fafc; font-size: 0.95rem; display: block;">
                                         {{ $lesson->pdf_attachment_name ?: 'Begleitendes Arbeitsbuch (PDF)' }}
                                     </strong>
-                                    <span style="color: #94a3b8; font-size: 0.78rem;">
-                                        Direkt eingebundenes Arbeitsmaterial mit persönlichem Wasserzeichen
+                                    <span style="color: #94a3b8; font-size: 0.75rem;">
+                                        Direkt eingebundenes Arbeitsmaterial mit persönlicher Lizenzierung
                                     </span>
                                 </div>
                             </div>
-                            <div style="display: flex; align-items: center; gap: 0.6rem;">
-                                <button type="button" onclick="togglePdfFullscreen()" style="background: #334155; color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.4); padding: 0.4rem 0.85rem; border-radius: 4px; font-size: 0.82rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 0.35rem;">
-                                    <span>⛶</span> Vollbild-Ansicht
-                                </button>
-                            </div>
+                            <button type="button" onclick="togglePdfFullscreen('companion-pdf-wrapper')" style="background: #334155; color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.4); padding: 0.35rem 0.75rem; border-radius: 4px; font-size: 0.8rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 0.35rem;">
+                                <span>⛶</span> Vollbild-Ansicht
+                            </button>
                         </div>
 
-                        {{-- Embedded PDF Viewer Iframe (No toolbar, in-portal viewing only) --}}
-                        <div id="pdf-viewer-wrapper" style="position: relative; width: 100%; height: 750px; background: #0b1120;">
+                        {{-- Embedded PDF Viewer Iframe with Dynamic Watermark Overlay --}}
+                        <div id="companion-pdf-wrapper" style="position: relative; width: 100%; height: 750px; background: #0b1120;">
+                            {{-- Single Diagonal Watermark Overlay Strip --}}
+                            <div class="watermark-overlay-layer" aria-hidden="true" style="position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 10;">
+                                <div style="position: absolute; top: 50%; left: 50%; width: 220%; transform: translate(-50%, -50%) rotate(-24deg); background: rgba(255, 255, 255, 0.035); border-top: 1px solid rgba(255, 255, 255, 0.07); border-bottom: 1px solid rgba(255, 255, 255, 0.07); padding: 6px 0; display: flex; justify-content: center; user-select: none;">
+                                    <span style="color: rgba(255, 255, 255, 0.16); font-size: 0.76rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; white-space: nowrap;">
+                                        {{ $userIdentString }} &nbsp;&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;&nbsp; {{ $userIdentString }}
+                                    </span>
+                                </div>
+                            </div>
+
                             <iframe 
-                                id="embedded-pdf-frame"
                                 src="{{ route('media.stream', ['courseSlug' => $course->slug, 'lessonSlug' => $lesson->slug, 'type' => 'pdf']) }}#toolbar=0&navpanes=0" 
                                 style="width: 100%; height: 100%; border: none;"
                                 title="{{ $lesson->pdf_attachment_name ?: 'PDF-Dokument' }}"
@@ -272,6 +403,20 @@
                                     @php
                                         $isItemActive = $item->id === $lesson->id;
                                         $isItemCompleted = in_array($item->id, $completedIds);
+                                        
+                                        $itemHasVideo = !empty($item->video_path) || !empty($item->video_url);
+                                        $itemHasAudio = !empty($item->audio_path);
+                                        $itemHasPdf = !empty($item->pdf_attachment_name) || !empty($item->pdf_attachment_path);
+
+                                        if ($itemHasVideo) {
+                                            $itemType = 'video';
+                                        } elseif ($itemHasAudio) {
+                                            $itemType = 'audio';
+                                        } elseif ($itemHasPdf) {
+                                            $itemType = 'pdf';
+                                        } else {
+                                            $itemType = 'text';
+                                        }
                                     @endphp
                                     <a href="{{ route('course.lesson', ['courseSlug' => $course->slug, 'lessonSlug' => $item->slug]) }}" style="display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1.25rem; text-decoration: none; background: {{ $isItemActive ? '#1e293b' : 'transparent' }}; border-left: 3px solid {{ $isItemActive ? '#38bdf8' : 'transparent' }}; transition: background 0.15s;">
                                         <div style="display: flex; align-items: center; gap: 0.75rem; overflow: hidden;">
@@ -283,14 +428,18 @@
                                                     {{ $item->lesson_number }}. {{ $item->title }}
                                                 </span>
                                                 <div style="display: flex; gap: 0.4rem; font-size: 0.7rem; color: #64748b; margin-top: 0.15rem; flex-wrap: wrap;">
-                                                    @if($item->video_path || $item->video_url)
+                                                    @if($itemType === 'video')
                                                         <span style="color: #38bdf8;">🎬 Video</span>
-                                                    @endif
-                                                    @if($item->audio_path)
+                                                    @elseif($itemType === 'audio')
                                                         <span style="color: #4ade80;">🎧 Audio</span>
-                                                    @endif
-                                                    @if($item->pdf_attachment_name || $item->pdf_attachment_path)
+                                                    @elseif($itemType === 'pdf')
                                                         <span style="color: #c084fc;">📄 PDF</span>
+                                                    @else
+                                                        <span style="color: #94a3b8;">📝 Text</span>
+                                                    @endif
+
+                                                    @if($itemType !== 'pdf' && $itemHasPdf)
+                                                        <span style="color: #c084fc;">+ Arbeitsbuch</span>
                                                     @endif
                                                 </div>
                                             </div>
@@ -322,36 +471,138 @@
         </footer>
     </main>
 
-    {{-- Interactive AJAX Scripts for Media, Completion, Speed & Fullscreen --}}
+    {{-- Interactive JavaScript for Audio Controls, PDF Fullscreen, Progress & Duration --}}
     <script>
-        // 1. Audio Control Helpers
-        function skipAudio(seconds) {
-            const audio = document.getElementById('lesson-audio');
-            if (audio) {
-                audio.currentTime = Math.max(0, Math.min(audio.duration || 9999, audio.currentTime + seconds));
+        // ==========================================
+        // 1. Audio Player Interaction Logic
+        // ==========================================
+        const audioEl = document.getElementById('lesson-audio');
+        const playBtn = document.getElementById('audio-play-btn');
+        const playIcon = document.getElementById('audio-play-icon');
+        const scrubber = document.getElementById('audio-scrubber');
+        const curTimeDisplay = document.getElementById('audio-current-time');
+        const totalTimeDisplay = document.getElementById('audio-total-time');
+
+        function formatTime(seconds) {
+            if (isNaN(seconds) || seconds < 0) return '00:00';
+            const m = Math.floor(seconds / 60);
+            const s = Math.floor(seconds % 60);
+            return `${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
+        }
+
+        function toggleAudioPlay() {
+            if (!audioEl) return;
+            if (audioEl.paused) {
+                audioEl.play().catch(e => console.log('Audio autoplay prevented:', e));
+                if (playIcon) playIcon.innerText = '❚❚';
+                if (playBtn) playBtn.style.background = '#4ade80';
+            } else {
+                audioEl.pause();
+                if (playIcon) playIcon.innerText = '▶';
+                if (playBtn) playBtn.style.background = '#38bdf8';
             }
+        }
+
+        function skipAudio(seconds) {
+            if (!audioEl) return;
+            audioEl.currentTime = Math.max(0, Math.min(audioEl.duration || 9999, audioEl.currentTime + seconds));
         }
 
         function setAudioSpeed(speed, btn) {
-            const audio = document.getElementById('lesson-audio');
-            if (audio) {
-                audio.playbackRate = speed;
-                document.querySelectorAll('.speed-btn').forEach(b => {
-                    b.style.background = '#1e293b';
-                    b.style.color = '#cbd5e1';
-                    b.style.border = '1px solid #334155';
-                });
-                if (btn) {
-                    btn.style.background = '#38bdf8';
-                    btn.style.color = '#0f172a';
-                    btn.style.border = 'none';
-                }
+            if (!audioEl) return;
+            audioEl.playbackRate = speed;
+            document.querySelectorAll('.speed-btn').forEach(b => {
+                b.style.background = '#1e293b';
+                b.style.color = '#cbd5e1';
+                b.style.border = '1px solid #334155';
+            });
+            if (btn) {
+                btn.style.background = '#38bdf8';
+                btn.style.color = '#0f172a';
+                btn.style.border = 'none';
             }
         }
 
-        // 2. Fullscreen Toggle for Embedded PDF Viewer
-        function togglePdfFullscreen() {
-            const wrapper = document.getElementById('pdf-viewer-wrapper');
+        let isDraggingScrubber = false;
+        function onScrubberInput(val) {
+            isDraggingScrubber = true;
+            if (audioEl && audioEl.duration) {
+                const targetSec = (val / 100) * audioEl.duration;
+                if (curTimeDisplay) curTimeDisplay.innerText = formatTime(targetSec);
+            }
+        }
+
+        function onScrubberChange(val) {
+            if (audioEl && audioEl.duration) {
+                audioEl.currentTime = (val / 100) * audioEl.duration;
+            }
+            isDraggingScrubber = false;
+        }
+
+        if (audioEl) {
+            audioEl.addEventListener('play', () => {
+                if (playIcon) playIcon.innerText = '❚❚';
+                if (playBtn) playBtn.style.background = '#4ade80';
+            });
+
+            audioEl.addEventListener('pause', () => {
+                if (playIcon) playIcon.innerText = '▶';
+                if (playBtn) playBtn.style.background = '#38bdf8';
+            });
+
+            audioEl.addEventListener('timeupdate', () => {
+                if (!isDraggingScrubber && audioEl.duration) {
+                    const percent = (audioEl.currentTime / audioEl.duration) * 100;
+                    if (scrubber) scrubber.value = percent;
+                    if (curTimeDisplay) curTimeDisplay.innerText = formatTime(audioEl.currentTime);
+                }
+            });
+
+            audioEl.addEventListener('loadedmetadata', () => {
+                if (audioEl.duration && totalTimeDisplay) {
+                    totalTimeDisplay.innerText = formatTime(audioEl.duration);
+                    updateDurationHeaders(audioEl.duration);
+                }
+            });
+        }
+
+        // ==========================================
+        // 2. Video Duration Update
+        // ==========================================
+        const videoEl = document.getElementById('lesson-video');
+        if (videoEl) {
+            videoEl.addEventListener('loadedmetadata', () => {
+                if (videoEl.duration) {
+                    updateDurationHeaders(videoEl.duration);
+                }
+            });
+        }
+
+        function updateDurationHeaders(durationSeconds) {
+            const totalSec = Math.round(durationSeconds);
+            const mins = Math.floor(totalSec / 60);
+            const secs = totalSec % 60;
+            const formattedLong = mins > 0 
+                ? (secs > 0 ? `${mins} Min. ${secs} Sek.` : `${mins} Minuten`) 
+                : `${secs} Sekunden`;
+            const formattedShort = mins > 0 ? `${mins}m` : `${secs}s`;
+
+            const mainDisplay = document.getElementById('lesson-duration-display');
+            if (mainDisplay) {
+                mainDisplay.innerHTML = `⏱ Dauer: ${formattedLong}`;
+            }
+
+            const currentSidebar = document.getElementById('sidebar-duration-{{ $lesson->id }}');
+            if (currentSidebar) {
+                currentSidebar.innerText = formattedShort;
+            }
+        }
+
+        // ==========================================
+        // 3. Fullscreen Toggle for PDF Viewers
+        // ==========================================
+        function togglePdfFullscreen(wrapperId) {
+            const wrapper = document.getElementById(wrapperId);
             if (!wrapper) return;
             if (!document.fullscreenElement) {
                 wrapper.requestFullscreen().catch(err => {
@@ -362,62 +613,9 @@
             }
         }
 
-        // 3. Dynamic Media Duration Detection
-        document.addEventListener('DOMContentLoaded', () => {
-            const videoEl = document.getElementById('lesson-video');
-            const audioEl = document.getElementById('lesson-audio');
-            const mediaEl = audioEl || videoEl;
-
-            if (mediaEl) {
-                function updateMediaDuration() {
-                    if (mediaEl.duration && !isNaN(mediaEl.duration) && mediaEl.duration > 0 && isFinite(mediaEl.duration)) {
-                        const totalSec = Math.round(mediaEl.duration);
-                        const mins = Math.floor(totalSec / 60);
-                        const secs = totalSec % 60;
-                        
-                        const formattedLong = mins > 0 
-                            ? (secs > 0 ? `${mins} Min. ${secs} Sek.` : `${mins} Minuten`) 
-                            : `${secs} Sekunden`;
-                        const formattedShort = mins > 0 ? `${mins}m` : `${secs}s`;
-
-                        const mainDisplay = document.getElementById('lesson-duration-display');
-                        if (mainDisplay) {
-                            mainDisplay.innerHTML = `⏱ Dauer: ${formattedLong}`;
-                        }
-
-                        const currentSidebar = document.getElementById('sidebar-duration-{{ $lesson->id }}');
-                        if (currentSidebar) {
-                            currentSidebar.innerText = formattedShort;
-                        }
-                    }
-                }
-
-                mediaEl.addEventListener('loadedmetadata', updateMediaDuration);
-                mediaEl.addEventListener('durationchange', updateMediaDuration);
-                mediaEl.addEventListener('canplay', updateMediaDuration);
-                if (mediaEl.readyState >= 1) {
-                    updateMediaDuration();
-                }
-
-                // Audio Waveform Animation effect on play/pause
-                const bars = document.querySelectorAll('.audio-waveform-bar');
-                if (bars.length > 0) {
-                    let waveInterval;
-                    mediaEl.addEventListener('play', () => {
-                        waveInterval = setInterval(() => {
-                            bars.forEach(b => {
-                                const r = Math.floor(Math.random() * 85) + 15;
-                                b.style.height = r + '%';
-                            });
-                        }, 250);
-                    });
-                    mediaEl.addEventListener('pause', () => clearInterval(waveInterval));
-                    mediaEl.addEventListener('ended', () => clearInterval(waveInterval));
-                }
-            }
-        });
-
+        // ==========================================
         // 4. Toggle Lesson Completion via AJAX
+        // ==========================================
         let isCompleted = {{ $isCurrentCompleted ? 'true' : 'false' }};
         let isSaving = false;
 
@@ -446,7 +644,7 @@
                 isSaving = false;
                 btn.style.opacity = '1';
 
-                if (data.status === 'success') {
+                if (data.success) {
                     isCompleted = data.is_completed;
                     
                     if (isCompleted) {

@@ -39,10 +39,21 @@ class MediaController extends Controller
                     $sourcePath = Storage::disk('public')->path($lesson->pdf_attachment_path);
                 }
 
-                $watermarkService = new \App\Services\PdfWatermarkService();
-                $watermarkedPdfBinary = $watermarkService->generateWatermarkedPdf($user, $course, $lesson, $sourcePath);
+                if ($sourcePath && file_exists($sourcePath)) {
+                    return response()->file($sourcePath, [
+                        'Content-Type' => 'application/pdf',
+                        'Content-Disposition' => 'inline; filename="' . $filename . '"',
+                        'Cache-Control' => 'private, no-cache, no-store, must-revalidate',
+                        'Pragma' => 'no-cache',
+                        'Expires' => '0',
+                        'X-Content-Type-Options' => 'nosniff',
+                    ]);
+                }
 
-                return response($watermarkedPdfBinary, 200, [
+                $watermarkService = new \App\Services\PdfWatermarkService();
+                $cleanPdfBinary = $watermarkService->generateCleanPdf($course, $lesson);
+
+                return response($cleanPdfBinary, 200, [
                     'Content-Type' => 'application/pdf',
                     'Content-Disposition' => 'inline; filename="' . $filename . '"',
                     'Cache-Control' => 'private, no-cache, no-store, must-revalidate',

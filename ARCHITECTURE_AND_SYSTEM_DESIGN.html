@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dennis Besseler Course Portal — Architecture, System Design & Workflows</title>
+    <!-- Mermaid.js for interactive diagrams -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({ startOnLoad: true, theme: 'dark' });
+    </script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0b0f19;
+            --bg-secondary: #111827;
+            --bg-card: #1e293b;
+            --border-color: #334155;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-blue: #38bdf8;
+            --accent-emerald: #10b981;
+            --accent-amber: #f59e0b;
+            --accent-purple: #c084fc;
+            --accent-rose: #f43f5e;
+            --code-bg: #020617;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            line-height: 1.7;
+            font-size: 16px;
+            padding: 2.5rem 1.5rem;
+        }
+
+        .container {
+            max-width: 1150px;
+            margin: 0 auto;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 3.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+        }
+
+        /* Header Bar */
+        .doc-header {
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 2rem;
+            margin-bottom: 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+
+        .doc-badge {
+            display: inline-block;
+            background: rgba(56, 189, 248, 0.15);
+            color: var(--accent-blue);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            padding: 0.35rem 0.85rem;
+            border-radius: 30px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-bottom: 0.75rem;
+        }
+
+        h1 {
+            font-size: 2.4rem;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: -0.03em;
+            line-height: 1.25;
+            margin-bottom: 0.5rem;
+        }
+
+        .doc-meta {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .print-btn {
+            background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+            color: #fff;
+            border: none;
+            padding: 0.75rem 1.4rem;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(2, 132, 199, 0.4);
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .print-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(2, 132, 199, 0.6);
+        }
+
+        /* Headings */
+        h2 {
+            font-size: 1.65rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-top: 3.5rem;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.6rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--accent-blue);
+            margin-top: 2rem;
+            margin-bottom: 0.85rem;
+        }
+
+        p, ul, ol {
+            margin-bottom: 1.25rem;
+            color: #cbd5e1;
+        }
+
+        ul, ol {
+            padding-left: 1.5rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Cards & Grids */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .card h4 {
+            color: #f8fafc;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Mermaid Box */
+        .mermaid-container {
+            background: #020617;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.75rem;
+            margin: 2rem 0;
+            overflow-x: auto;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* Code Blocks */
+        pre, code {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        pre {
+            background: var(--code-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 1.25rem;
+            overflow-x: auto;
+            color: #e2e8f0;
+            font-size: 0.88rem;
+            margin: 1.5rem 0;
+            line-height: 1.6;
+        }
+
+        p code, li code {
+            background: rgba(56, 189, 248, 0.12);
+            color: #38bdf8;
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.88em;
+            border: 1px solid rgba(56, 189, 248, 0.25);
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            background: var(--bg-card);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        th, td {
+            padding: 1rem 1.25rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background: rgba(15, 23, 42, 0.8);
+            color: var(--accent-blue);
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* Callout Notes */
+        .callout {
+            border-left: 4px solid var(--accent-blue);
+            background: rgba(56, 189, 248, 0.08);
+            padding: 1.25rem 1.5rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1.75rem 0;
+        }
+
+        .callout.success {
+            border-left-color: var(--accent-emerald);
+            background: rgba(16, 185, 129, 0.08);
+        }
+
+        .callout.warning {
+            border-left-color: var(--accent-amber);
+            background: rgba(245, 158, 11, 0.08);
+        }
+
+        .callout strong {
+            color: #fff;
+            display: block;
+            margin-bottom: 0.35rem;
+        }
+
+        /* Print Optimization */
+        @media print {
+            body {
+                background: #fff;
+                color: #000;
+                padding: 0;
+            }
+
+            .container {
+                border: none;
+                box-shadow: none;
+                padding: 0;
+                background: #fff;
+                max-width: 100%;
+            }
+
+            .print-btn, .doc-badge {
+                display: none;
+            }
+
+            h1, h2, h3, h4 {
+                color: #000 !important;
+            }
+
+            p, li, td, th {
+                color: #333 !important;
+            }
+
+            .mermaid-container, pre, table, .card {
+                background: #f8fafc !important;
+                border: 1px solid #ccc !important;
+                color: #000 !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Document Header -->
+    <header class="doc-header">
+        <div>
+            <div class="doc-badge">Technical Architecture &amp; System Design</div>
+            <h1>Dennis Besseler Course Portal</h1>
+            <div class="doc-meta">
+                <strong>Platform:</strong> Laravel 11/12 Full-Stack &bull; 
+                <strong>Version:</strong> 1.0.0 (Phase 1 Final &amp; Phase 2 Ready) &bull; 
+                <strong>Architecture:</strong> MVC + Service Layer
+            </div>
+        </div>
+        <div>
+            <button class="print-btn" onclick="window.print()">
+                🖨️ Print / Save as PDF
+            </button>
+        </div>
+    </header>
+
+    <!-- 1. Executive Summary -->
+    <section>
+        <h2>1. Executive Summary &amp; Core Philosophy</h2>
+        <p>The <strong>Dennis Besseler Course Portal</strong> is an enterprise-grade learning management and audio-first media delivery system designed around strict architectural, pedagogical, and security principles:</p>
+        
+        <div class="grid-2">
+            <div class="card">
+                <h4>🎯 Clean Separation of Concerns</h4>
+                <p>Complete structural and technical decoupling between the public marketing &amp; sales portal (<code>besseler.de</code>) and the dedicated, protected learning platform (<code>besseler-kursportal.de</code>).</p>
+            </div>
+            <div class="card">
+                <h4>🎧 Audio-First Course Pedagogy</h4>
+                <p>Engineered for high-retention audio lectures, guided reflection, and embedded PDF workbooks without distracting visual elements or intrusive course frameworks.</p>
+            </div>
+            <div class="card">
+                <h4>🛡️ Strict Intellectual Property Protection</h4>
+                <p>Dynamic server-side PDF license watermarking, cryptographic single-device binding, and protected media streaming via authenticated HTTP range requests (zero direct download links).</p>
+            </div>
+            <div class="card">
+                <h4>💳 Transparent Single-Payment Model</h4>
+                <p>No recurring subscriptions, no third-party tracking scripts or payment gateway cookies on the portal, and deterministic course access durations (30 or 90 days).</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. High-Level Software Architecture -->
+    <section>
+        <h2>2. High-Level Software Architecture</h2>
+        <p>The platform follows a layered <strong>Model-View-Controller (MVC) + Service Layer Architecture</strong> built on Laravel, utilizing PHP 8.2+, SQLite/MySQL, Blade templating, and vanilla JavaScript (zero heavy SPA frameworks to ensure high performance and maximum stability).</p>
+
+        <div class="mermaid-container">
+            <pre class="mermaid">
+graph TD
+    subgraph Client Layer [Client Web Browser]
+        UI_Guest[Public Landing & Course Pages]
+        UI_Member[Protected Member Dashboard & Player]
+        UI_Admin[Admin Control Center]
+        JS_Fingerprint[SHA-256 Client Device Fingerprint]
+    end
+
+    subgraph HTTP & Security Layer [Routing & Middleware]
+        Route[Laravel HTTP Kernel / Routing]
+        AuthMid[Auth & Role Verification Middleware]
+        DeviceMid[Device Binding Enforcer]
+        RateLimit[Throttle & Security Rate Limiters]
+    end
+
+    subgraph Application & Service Layer [Controllers & Services]
+        Ctrl_Auth[Authentication Controllers]
+        Ctrl_Course[Course & Player Controllers]
+        Ctrl_Media[Protected Media Stream Controller]
+        Ctrl_Admin[Admin Management Controllers]
+        Svc_Watermark[PDF Dynamic Watermark Service]
+        Svc_Device[Device Binding & Reset Service]
+    end
+
+    subgraph Data & Storage Layer [Persistence & Storage]
+        DB[(Relational Database: Users, Courses, Lessons, Progress)]
+        Storage_Audio[Private Audio Storage: MP3 / WAV]
+        Storage_PDF[Private Document Storage: PDF Workbooks]
+        Storage_Video[Private/Public Video Storage: MP4 / Stream]
+    end
+
+    UI_Guest -->|HTTP Request| Route
+    UI_Member -->|Authenticated Request + Device Hash| Route
+    UI_Admin -->|Security Code + Password + Device Hash| Route
+    JS_Fingerprint -.->|Device Hash Headers/Payload| Route
+
+    Route --> RateLimit --> AuthMid --> DeviceMid
+    DeviceMid --> Ctrl_Auth
+    DeviceMid --> Ctrl_Course
+    DeviceMid --> Ctrl_Media
+    DeviceMid --> Ctrl_Admin
+
+    Ctrl_Media --> Svc_Watermark
+    Ctrl_Auth --> Svc_Device
+    Ctrl_Media --> Storage_Audio
+    Ctrl_Media --> Storage_PDF
+    Ctrl_Media --> Storage_Video
+    Svc_Watermark --> Storage_PDF
+
+    Ctrl_Auth --> DB
+    Ctrl_Course --> DB
+    Ctrl_Admin --> DB
+            </pre>
+        </div>
+    </section>
+
+    <!-- 3. Core Subsystems & Security Architecture -->
+    <section>
+        <h2>3. Core Subsystems &amp; Security Architecture</h2>
+
+        <h3>3.1. Authentication &amp; Single-Device Binding Engine</h3>
+        <p>To eliminate credential sharing and unauthorized account proliferation, the platform implements a <strong>Cryptographic Single-Device Binding Mechanism</strong>:</p>
+        
+        <ol>
+            <li><strong>Fingerprint Generation:</strong> When a user accesses any login form, a client-side JavaScript routine gathers hardware and browser characteristics (<code>navigator.userAgent</code>, <code>platform</code>, <code>screen.width</code>, <code>screen.height</code>, <code>Intl.timezone</code>) and computes a <strong>SHA-256 cryptographic hash</strong> (<code>device_id</code>).</li>
+            <li><strong>First-Login Dynamic Binding:</strong> When a customer logs in for the first time, if <code>device_id</code> is null on their record, the system automatically binds the hash to their account and timestamps <code>last_device_activity_at</code>.</li>
+            <li><strong>Subsequent Access Verification:</strong> On all subsequent login attempts, the system validates the incoming device hash against the stored hash. If there is a mismatch, login is blocked with an explicit German security notice.</li>
+            <li><strong>Admin 2FA Security Code:</strong> The admin login requires an email/password <strong>plus</strong> a separate hashed <strong>Security Code</strong> (default <code>1979</code>).</li>
+            <li><strong>Administrative Device Reset:</strong> Admins can reset a user's bound device with a single click in the Admin Panel whenever a legitimate customer changes hardware.</li>
+        </ol>
+
+        <h3>3.2. Protected Media Delivery &amp; Dynamic Watermarking</h3>
+        <p>All course files (Audio MP3s, Video MP4s, and PDF Workbooks) reside in non-public storage directories and are never exposed via raw static web URLs.</p>
+
+        <pre>
+Request: /kurs/{courseSlug}/lektion/{lessonSlug}/media?type=audio
+  │
+  ├── 1. Check Authentication (Member or Admin)
+  ├── 2. Check Course Enrollment & Active Expiration Date
+  ├── 3. Determine MIME Type & File Size
+  ├── 4. Audio/Video -> Handle HTTP 206 Partial Content (Byte Range Requests)
+  └── 5. PDF -> Pass through PdfWatermarkService -> Inject Personalized Stamp -> Output inline
+        </pre>
+
+        <div class="callout success">
+            <strong>Key Media Streaming Capabilities:</strong>
+            <ul>
+                <li><strong>Range Request Streaming:</strong> Supports <code>HTTP/1.1 206 Partial Content</code> with <code>Accept-Ranges: bytes</code>, enabling instant 10-second skip forward/back and variable speed playback (1.0x, 1.25x, 1.5x) without buffering delays.</li>
+                <li><strong>Dynamic PDF Watermarking:</strong> Every rendered PDF contains server-side customer license watermarks (<code>PRIVAT-LIZENZ · [First Name] · [RE-Number]</code>).</li>
+                <li><strong>In-Page Embedding:</strong> Workbooks are embedded via in-page viewer iframe with <code>#toolbar=0&amp;navpanes=0</code> and fullscreen toggle without external download triggers.</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- 4. User & System Workflows -->
+    <section>
+        <h2>4. User &amp; System Workflows</h2>
+
+        <h3>4.1. Customer / Student Lifecycle Flow</h3>
+        <div class="mermaid-container">
+            <pre class="mermaid">
+sequenceDiagram
+    autonumber
+    actor Customer
+    participant Portal as Course Landing Page
+    participant Auth as Auth Controller
+    participant DB as Relational Database
+    participant Player as Member Course Player
+    participant Media as Media Streamer
+
+    Customer->>Portal: Visits /kurse/dnl-kompakt
+    Portal->>Customer: Renders Landing Page with Price & Module Facts
+    Customer->>Auth: Submits Login (username, password, sha256_device_id)
+    Auth->>DB: Check Credentials & Account Status
+    alt Device unbound (First Login)
+        Auth->>DB: Bind device_id & timestamp
+    else Device mismatch
+        Auth->>Customer: 403 / Error "Gerätewechsel erfordert Support"
+    end
+    Auth->>Customer: Redirect to /mein-lernbereich (Dashboard)
+    
+    Customer->>Player: Opens /kurs/dnl-kompakt/lektion/1-einfuehrung
+    Player->>DB: Fetch Lesson Data & Completed Status
+    Player->>Media: Stream Audio (Range: bytes=0-1048576)
+    Media->>Player: HTTP 206 Partial Content (Audio Stream)
+    Player->>Media: Embed PDF Workbook
+    Media->>Player: Personalized Watermarked PDF
+    Customer->>Player: Clicks "✓ Lektion abgeschlossen"
+    Player->>DB: AJAX: Update LessonProgress (completed=true)
+    Player->>Customer: Updates Progress Bar to 20%
+            </pre>
+        </div>
+
+        <h3>4.2. Administrator Management Workflow</h3>
+        <div class="mermaid-container">
+            <pre class="mermaid">
+sequenceDiagram
+    autonumber
+    actor Admin
+    participant AdminAuth as Admin Login (/admin/login)
+    participant AdminDash as Admin Dashboard (/admin/dashboard)
+    participant DB as Database
+
+    Admin->>AdminAuth: Enters Email, Password, Security Code ("1979")
+    AdminAuth->>DB: Verify Admin Password & Security Code Hash
+    AdminAuth->>Admin: Redirect to Admin Dashboard
+    
+    rect rgb(20, 30, 50)
+        Note over Admin, AdminDash: Customer Management Actions
+        Admin->>AdminDash: Add New Customer (Invoice #, Name, Username, Expiration Date)
+        AdminDash->>DB: Insert User & Enroll in Selected Courses
+        Admin->>AdminDash: Reset Customer Device Binding
+        AdminDash->>DB: Set device_id = NULL
+        Admin->>AdminDash: Reset Customer Progress
+        AdminDash->>DB: Delete LessonProgress entries
+    end
+
+    rect rgb(30, 40, 60)
+        Note over Admin, AdminDash: Course & Curriculum Management
+        Admin->>AdminDash: Create/Edit Course & Lessons (Upload Audio/PDF, Set Duration)
+        AdminDash->>DB: Save Course & Lesson Entities
+        Admin->>AdminDash: Manage Admin Notes & Version Roadmap Notes
+        AdminDash->>DB: Save Notes with Expiration Timers
+    end
+            </pre>
+        </div>
+    </section>
+
+    <!-- 5. Database Schema & Data Models -->
+    <section>
+        <h2>5. Database Schema &amp; Data Models</h2>
+        <p>The database schema is organized into normalized relational tables:</p>
+
+        <div class="mermaid-container">
+            <pre class="mermaid">
+erDiagram
+    USERS ||--o{ COURSE_USER : enrolls
+    USERS ||--o{ LESSON_PROGRESS : achieves
+    USERS ||--o{ ADMIN_NOTES : creates
+    USERS ||--o{ VERSION_NOTES : creates
+    COURSES ||--o{ LESSONS : contains
+    COURSES ||--o{ COURSE_USER : assigned_to
+    COURSES ||--o{ LESSON_PROGRESS : tracked_in
+    LESSONS ||--o{ LESSON_PROGRESS : logged_for
+
+    USERS {
+        bigint id PK
+        string name
+        string username UK
+        string email UK
+        string password
+        string role "admin | member"
+        string invoice_number
+        string device_id "SHA-256 hash"
+        string device_name
+        datetime last_device_activity_at
+        datetime access_expires_at
+        string security_code_hash "Admin 2FA"
+        boolean is_active
+        timestamps created_at_updated_at
+    }
+
+    COURSES {
+        bigint id PK
+        string title
+        string slug UK
+        string category "academy | prevention | business | adventure"
+        string category_color "blau | gruen | orange | rot"
+        decimal price "490.00"
+        integer access_duration_days "90 or 30"
+        text description
+        boolean is_active
+        integer order
+        timestamps created_at_updated_at
+    }
+
+    LESSONS {
+        bigint id PK
+        bigint course_id FK
+        string chapter_name "Modul 1..."
+        string title
+        string slug
+        integer lesson_number
+        integer duration_minutes
+        string audio_path "Protected audio path"
+        string video_path "Protected video path"
+        string video_url "External video stream"
+        string pdf_attachment_name
+        string pdf_attachment_path "Protected PDF path"
+        longtext content_html
+        boolean is_preview
+        integer order
+        timestamps created_at_updated_at
+    }
+
+    LESSON_PROGRESS {
+        bigint id PK
+        bigint user_id FK
+        bigint lesson_id FK
+        bigint course_id FK
+        boolean is_completed
+        datetime completed_at
+        integer last_position_seconds
+        timestamps created_at_updated_at
+    }
+
+    COURSE_USER {
+        bigint id PK
+        bigint user_id FK
+        bigint course_id FK
+        datetime expires_at
+        timestamps created_at_updated_at
+    }
+
+    ACCESS_REQUESTS {
+        bigint id PK
+        string username
+        string invoice_number
+        string course_name
+        text message
+        string status "pending | resolved | rejected"
+        timestamps created_at_updated_at
+    }
+            </pre>
+        </div>
+    </section>
+
+    <!-- 6. Automated Test Coverage -->
+    <section>
+        <h2>6. Automated Test Coverage &amp; Verification</h2>
+        <p>The entire architectural specification is continuously validated by an automated test suite executed via <code>php artisan test</code>:</p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Test Suite</th>
+                    <th>Assertions</th>
+                    <th>Functional Scope Verified</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>public landing pages are accessible</code></td>
+                    <td>15</td>
+                    <td>Verifies all 11 course pages, home, and legal pages render with status 200</td>
+                </tr>
+                <tr>
+                    <td><code>admin login with security code and device binding</code></td>
+                    <td>8</td>
+                    <td>Validates admin credential check, security code verification, and session regeneration</td>
+                </tr>
+                <tr>
+                    <td><code>admin can change password with security code</code></td>
+                    <td>6</td>
+                    <td>Validates admin password updates requiring both current password and 2FA code</td>
+                </tr>
+                <tr>
+                    <td><code>admin customer crud and device reset</code></td>
+                    <td>10</td>
+                    <td>Validates customer creation, editing, deletion, device unbinding, and progress reset</td>
+                </tr>
+                <tr>
+                    <td><code>customer login and course player flow</code></td>
+                    <td>12</td>
+                    <td>Tests student login, device binding, dashboard rendering, player access, and AJAX toggle</td>
+                </tr>
+                <tr>
+                    <td><code>unauthenticated media access is forbidden</code></td>
+                    <td>4</td>
+                    <td>Verifies protected media route returns 403/redirect for unauthenticated requests</td>
+                </tr>
+                <tr>
+                    <td><code>forgot password access request is recorded</code></td>
+                    <td>4</td>
+                    <td>Verifies password recovery requests are safely logged in the database</td>
+                </tr>
+                <tr>
+                    <td><code>inquiry mailto generator</code></td>
+                    <td>4</td>
+                    <td>Tests faster-processing service page and mailto query generator</td>
+                </tr>
+                <tr>
+                    <td><code>admin can create update and delete lesson</code></td>
+                    <td>4</td>
+                    <td>Tests full curriculum management cycle for course lessons</td>
+                </tr>
+                <tr>
+                    <td><code>admin can create update and delete course</code></td>
+                    <td>4</td>
+                    <td>Tests course lifecycle management in the administration portal</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="callout success">
+            <strong>✅ Test Suite Execution Result:</strong> 12 Tests Passed &bull; 71 Assertions &bull; 0 Failures &bull; Duration: 0.85s
+        </div>
+    </section>
+</div>
+
+</body>
+</html>

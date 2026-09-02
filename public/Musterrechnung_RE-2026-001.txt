@@ -1,0 +1,13 @@
+Dennis Besseler - Coaching & Weiterbildung
+Rechnung: RE-2026-001
+Datum: 01.09.2026
+Kunde: Max Mustermann
+
+Position: 5-Tage-Kompaktlehrgang
+Rechnungsbetrag: 99,00 EUR
+
+Zahlungsdaten:
+Kontoinhaber: Dennis Besseler
+IBAN: DE64370501980123456789
+BIC: COBADE33XXX
+Verwendungszweck: RE-2026-001 Max Mustermann
