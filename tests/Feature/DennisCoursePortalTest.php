@@ -402,4 +402,127 @@ class DennisCoursePortalTest extends TestCase
             'id' => $course->id,
         ]);
     }
+
+    /**
+     * Test Systematic Differentiation of Content Types: Audio, Video, PDF, and Text
+     */
+    public function test_systematic_content_type_rendering_for_audio_video_pdf_text(): void
+    {
+        $member = User::where('username', 'testkunde')->first();
+        $this->actingAs($member);
+
+        $course = Course::where('slug', 'dnl-kompakt')->first();
+
+        // 1. Audio Lesson (e.g. stressregulation-und-ressourcen)
+        $audioLesson = Lesson::where('slug', 'stressregulation-und-ressourcen')->first();
+        $response = $this->get(route('course.lesson', [
+            'courseSlug' => $course->slug,
+            'lessonSlug' => $audioLesson->slug,
+        ]));
+        $response->assertStatus(200);
+        $response->assertSee('Audiolektion');
+        $response->assertSee('id="audio-play-btn"', false);
+        $response->assertDontSee('id="lesson-video"', false);
+
+        // 2. Pure Video Lesson (no audio attached)
+        $pureVideoLesson = Lesson::create([
+            'course_id' => $course->id,
+            'chapter_name' => 'Modul Video',
+            'title' => 'Reine Videolektion',
+            'slug' => 'reine-videolektion',
+            'lesson_number' => 98,
+            'duration_minutes' => 20,
+            'video_url' => 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+            'video_path' => null,
+            'audio_path' => null,
+            'pdf_attachment_name' => null,
+            'pdf_attachment_path' => null,
+            'order' => 98,
+        ]);
+
+        $response = $this->get(route('course.lesson', [
+            'courseSlug' => $course->slug,
+            'lessonSlug' => $pureVideoLesson->slug,
+        ]));
+        $response->assertStatus(200);
+        $response->assertSee('Videolektion');
+        $response->assertSee('id="lesson-video"', false);
+        $response->assertDontSee('id="audio-play-btn"', false);
+
+        // 2b. Video Lesson with Companion Audio (both video and audio available)
+        $stressCourse = Course::where('slug', 'stress-und-ressourcen')->first();
+        $videoWithAudioLesson = Lesson::where('slug', 'neurobiologie-des-stresses')->first();
+        
+        \App\Models\Enrollment::firstOrCreate(
+            ['user_id' => $member->id, 'course_id' => $stressCourse->id],
+            [
+                'started_at' => now(),
+                'expires_at' => now()->addDays(90),
+                'is_active' => true,
+            ]
+        );
+
+        $response = $this->get(route('course.lesson', [
+            'courseSlug' => $stressCourse->slug,
+            'lessonSlug' => $videoWithAudioLesson->slug,
+        ]));
+        $response->assertStatus(200);
+        $response->assertSee('Videolektion');
+        $response->assertSee('id="lesson-video"', false);
+        $response->assertSee('id="audio-play-btn"', false);
+
+        // 3. Create & Test Pure PDF Lesson
+        $pdfLesson = Lesson::create([
+            'course_id' => $course->id,
+            'chapter_name' => 'Modul PDF',
+            'title' => 'Reines PDF Arbeitsbuch',
+            'slug' => 'reines-pdf-arbeitsbuch',
+            'lesson_number' => 99,
+            'duration_minutes' => 15,
+            'video_url' => null,
+            'video_path' => null,
+            'audio_path' => null,
+            'pdf_attachment_name' => 'Test_Workbook.pdf',
+            'pdf_attachment_path' => 'materials/DjtP2gYwdR7gFgq6mB3z3LpeCymMZms5WmWxli5h.pdf',
+            'order' => 99,
+        ]);
+
+        $response = $this->get(route('course.lesson', [
+            'courseSlug' => $course->slug,
+            'lessonSlug' => $pdfLesson->slug,
+        ]));
+        $response->assertStatus(200);
+        $response->assertSee('PDF-Arbeitsbuch');
+        $response->assertSee('id="primary-pdf-wrapper"', false);
+        $response->assertDontSee('id="lesson-video"', false);
+        $response->assertDontSee('id="audio-play-btn"', false);
+
+        // 4. Create & Test Pure Text Lesson
+        $textLesson = Lesson::create([
+            'course_id' => $course->id,
+            'chapter_name' => 'Modul Text',
+            'title' => 'Reine Textlektion',
+            'slug' => 'reine-textlektion',
+            'lesson_number' => 100,
+            'duration_minutes' => 10,
+            'video_url' => null,
+            'video_path' => null,
+            'audio_path' => null,
+            'pdf_attachment_name' => null,
+            'pdf_attachment_path' => null,
+            'content_html' => '<p>Dies ist eine reine Textlektion ohne Medienplayer.</p>',
+            'order' => 100,
+        ]);
+
+        $response = $this->get(route('course.lesson', [
+            'courseSlug' => $course->slug,
+            'lessonSlug' => $textLesson->slug,
+        ]));
+        $response->assertStatus(200);
+        $response->assertSee('Textlektion');
+        $response->assertSee('Dies ist eine reine Textlektion ohne Medienplayer.');
+        $response->assertDontSee('id="lesson-video"', false);
+        $response->assertDontSee('id="audio-play-btn"', false);
+        $response->assertDontSee('id="primary-pdf-wrapper"', false);
+    }
 }

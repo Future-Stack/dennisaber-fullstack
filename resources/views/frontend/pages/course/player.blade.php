@@ -63,16 +63,16 @@
             </div>
         </div>
 
-        {{-- Media Type Detection & Preparation --}}
+        {{-- Media Type Detection & Preparation (Audio Prioritized) --}}
         @php
-            $hasVideo = !empty($lesson->video_path) || !empty($lesson->video_url);
             $hasAudio = !empty($lesson->audio_path);
+            $hasVideo = !empty($lesson->video_path) || !empty($lesson->video_url);
             $hasPdf = !empty($lesson->pdf_attachment_name) || !empty($lesson->pdf_attachment_path);
 
-            if ($hasVideo) {
-                $primaryType = 'video';
-            } elseif ($hasAudio) {
+            if ($hasAudio) {
                 $primaryType = 'audio';
+            } elseif ($hasVideo) {
+                $primaryType = 'video';
             } elseif ($hasPdf) {
                 $primaryType = 'pdf';
             } else {
@@ -102,13 +102,13 @@
 
                         {{-- Systematic Badges by Content Type --}}
                         <div style="display: inline-flex; gap: 0.4rem; flex-wrap: wrap; align-items: center;">
-                            @if($primaryType === 'video')
-                                <span style="background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); padding: 0.25rem 0.65rem; border-radius: 6px; font-size: 0.78rem; font-weight: 700; display: inline-flex; align-items: center; gap: 0.35rem;">
-                                    🎬 Videolektion
-                                </span>
-                            @elseif($primaryType === 'audio')
+                            @if($primaryType === 'audio')
                                 <span style="background: rgba(74, 222, 128, 0.15); color: #4ade80; border: 1px solid rgba(74, 222, 128, 0.3); padding: 0.25rem 0.65rem; border-radius: 6px; font-size: 0.78rem; font-weight: 700; display: inline-flex; align-items: center; gap: 0.35rem;">
                                     🎧 Audiolektion
+                                </span>
+                            @elseif($primaryType === 'video')
+                                <span style="background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); padding: 0.25rem 0.65rem; border-radius: 6px; font-size: 0.78rem; font-weight: 700; display: inline-flex; align-items: center; gap: 0.35rem;">
+                                    🎬 Videolektion
                                 </span>
                             @elseif($primaryType === 'pdf')
                                 <span style="background: rgba(192, 132, 252, 0.15); color: #c084fc; border: 1px solid rgba(192, 132, 252, 0.3); padding: 0.25rem 0.65rem; border-radius: 6px; font-size: 0.78rem; font-weight: 700; display: inline-flex; align-items: center; gap: 0.35rem;">
@@ -117,6 +117,12 @@
                             @else
                                 <span style="background: rgba(148, 163, 184, 0.15); color: #94a3b8; border: 1px solid rgba(148, 163, 184, 0.3); padding: 0.25rem 0.65rem; border-radius: 6px; font-size: 0.78rem; font-weight: 700; display: inline-flex; align-items: center; gap: 0.35rem;">
                                     📝 Textlektion
+                                </span>
+                            @endif
+
+                            @if($primaryType === 'audio' && $hasVideo)
+                                <span style="background: rgba(56, 189, 248, 0.12); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.25); padding: 0.25rem 0.65rem; border-radius: 6px; font-size: 0.78rem; font-weight: 600; display: inline-flex; align-items: center; gap: 0.35rem;">
+                                    🎬 Video inklusive
                                 </span>
                             @endif
 
@@ -135,9 +141,104 @@
                 </div>
 
                 {{-- ========================================================= --}}
-                {{-- 1. VIDEO LESSON DISPLAY                                   --}}
+                {{-- 1. AUDIO LESSON DISPLAY (Compact Pure Audio Player First) --}}
                 {{-- ========================================================= --}}
-                @if($primaryType === 'video')
+                @if($primaryType === 'audio')
+                    <div style="background: linear-gradient(135deg, #0f172a 0%, #172554 100%); border-radius: 12px; padding: 1.25rem 1.5rem; border: 1px solid #334155; margin-bottom: {{ $hasVideo ? '1.5rem' : '2rem' }}; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4); position: relative; overflow: hidden;">
+                        {{-- Single Diagonal Watermark Overlay Strip --}}
+                        <div class="watermark-overlay-layer" aria-hidden="true" style="position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 10; border-radius: 12px;">
+                            <div style="position: absolute; top: 50%; left: 50%; width: 220%; transform: translate(-50%, -50%) rotate(-24deg); background: rgba(255, 255, 255, 0.025); border-top: 1px solid rgba(255, 255, 255, 0.05); border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding: 5px 0; display: flex; justify-content: center; user-select: none;">
+                                <span style="color: rgba(255, 255, 255, 0.13); font-size: 0.74rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; white-space: nowrap;">
+                                    {{ $userIdentString }} &nbsp;&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;&nbsp; {{ $userIdentString }}
+                                </span>
+                            </div>
+                        </div>
+
+                        {{-- Compact Audio Top: Track Meta & Format Status --}}
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.9rem; flex-wrap: wrap; gap: 0.5rem; position: relative; z-index: 2;">
+                            <div style="display: flex; align-items: center; gap: 0.6rem;">
+                                <span style="font-size: 1.25rem; color: #38bdf8;">🎧</span>
+                                <div>
+                                    <span style="font-size: 0.72rem; color: #38bdf8; text-transform: uppercase; font-weight: 800; letter-spacing: 0.08em; display: block;">
+                                        Original-Audioaufzeichnung · Dennis Besseler
+                                    </span>
+                                    <strong style="color: #f8fafc; font-size: 0.98rem; display: block;">
+                                        {{ $lesson->title }}
+                                    </strong>
+                                </div>
+                            </div>
+                            <span style="background: rgba(74, 222, 128, 0.15); color: #4ade80; border: 1px solid rgba(74, 222, 128, 0.3); padding: 0.2rem 0.55rem; border-radius: 20px; font-size: 0.72rem; font-weight: 700;">
+                                ● Audio bereit
+                            </span>
+                        </div>
+
+                        {{-- Compact Audio Controls Bar --}}
+                        <div style="display: flex; align-items: center; gap: 1rem; background: #020617; padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid #1e293b; position: relative; z-index: 2; flex-wrap: wrap;">
+                            {{-- Play / Pause Button --}}
+                            <button type="button" id="audio-play-btn" onclick="toggleAudioPlay()" style="width: 42px; height: 42px; border-radius: 50%; background: #38bdf8; color: #0b1120; border: none; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; cursor: pointer; font-weight: bold; flex-shrink: 0; box-shadow: 0 0 15px rgba(56, 189, 248, 0.4); transition: transform 0.15s, background 0.15s;">
+                                <span id="audio-play-icon">▶</span>
+                            </button>
+
+                            {{-- Time & Interactive Scrubber --}}
+                            <div style="flex: 1; min-width: 180px; display: flex; flex-direction: column; gap: 0.3rem;">
+                                <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: #94a3b8; font-family: monospace;">
+                                    <span id="audio-current-time">00:00</span>
+                                    <span id="audio-total-time">{{ sprintf('%02d:00', $lesson->duration_minutes) }}</span>
+                                </div>
+                                <input type="range" id="audio-scrubber" min="0" max="100" value="0" step="0.1" oninput="onScrubberInput(this.value)" onchange="onScrubberChange(this.value)" style="width: 100%; cursor: pointer; accent-color: #38bdf8; height: 5px;">
+                            </div>
+
+                            {{-- Skip ±10s Buttons --}}
+                            <div style="display: flex; align-items: center; gap: 0.35rem;">
+                                <button type="button" onclick="skipAudio(-10)" title="10 Sekunden zurück" style="background: #1e293b; color: #cbd5e1; border: 1px solid #334155; padding: 0.35rem 0.6rem; border-radius: 4px; cursor: pointer; font-size: 0.75rem; font-weight: 600;">
+                                    ↺ -10s
+                                </button>
+                                <button type="button" onclick="skipAudio(10)" title="10 Sekunden vor" style="background: #1e293b; color: #cbd5e1; border: 1px solid #334155; padding: 0.35rem 0.6rem; border-radius: 4px; cursor: pointer; font-size: 0.75rem; font-weight: 600;">
+                                    ↻ +10s
+                                </button>
+                            </div>
+
+                            {{-- Playback Speed Switcher --}}
+                            <div style="display: flex; align-items: center; gap: 0.25rem;">
+                                <button type="button" onclick="setAudioSpeed(1.0, this)" class="speed-btn active" style="background: #38bdf8; color: #0f172a; border: none; padding: 0.3rem 0.5rem; border-radius: 4px; font-size: 0.72rem; font-weight: bold; cursor: pointer;">1.0x</button>
+                                <button type="button" onclick="setAudioSpeed(1.25, this)" class="speed-btn" style="background: #1e293b; color: #cbd5e1; border: 1px solid #334155; padding: 0.3rem 0.5rem; border-radius: 4px; font-size: 0.72rem; font-weight: 600; cursor: pointer;">1.25x</button>
+                                <button type="button" onclick="setAudioSpeed(1.5, this)" class="speed-btn" style="background: #1e293b; color: #cbd5e1; border: 1px solid #334155; padding: 0.3rem 0.5rem; border-radius: 4px; font-size: 0.72rem; font-weight: 600; cursor: pointer;">1.5x</button>
+                            </div>
+                        </div>
+
+                        {{-- Hidden Native HTML5 Audio Element --}}
+                        <audio id="lesson-audio" preload="metadata" style="display: none;">
+                            <source src="{{ route('media.stream', ['courseSlug' => $course->slug, 'lessonSlug' => $lesson->slug, 'type' => 'audio']) }}" type="audio/mpeg">
+                        </audio>
+                    </div>
+
+                    {{-- If audio lesson also has a companion video, display the video player below --}}
+                    @if($hasVideo)
+                        <div style="background: #020617; border-radius: 12px; overflow: hidden; position: relative; aspect-ratio: 16/9; margin-bottom: 2rem; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5); border: 1px solid #1e293b;">
+                            {{-- Single Diagonal Watermark Overlay Strip --}}
+                            <div class="watermark-overlay-layer" aria-hidden="true" style="position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 10; border-radius: 12px;">
+                                <div style="position: absolute; top: 50%; left: 50%; width: 220%; transform: translate(-50%, -50%) rotate(-24deg); background: rgba(255, 255, 255, 0.035); border-top: 1px solid rgba(255, 255, 255, 0.07); border-bottom: 1px solid rgba(255, 255, 255, 0.07); padding: 6px 0; display: flex; justify-content: center; user-select: none;">
+                                    <span style="color: rgba(255, 255, 255, 0.16); font-size: 0.76rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; white-space: nowrap;">
+                                        {{ $userIdentString }} &nbsp;&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;&nbsp; {{ $userIdentString }}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <video id="lesson-video" controls style="width: 100%; height: 100%; object-fit: cover;" poster="/frontend/assets/video-poster.jpg" preload="metadata">
+                                @if($lesson->video_path)
+                                    <source src="{{ route('media.stream', ['courseSlug' => $course->slug, 'lessonSlug' => $lesson->slug, 'type' => 'video']) }}" type="video/mp4">
+                                @elseif($lesson->video_url)
+                                    <source src="{{ $lesson->video_url }}" type="video/mp4">
+                                @endif
+                                Ihr Browser unterstützt das Video-Tag leider nicht.
+                            </video>
+                        </div>
+                    @endif
+
+                {{-- ========================================================= --}}
+                {{-- 2. PURE VIDEO LESSON DISPLAY                              --}}
+                {{-- ========================================================= --}}
+                @elseif($primaryType === 'video')
                     <div style="background: #020617; border-radius: 12px; overflow: hidden; position: relative; aspect-ratio: 16/9; margin-bottom: 2rem; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5); border: 1px solid #1e293b;">
                         {{-- Single Diagonal Watermark Overlay Strip --}}
                         <div class="watermark-overlay-layer" aria-hidden="true" style="position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 10; border-radius: 12px;">
@@ -157,11 +258,6 @@
                             Ihr Browser unterstützt das Video-Tag leider nicht.
                         </video>
                     </div>
-
-                {{-- ========================================================= --}}
-                {{-- 2. AUDIO LESSON DISPLAY (Compact Pure Audio Player)       --}}
-                {{-- ========================================================= --}}
-                @elseif($primaryType === 'audio')
                     <div style="background: linear-gradient(135deg, #0f172a 0%, #172554 100%); border-radius: 12px; padding: 1.25rem 1.5rem; border: 1px solid #334155; margin-bottom: 2rem; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4); position: relative; overflow: hidden;">
                         {{-- Single Diagonal Watermark Overlay Strip --}}
                         <div class="watermark-overlay-layer" aria-hidden="true" style="position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 10; border-radius: 12px;">
@@ -408,10 +504,10 @@
                                         $itemHasAudio = !empty($item->audio_path);
                                         $itemHasPdf = !empty($item->pdf_attachment_name) || !empty($item->pdf_attachment_path);
 
-                                        if ($itemHasVideo) {
-                                            $itemType = 'video';
-                                        } elseif ($itemHasAudio) {
+                                        if ($itemHasAudio) {
                                             $itemType = 'audio';
+                                        } elseif ($itemHasVideo) {
+                                            $itemType = 'video';
                                         } elseif ($itemHasPdf) {
                                             $itemType = 'pdf';
                                         } else {
@@ -428,14 +524,18 @@
                                                     {{ $item->lesson_number }}. {{ $item->title }}
                                                 </span>
                                                 <div style="display: flex; gap: 0.4rem; font-size: 0.7rem; color: #64748b; margin-top: 0.15rem; flex-wrap: wrap;">
-                                                    @if($itemType === 'video')
-                                                        <span style="color: #38bdf8;">🎬 Video</span>
-                                                    @elseif($itemType === 'audio')
+                                                    @if($itemType === 'audio')
                                                         <span style="color: #4ade80;">🎧 Audio</span>
+                                                    @elseif($itemType === 'video')
+                                                        <span style="color: #38bdf8;">🎬 Video</span>
                                                     @elseif($itemType === 'pdf')
                                                         <span style="color: #c084fc;">📄 PDF</span>
                                                     @else
                                                         <span style="color: #94a3b8;">📝 Text</span>
+                                                    @endif
+
+                                                    @if($itemType === 'audio' && $itemHasVideo)
+                                                        <span style="color: #38bdf8;">+ Video</span>
                                                     @endif
 
                                                     @if($itemType !== 'pdf' && $itemHasPdf)
