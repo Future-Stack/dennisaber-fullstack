@@ -51,7 +51,7 @@ COPY docker-entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 # Expose port 8000 for Laravel's built-in server
-EXPOSE 8000
+EXPOSE 8080
 
 # Set the entrypoint script
 ENTRYPOINT ["docker-entrypoint.sh"]
