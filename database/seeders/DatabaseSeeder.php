@@ -21,49 +21,55 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // 1. Seed Admin User (Dennis Besseler)
-        $admin = User::create([
-            'name' => 'Dennis Besseler',
-            'first_name' => 'Dennis',
-            'username' => 'dennis.besseler',
-            'email' => 'dennis@besseler.de',
-            'password' => Hash::make('TestTestTest00!'),
-            'role' => 'admin',
-            'security_code_hash' => Hash::make('1979'),
-            'security_code_expires_at' => null,
-            'is_active' => true,
-        ]);
+        $admin = User::updateOrCreate(
+            ['username' => 'dennis.besseler'],
+            [
+                'name' => 'Dennis Besseler',
+                'first_name' => 'Dennis',
+                'email' => 'dennis@besseler.de',
+                'password' => Hash::make('TestTestTest00!'),
+                'role' => 'admin',
+                'security_code_hash' => Hash::make('1979'),
+                'security_code_expires_at' => null,
+                'is_active' => true,
+            ]
+        );
 
         // 2. Seed Test Member User (Max Mustermann)
-        $member = User::create([
-            'name' => 'Max Mustermann',
-            'first_name' => 'Max',
-            'username' => 'testkunde',
-            'email' => 'kunde@besseler.de',
-            'password' => Hash::make('KundeTest2026!'),
-            'role' => 'member',
-            'invoice_number' => 'RE-2026-001',
-            'is_active' => true,
-        ]);
+        $member = User::updateOrCreate(
+            ['username' => 'testkunde'],
+            [
+                'name' => 'Max Mustermann',
+                'first_name' => 'Max',
+                'email' => 'kunde@besseler.de',
+                'password' => Hash::make('KundeTest2026!'),
+                'role' => 'member',
+                'invoice_number' => 'RE-2026-001',
+                'is_active' => true,
+            ]
+        );
 
         // 3. Seed Staff User (Sarah Kundenservice)
-        $staff = User::create([
-            'name' => 'Sarah Schmidt',
-            'first_name' => 'Sarah',
-            'username' => 'sarah.service',
-            'email' => 'sarah@besseler.de',
-            'password' => Hash::make('Mitarbeiter2026!'),
-            'role' => 'staff',
-            'occupation' => 'Kundenservice & Freigaben',
-            'access_from' => now()->subDays(5)->toDateString(),
-            'access_until' => now()->addDays(30)->toDateString(),
-            'permissions' => [
-                'view_customers' => true,
-                'create_customers' => true,
-                'manage_enrollments' => true,
-                'reset_passwords' => true,
-            ],
-            'is_active' => true,
-        ]);
+        $staff = User::updateOrCreate(
+            ['username' => 'sarah.service'],
+            [
+                'name' => 'Sarah Schmidt',
+                'first_name' => 'Sarah',
+                'email' => 'sarah@besseler.de',
+                'password' => Hash::make('Mitarbeiter2026!'),
+                'role' => 'staff',
+                'occupation' => 'Kundenservice & Freigaben',
+                'access_from' => now()->subDays(5)->toDateString(),
+                'access_until' => now()->addDays(30)->toDateString(),
+                'permissions' => [
+                    'view_customers' => true,
+                    'create_customers' => true,
+                    'manage_enrollments' => true,
+                    'reset_passwords' => true,
+                ],
+                'is_active' => true,
+            ]
+        );
 
         // 4. Seed All 11 Courses
         $coursesData = [
@@ -214,7 +220,7 @@ class DatabaseSeeder extends Seeder
 
         $courses = [];
         foreach ($coursesData as $c) {
-            $courses[$c['slug']] = Course::create($c);
+            $courses[$c['slug']] = Course::updateOrCreate(['slug' => $c['slug']], $c);
         }
 
         // 5. Seed Comprehensive Lessons for Test Course (dnl-kompakt)
@@ -344,218 +350,243 @@ class DatabaseSeeder extends Seeder
 
         $createdLessons = [];
         foreach ($lessonsData as $l) {
-            $createdLessons[] = Lesson::create($l);
+            $createdLessons[] = Lesson::updateOrCreate(
+                ['course_id' => $l['course_id'], 'slug' => $l['slug']],
+                $l
+            );
         }
 
         // 6. Seed Lessons for Stress Course
         $stressCourse = $courses['stress-und-ressourcen'];
-        Lesson::create([
-            'course_id' => $stressCourse->id,
-            'chapter_name' => 'Modul 1: Stress verstehen',
-            'title' => '1. Die Neurobiologie von akutem und chronischem Stress',
-            'slug' => 'neurobiologie-des-stresses',
-            'lesson_number' => 1,
-            'duration_minutes' => 20,
-            'video_url' => 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-            'video_path' => 'videos/stress-lektion-1.mp4',
-            'pdf_attachment_name' => 'Stress_Selbstanalyse_Bogen.pdf',
-            'pdf_attachment_path' => 'materials/Stress_Selbstanalyse_Bogen.pdf',
-            'audio_path' => 'audio/SMdGRmsH0Z5eaFJnHcOo3VWWz9FLpT1drtPy8Ccc.wav',
-            'is_preview' => true,
-            'order' => 1,
-            'content_html' => '<p>Wie wirkt Stress auf Körper und Geist? Erfahren Sie die biochemischen Abläufe der Stressachse.</p>',
-        ]);
+        Lesson::updateOrCreate(
+            ['course_id' => $stressCourse->id, 'slug' => 'neurobiologie-des-stresses'],
+            [
+                'chapter_name' => 'Modul 1: Stress verstehen',
+                'title' => '1. Die Neurobiologie von akutem und chronischem Stress',
+                'lesson_number' => 1,
+                'duration_minutes' => 20,
+                'video_url' => 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+                'video_path' => 'videos/stress-lektion-1.mp4',
+                'pdf_attachment_name' => 'Stress_Selbstanalyse_Bogen.pdf',
+                'pdf_attachment_path' => 'materials/Stress_Selbstanalyse_Bogen.pdf',
+                'audio_path' => 'audio/SMdGRmsH0Z5eaFJnHcOo3VWWz9FLpT1drtPy8Ccc.wav',
+                'is_preview' => true,
+                'order' => 1,
+                'content_html' => '<p>Wie wirkt Stress auf Körper und Geist? Erfahren Sie die biochemischen Abläufe der Stressachse.</p>',
+            ]
+        );
 
-        Lesson::create([
-            'course_id' => $stressCourse->id,
-            'chapter_name' => 'Modul 1: Stress verstehen',
-            'title' => '2. Individuelle Stressoren und Antreiber identifizieren',
-            'slug' => 'stressoren-identifizieren',
-            'lesson_number' => 2,
-            'duration_minutes' => 24,
-            'video_url' => 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
-            'video_path' => 'videos/stress-lektion-2.mp4',
-            'pdf_attachment_name' => 'Innere_Antreiber_Test.pdf',
-            'pdf_attachment_path' => 'materials/Innere_Antreiber_Test.pdf',
-            'audio_path' => 'audio/w5RTq6i8FMgDxZC9UAeEUsgnk1IS2hl0L8aodp2T.wav',
-            'is_preview' => false,
-            'order' => 2,
-            'content_html' => '<p>Die 5 inneren Antreiber: Sei perfekt, sei schnell, streng dich an, mach es allen recht, sei stark.</p>',
-        ]);
+        Lesson::updateOrCreate(
+            ['course_id' => $stressCourse->id, 'slug' => 'stressoren-identifizieren'],
+            [
+                'chapter_name' => 'Modul 1: Stress verstehen',
+                'title' => '2. Individuelle Stressoren und Antreiber identifizieren',
+                'lesson_number' => 2,
+                'duration_minutes' => 24,
+                'video_url' => 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
+                'video_path' => 'videos/stress-lektion-2.mp4',
+                'pdf_attachment_name' => 'Innere_Antreiber_Test.pdf',
+                'pdf_attachment_path' => 'materials/Innere_Antreiber_Test.pdf',
+                'audio_path' => 'audio/w5RTq6i8FMgDxZC9UAeEUsgnk1IS2hl0L8aodp2T.wav',
+                'is_preview' => false,
+                'order' => 2,
+                'content_html' => '<p>Die 5 inneren Antreiber: Sei perfekt, sei schnell, streng dich an, mach es allen recht, sei stark.</p>',
+            ]
+        );
 
-        Lesson::create([
-            'course_id' => $stressCourse->id,
-            'chapter_name' => 'Modul 2: Sofortinterventionen',
-            'title' => '3. Die SOS-Entspannungsübung für den Arbeitsalltag',
-            'slug' => 'sos-entspannung',
-            'lesson_number' => 3,
-            'duration_minutes' => 15,
-            'video_url' => 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
-            'video_path' => 'videos/stress-lektion-3.mp4',
-            'pdf_attachment_name' => 'Atemtechniken_Uebersicht.pdf',
-            'pdf_attachment_path' => 'materials/Atemtechniken_Uebersicht.pdf',
-            'audio_path' => 'audio/SMdGRmsH0Z5eaFJnHcOo3VWWz9FLpT1drtPy8Ccc.wav',
-            'is_preview' => false,
-            'order' => 3,
-            'content_html' => '<p>Gezielte Atem- und Körperübungen zur schnellen Senkung des Herzschlags und Cortisolspiegels.</p>',
-        ]);
+        Lesson::updateOrCreate(
+            ['course_id' => $stressCourse->id, 'slug' => 'sos-entspannung'],
+            [
+                'chapter_name' => 'Modul 2: Sofortinterventionen',
+                'title' => '3. Die SOS-Entspannungsübung für den Arbeitsalltag',
+                'lesson_number' => 3,
+                'duration_minutes' => 15,
+                'video_url' => 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+                'video_path' => 'videos/stress-lektion-3.mp4',
+                'pdf_attachment_name' => 'Atemtechniken_Uebersicht.pdf',
+                'pdf_attachment_path' => 'materials/Atemtechniken_Uebersicht.pdf',
+                'audio_path' => 'audio/SMdGRmsH0Z5eaFJnHcOo3VWWz9FLpT1drtPy8Ccc.wav',
+                'is_preview' => false,
+                'order' => 3,
+                'content_html' => '<p>Gezielte Atem- und Körperübungen zur schnellen Senkung des Herzschlags und Cortisolspiegels.</p>',
+            ]
+        );
 
         // 6.b Seed Audio Adventure Lessons for Rio Negro 2002
         $rioCourse = $courses['rio-negro-2002'];
-        Lesson::create([
-            'course_id' => $rioCourse->id,
-            'chapter_name' => 'Teil 1: Die Expedition beginnt',
-            'title' => '1. Einführung in das Audio-Abenteuer Rio Negro',
-            'slug' => 'einfuehrung-audio-abenteuer',
-            'lesson_number' => 1,
-            'duration_minutes' => 14,
-            'video_url' => null,
-            'video_path' => null,
-            'pdf_attachment_name' => 'Rio_Negro_Expeditionsbuch.pdf',
-            'pdf_attachment_path' => 'materials/DjtP2gYwdR7gFgq6mB3z3LpeCymMZms5WmWxli5h.pdf',
-            'audio_path' => 'audio/SMdGRmsH0Z5eaFJnHcOo3VWWz9FLpT1drtPy8Ccc.wav',
-            'is_preview' => true,
-            'order' => 1,
-            'content_html' => '<h3>Das Rio Negro Audio-Abenteuer</h3><p>Hören Sie die Einführung und bereiten Sie Ihr persönliches Expeditionsbuch für die Reise vor.</p>',
-        ]);
+        Lesson::updateOrCreate(
+            ['course_id' => $rioCourse->id, 'slug' => 'einfuehrung-audio-abenteuer'],
+            [
+                'chapter_name' => 'Teil 1: Die Expedition beginnt',
+                'title' => '1. Einführung in das Audio-Abenteuer Rio Negro',
+                'lesson_number' => 1,
+                'duration_minutes' => 14,
+                'video_url' => null,
+                'video_path' => null,
+                'pdf_attachment_name' => 'Rio_Negro_Expeditionsbuch.pdf',
+                'pdf_attachment_path' => 'materials/DjtP2gYwdR7gFgq6mB3z3LpeCymMZms5WmWxli5h.pdf',
+                'audio_path' => 'audio/SMdGRmsH0Z5eaFJnHcOo3VWWz9FLpT1drtPy8Ccc.wav',
+                'is_preview' => true,
+                'order' => 1,
+                'content_html' => '<h3>Das Rio Negro Audio-Abenteuer</h3><p>Hören Sie die Einführung und bereiten Sie Ihr persönliches Expeditionsbuch für die Reise vor.</p>',
+            ]
+        );
 
-        Lesson::create([
-            'course_id' => $rioCourse->id,
-            'chapter_name' => 'Teil 1: Die Expedition beginnt',
-            'title' => '2. Die erste Etappe – Aufbruch in Manaus',
-            'slug' => 'die-erste-etappe-manaus',
-            'lesson_number' => 2,
-            'duration_minutes' => 22,
-            'video_url' => null,
-            'video_path' => null,
-            'pdf_attachment_name' => 'Etappe_1_Entscheidungskarte.pdf',
-            'pdf_attachment_path' => 'materials/DjtP2gYwdR7gFgq6mB3z3LpeCymMZms5WmWxli5h.pdf',
-            'audio_path' => 'audio/w5RTq6i8FMgDxZC9UAeEUsgnk1IS2hl0L8aodp2T.wav',
-            'is_preview' => false,
-            'order' => 2,
-            'content_html' => '<h3>Erste Etappe: Manaus</h3><p>Hören Sie die Originalaufnahmen der ersten Station und treffen Sie Ihre erste Richtungsentscheidung.</p>',
-        ]);
+        Lesson::updateOrCreate(
+            ['course_id' => $rioCourse->id, 'slug' => 'die-erste-etappe-manaus'],
+            [
+                'chapter_name' => 'Teil 1: Die Expedition beginnt',
+                'title' => '2. Die erste Etappe – Aufbruch in Manaus',
+                'lesson_number' => 2,
+                'duration_minutes' => 22,
+                'video_url' => null,
+                'video_path' => null,
+                'pdf_attachment_name' => 'Etappe_1_Entscheidungskarte.pdf',
+                'pdf_attachment_path' => 'materials/DjtP2gYwdR7gFgq6mB3z3LpeCymMZms5WmWxli5h.pdf',
+                'audio_path' => 'audio/w5RTq6i8FMgDxZC9UAeEUsgnk1IS2hl0L8aodp2T.wav',
+                'is_preview' => false,
+                'order' => 2,
+                'content_html' => '<h3>Erste Etappe: Manaus</h3><p>Hören Sie die Originalaufnahmen der ersten Station und treffen Sie Ihre erste Richtungsentscheidung.</p>',
+            ]
+        );
 
-        Lesson::create([
-            'course_id' => $rioCourse->id,
-            'chapter_name' => 'Teil 2: Tiefer in den Dschungel',
-            'title' => '3. Die Fortsetzung – Unerwartete Hindernisse',
-            'slug' => 'die-fortsetzung-hindernisse',
-            'lesson_number' => 3,
-            'duration_minutes' => 19,
-            'video_url' => null,
-            'video_path' => null,
-            'pdf_attachment_name' => 'Etappe_2_Tagebuch.pdf',
-            'pdf_attachment_path' => 'materials/DjtP2gYwdR7gFgq6mB3z3LpeCymMZms5WmWxli5h.pdf',
-            'audio_path' => 'audio/SMdGRmsH0Z5eaFJnHcOo3VWWz9FLpT1drtPy8Ccc.wav',
-            'is_preview' => false,
-            'order' => 3,
-            'content_html' => '<h3>Zweite Etappe: Der Flusslauf</h3><p>Erleben Sie die dynamische Fortsetzung der Reise auf dem Rio Negro.</p>',
-        ]);
+        Lesson::updateOrCreate(
+            ['course_id' => $rioCourse->id, 'slug' => 'die-fortsetzung-hindernisse'],
+            [
+                'chapter_name' => 'Teil 2: Tiefer in den Dschungel',
+                'title' => '3. Die Fortsetzung – Unerwartete Hindernisse',
+                'lesson_number' => 3,
+                'duration_minutes' => 19,
+                'video_url' => null,
+                'video_path' => null,
+                'pdf_attachment_name' => 'Etappe_2_Tagebuch.pdf',
+                'pdf_attachment_path' => 'materials/DjtP2gYwdR7gFgq6mB3z3LpeCymMZms5WmWxli5h.pdf',
+                'audio_path' => 'audio/SMdGRmsH0Z5eaFJnHcOo3VWWz9FLpT1drtPy8Ccc.wav',
+                'is_preview' => false,
+                'order' => 3,
+                'content_html' => '<h3>Zweite Etappe: Der Flusslauf</h3><p>Erleben Sie die dynamische Fortsetzung der Reise auf dem Rio Negro.</p>',
+            ]
+        );
 
-        Lesson::create([
-            'course_id' => $rioCourse->id,
-            'chapter_name' => 'Teil 3: Das Fazit',
-            'title' => '4. Der Abschluss – Erkenntnisse für eigene Entscheidungen',
-            'slug' => 'der-abschluss-erkenntnisse',
-            'lesson_number' => 4,
-            'duration_minutes' => 26,
-            'video_url' => null,
-            'video_path' => null,
-            'pdf_attachment_name' => 'Expeditions_Fazit_Leitfaden.pdf',
-            'pdf_attachment_path' => 'materials/DjtP2gYwdR7gFgq6mB3z3LpeCymMZms5WmWxli5h.pdf',
-            'audio_path' => 'audio/w5RTq6i8FMgDxZC9UAeEUsgnk1IS2hl0L8aodp2T.wav',
-            'is_preview' => false,
-            'order' => 4,
-            'content_html' => '<h3>Abschluss & Erkenntnisse</h3><p>Wie Dennis tatsächlich handelte und welche Prinzipien für reale Lebensentscheidungen daraus folgen.</p>',
-        ]);
+        Lesson::updateOrCreate(
+            ['course_id' => $rioCourse->id, 'slug' => 'der-abschluss-erkenntnisse'],
+            [
+                'chapter_name' => 'Teil 3: Das Fazit',
+                'title' => '4. Der Abschluss – Erkenntnisse für eigene Entscheidungen',
+                'lesson_number' => 4,
+                'duration_minutes' => 26,
+                'video_url' => null,
+                'video_path' => null,
+                'pdf_attachment_name' => 'Expeditions_Fazit_Leitfaden.pdf',
+                'pdf_attachment_path' => 'materials/DjtP2gYwdR7gFgq6mB3z3LpeCymMZms5WmWxli5h.pdf',
+                'audio_path' => 'audio/w5RTq6i8FMgDxZC9UAeEUsgnk1IS2hl0L8aodp2T.wav',
+                'is_preview' => false,
+                'order' => 4,
+                'content_html' => '<h3>Abschluss & Erkenntnisse</h3><p>Wie Dennis tatsächlich handelte und welche Prinzipien für reale Lebensentscheidungen daraus folgen.</p>',
+            ]
+        );
 
         // 7. Enroll Test Member in Test Courses & Seed Initial Progress
-        Enrollment::create([
-            'user_id' => $member->id,
-            'course_id' => $kompaktCourse->id,
-            'invoice_number' => 'RE-2026-001',
-            'started_at' => now()->subDays(5)->toDateString(),
-            'expires_at' => now()->addDays(85)->toDateString(),
-            'is_active' => true,
-            'early_start_agreed' => true,
-        ]);
+        Enrollment::updateOrCreate(
+            ['user_id' => $member->id, 'course_id' => $kompaktCourse->id],
+            [
+                'invoice_number' => 'RE-2026-001',
+                'started_at' => now()->subDays(5)->toDateString(),
+                'expires_at' => now()->addDays(85)->toDateString(),
+                'is_active' => true,
+                'early_start_agreed' => true,
+            ]
+        );
 
-        Enrollment::create([
-            'user_id' => $member->id,
-            'course_id' => $stressCourse->id,
-            'invoice_number' => 'RE-2026-002',
-            'started_at' => now()->subDays(3)->toDateString(),
-            'expires_at' => now()->addDays(87)->toDateString(),
-            'is_active' => true,
-            'early_start_agreed' => true,
-        ]);
+        Enrollment::updateOrCreate(
+            ['user_id' => $member->id, 'course_id' => $stressCourse->id],
+            [
+                'invoice_number' => 'RE-2026-002',
+                'started_at' => now()->subDays(3)->toDateString(),
+                'expires_at' => now()->addDays(87)->toDateString(),
+                'is_active' => true,
+                'early_start_agreed' => true,
+            ]
+        );
 
-        Enrollment::create([
-            'user_id' => $member->id,
-            'course_id' => $rioCourse->id,
-            'invoice_number' => 'RE-2026-003',
-            'started_at' => now()->subDays(2)->toDateString(),
-            'expires_at' => now()->addDays(28)->toDateString(),
-            'is_active' => true,
-            'early_start_agreed' => true,
-        ]);
+        Enrollment::updateOrCreate(
+            ['user_id' => $member->id, 'course_id' => $rioCourse->id],
+            [
+                'invoice_number' => 'RE-2026-003',
+                'started_at' => now()->subDays(2)->toDateString(),
+                'expires_at' => now()->addDays(28)->toDateString(),
+                'is_active' => true,
+                'early_start_agreed' => true,
+            ]
+        );
 
         // Mark first 2 lessons as completed for test member
-        LessonProgress::create([
-            'user_id' => $member->id,
-            'lesson_id' => $createdLessons[0]->id,
-            'course_id' => $kompaktCourse->id,
-            'is_completed' => true,
-            'completed_at' => now()->subDays(3),
-            'last_position_seconds' => 1080,
-        ]);
+        if (isset($createdLessons[0])) {
+            LessonProgress::updateOrCreate(
+                ['user_id' => $member->id, 'lesson_id' => $createdLessons[0]->id],
+                [
+                    'course_id' => $kompaktCourse->id,
+                    'is_completed' => true,
+                    'completed_at' => now()->subDays(3),
+                    'last_position_seconds' => 1080,
+                ]
+            );
+        }
 
-        LessonProgress::create([
-            'user_id' => $member->id,
-            'lesson_id' => $createdLessons[1]->id,
-            'course_id' => $kompaktCourse->id,
-            'is_completed' => true,
-            'completed_at' => now()->subDay(),
-            'last_position_seconds' => 1500,
-        ]);
+        if (isset($createdLessons[1])) {
+            LessonProgress::updateOrCreate(
+                ['user_id' => $member->id, 'lesson_id' => $createdLessons[1]->id],
+                [
+                    'course_id' => $kompaktCourse->id,
+                    'is_completed' => true,
+                    'completed_at' => now()->subDay(),
+                    'last_position_seconds' => 1500,
+                ]
+            );
+        }
 
         // 8. Seed Admin Notes & Version Notes & Access Requests
-        AdminNote::create([
-            'user_id' => $admin->id,
-            'title' => 'Papierkram Rechnungsabgleich',
-            'body' => 'Kontoauszüge für August abgleichen und Rechnungsnummern für Neuanmeldungen prüfen.',
-            'expires_at' => now()->addDays(9),
-        ]);
+        AdminNote::updateOrCreate(
+            ['user_id' => $admin->id, 'title' => 'Papierkram Rechnungsabgleich'],
+            [
+                'body' => 'Kontoauszüge für August abgleichen und Rechnungsnummern für Neuanmeldungen prüfen.',
+                'expires_at' => now()->addDays(9),
+            ]
+        );
 
-        AdminNote::create([
-            'user_id' => $admin->id,
-            'title' => 'Testphase mit Auftraggeber abstimmen',
-            'body' => 'Phase 1 Funktionen (Login, Testkurs, Fortschrittsspeicherung, Adminverwaltung) vollständig verifiziert.',
-            'expires_at' => now()->addDays(10),
-        ]);
+        AdminNote::updateOrCreate(
+            ['user_id' => $admin->id, 'title' => 'Testphase mit Auftraggeber abstimmen'],
+            [
+                'body' => 'Phase 1 Funktionen (Login, Testkurs, Fortschrittsspeicherung, Adminverwaltung) vollständig verifiziert.',
+                'expires_at' => now()->addDays(10),
+            ]
+        );
 
-        VersionNote::create([
-            'user_id' => $admin->id,
-            'title' => 'Zertifikats-PDF Download für Kunden',
-            'body' => 'Nach 100% Kursabschluss automatische Generierung eines personalisierten Teilnahme-Zertifikats (Phase 2).',
-        ]);
+        VersionNote::updateOrCreate(
+            ['user_id' => $admin->id, 'title' => 'Zertifikats-PDF Download für Kunden'],
+            [
+                'body' => 'Nach 100% Kursabschluss automatische Generierung eines personalisierten Teilnahme-Zertifikats (Phase 2).',
+            ]
+        );
 
-        VersionNote::create([
-            'user_id' => $admin->id,
-            'title' => 'Mitarbeiter-Portal Erweiterung',
-            'body' => 'Mitarbeiterbereich mit direkter CRM-Anbindung für Kundensupport und Telefonnotizen einbinden.',
-        ]);
+        VersionNote::updateOrCreate(
+            ['user_id' => $admin->id, 'title' => 'Mitarbeiter-Portal Erweiterung'],
+            [
+                'body' => 'Mitarbeiterbereich mit direkter CRM-Anbindung für Kundensupport und Telefonnotizen einbinden.',
+            ]
+        );
 
-        AccessRequest::create([
-            'first_name' => 'Thomas',
-            'username' => 'thomas.k',
-            'invoice_number' => 'RE-2026-089',
-            'course_slug' => 'dnl-kompakt',
-            'course_name' => '5-Tage-Kompaktlehrgang',
-            'email' => 'thomas@example.de',
-            'note' => 'Passwort verlegt nach Gerätewechsel. Bitte um Zusendung eines neuen Kennworts.',
-            'status' => 'open',
-        ]);
+        AccessRequest::updateOrCreate(
+            ['username' => 'thomas.k'],
+            [
+                'first_name' => 'Thomas',
+                'invoice_number' => 'RE-2026-089',
+                'course_slug' => 'dnl-kompakt',
+                'course_name' => '5-Tage-Kompaktlehrgang',
+                'email' => 'thomas@example.de',
+                'note' => 'Passwort verlegt nach Gerätewechsel. Bitte um Zusendung eines neuen Kennworts.',
+                'status' => 'open',
+            ]
+        );
     }
 }

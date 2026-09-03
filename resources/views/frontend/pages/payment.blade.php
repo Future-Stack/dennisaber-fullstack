@@ -60,7 +60,7 @@
                     </div>
 
                     <label>Kontoinhaber laut Rechnung
-                        <input type="text" id="giro-recipient" maxLength="70" autoComplete="off" required placeholder="z. B. Dennis Besseler" value="Dennis Besseler" oninput="hideError()"/>
+                        <input type="text" id="giro-recipient" maxLength="70" autoComplete="off" required placeholder="z. B. Dennis Besseler" value="" oninput="hideError()"/>
                     </label>
                     <label>IBAN laut Rechnung
                         <input type="text" id="giro-iban" inputMode="text" maxLength="42" autoComplete="off" spellCheck="false" required placeholder="z. B. DE89 3704 0044 0532 0130 00" oninput="hideError()"/>
