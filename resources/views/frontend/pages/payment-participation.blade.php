@@ -22,7 +22,7 @@
             <h2>1. Vertragspartner und Geltungsbereich</h2>
             <p>Vertragspartner für alle Kurszugänge ist Dennis Besseler, Aachenerstraße 1193, 50858 Köln. Diese Bedingungen gelten für die Bereitstellung digitaler Kursinhalte über dieses Kursportal.</p>
             <h2>2. Bereitstellung und Zahlungsabwicklung</h2>
-            <p>Der Zugang zu den gebuchten Kursinhalten wird nach Eingang des vereinbarten Rechnungsbetrages und individueller Prüfung für die vereinbarte Laufzeit (in der Regel 90 Tage) freigeschaltet.</p>
+            <p>Der Zugang zu den gebuchten Kursinhalten wird nach Eingang des vereinbarten Rechnungsbetrages und individueller Prüfung für die vereinbarte Laufzeit (in der Regel vier Monate bzw. 120 Tage ab Freischaltung) freigeschaltet.</p>
             <h2>3. Einzelgeräte-Bindung und Urheberrecht</h2>
             <p>Jeder persönliche Kurszugang ist an ein einzelnes Endgerät gebunden. Die Vervielfältigung, öffentliche Vorführung oder Weitergabe der Zugangsdaten und Kursmaterialien ist untersagt.</p>
         </article>

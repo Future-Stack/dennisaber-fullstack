@@ -102,7 +102,7 @@ class DashboardController extends Controller
                     ? Carbon::parse($request->start_date)
                     : ($isEarlyStart ? now() : now()->addDays(14));
 
-                $expiresDate = $startDate->copy()->addDays($course->duration_days ?: 90);
+                $expiresDate = $startDate->copy()->addDays($course->duration_days ?: 120);
 
                 Enrollment::create([
                     'user_id' => $customer->id,

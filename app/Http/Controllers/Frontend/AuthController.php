@@ -67,32 +67,30 @@ class AuthController extends Controller
             }
         }
 
-        /**
-         * Dynamic One-Device Binding for Members & Staff (temporarily commented out for HTTP testing)
-         */
-        /*
-        $deviceId = $request->device_id;
-        $deviceName = $request->device_name ?: 'Kundenbrowser';
+        // Dynamic One-Device Binding for Members & Staff
+        if ($request->filled('device_id')) {
+            $deviceId = $request->device_id;
+            $deviceName = $request->device_name ?: 'Kundenbrowser';
 
-        if (blank($user->device_id)) {
-            // First login → dynamically bind device
-            $user->update([
-                'device_id' => $deviceId,
-                'device_name' => $deviceName,
-                'device_bound_at' => now(),
-                'last_device_activity_at' => now(),
-            ]);
-        } elseif ($user->device_id !== $deviceId) {
-            throw ValidationException::withMessages([
-                'login' => __('Dieses Konto ist bereits an ein anderes Gerät gebunden. Aus Sicherheits- und Urheberrechtsgründen kann der Kurs nur auf Ihrem registrierten Erstgerät genutzt werden. Bei einem Gerätewechsel wenden Sie sich bitte an den Support.'),
-            ]);
-        } else {
-            $user->update([
-                'last_device_activity_at' => now(),
-                'device_name' => $deviceName,
-            ]);
+            if (blank($user->device_id)) {
+                // First login → dynamically bind device
+                $user->update([
+                    'device_id' => $deviceId,
+                    'device_name' => $deviceName,
+                    'device_bound_at' => now(),
+                    'last_device_activity_at' => now(),
+                ]);
+            } elseif ($user->device_id !== $deviceId) {
+                throw ValidationException::withMessages([
+                    'login' => __('Dieses Konto ist bereits an ein anderes Gerät gebunden. Aus Sicherheits- und Urheberrechtsgründen kann der Kurs nur auf Ihrem registrierten Erstgerät genutzt werden. Bei einem Gerätewechsel wenden Sie sich bitte an den Support.'),
+                ]);
+            } else {
+                $user->update([
+                    'last_device_activity_at' => now(),
+                    'device_name' => $deviceName,
+                ]);
+            }
         }
-        */
 
         Auth::login($user, true);
         $request->session()->regenerate();

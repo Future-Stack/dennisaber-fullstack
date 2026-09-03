@@ -82,7 +82,7 @@
         {
             id: 'KP-03', area: 'Kurse', title: 'Zugangsdauer', question: 'Wie lange kann ich einen Kurs nutzen?',
             keywords: ['laufzeit', 'zugangsdauer', 'wie lange zugriff', 'abgelaufen', 'dauer'],
-            answer: 'Reguläre Kurse laufen drei Monate ab der individuellen Freischaltung. Das Audio-Abenteuer Rio Negro 2002 ist die einzige Ausnahme und läuft 30 Tage.',
+            answer: 'Reguläre Kurse laufen vier Monate ab der individuellen Freischaltung. Das Audio-Abenteuer Rio Negro 2002 ist die einzige Ausnahme und läuft 30 Tage.',
             href: '/', linkLabel: 'Zur Kursübersicht', support: false
         },
         {

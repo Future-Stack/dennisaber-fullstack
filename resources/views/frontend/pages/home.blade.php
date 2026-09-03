@@ -32,7 +32,7 @@
             <div>
                 <article>
                     <span>Reguläre Kurse</span>
-                    <strong>Drei Monate</strong>
+                    <strong>Vier Monate</strong>
                     <p>Ab der individuellen Freischaltung.</p>
                     <a href="{{ route('course-compact') }}">Zum Fünf-Tage-Kurs →</a>
                 </article>
@@ -64,7 +64,7 @@
                         <h3>5-Tage-Kompaktlehrgang</h3>
                         <div class="catalog-card-bottom">
                             <strong>490 €</strong>
-                            <span>Drei Monate ab Freischaltung</span>
+                            <span>Vier Monate ab Freischaltung</span>
                             <b>Landingpage öffnen →</b>
                         </div>
                     </a>
@@ -73,7 +73,7 @@
                         <h3>Vertiefungsausbildung</h3>
                         <div class="catalog-card-bottom">
                             <strong>890 €</strong>
-                            <span>Drei Monate ab Freischaltung</span>
+                            <span>Vier Monate ab Freischaltung</span>
                             <b>Landingpage öffnen →</b>
                         </div>
                     </a>
@@ -82,7 +82,7 @@
                         <h3>Premium-Seminar</h3>
                         <div class="catalog-card-bottom">
                             <strong>1.490 €</strong>
-                            <span>Drei Monate ab Freischaltung</span>
+                            <span>Vier Monate ab Freischaltung</span>
                             <b>Landingpage öffnen →</b>
                         </div>
                     </a>
@@ -101,7 +101,7 @@
                         <h3>Stress und Ressourcen</h3>
                         <div class="catalog-card-bottom">
                             <strong>199 €</strong>
-                            <span>Drei Monate ab Freischaltung</span>
+                            <span>Vier Monate ab Freischaltung</span>
                             <b>Landingpage öffnen →</b>
                         </div>
                     </a>
@@ -110,7 +110,7 @@
                         <h3>Rauchfrei</h3>
                         <div class="catalog-card-bottom">
                             <strong>199 €</strong>
-                            <span>Drei Monate ab Freischaltung</span>
+                            <span>Vier Monate ab Freischaltung</span>
                             <b>Landingpage öffnen →</b>
                         </div>
                     </a>
@@ -119,7 +119,7 @@
                         <h3>Ernährung</h3>
                         <div class="catalog-card-bottom">
                             <strong>199 €</strong>
-                            <span>Drei Monate ab Freischaltung</span>
+                            <span>Vier Monate ab Freischaltung</span>
                             <b>Landingpage öffnen →</b>
                         </div>
                     </a>
@@ -128,7 +128,7 @@
                         <h3>Klar entscheiden</h3>
                         <div class="catalog-card-bottom">
                             <strong>199 €</strong>
-                            <span>Drei Monate ab Freischaltung</span>
+                            <span>Vier Monate ab Freischaltung</span>
                             <b>Landingpage öffnen →</b>
                         </div>
                     </a>
@@ -147,7 +147,7 @@
                         <h3>Erfolgreich gründen</h3>
                         <div class="catalog-card-bottom">
                             <strong>1.690 €</strong>
-                            <span>Drei Monate ab Freischaltung</span>
+                            <span>Vier Monate ab Freischaltung</span>
                             <b>Landingpage öffnen →</b>
                         </div>
                     </a>
@@ -156,7 +156,7 @@
                         <h3>Presse &amp; Öffentlichkeit</h3>
                         <div class="catalog-card-bottom">
                             <strong>390 €</strong>
-                            <span>Drei Monate ab Freischaltung</span>
+                            <span>Vier Monate ab Freischaltung</span>
                             <b>Landingpage öffnen →</b>
                         </div>
                     </a>
@@ -165,7 +165,7 @@
                         <h3>Rhetorik unter Druck</h3>
                         <div class="catalog-card-bottom">
                             <strong>249 €</strong>
-                            <span>Drei Monate ab Freischaltung</span>
+                            <span>Vier Monate ab Freischaltung</span>
                             <b>Landingpage öffnen →</b>
                         </div>
                     </a>

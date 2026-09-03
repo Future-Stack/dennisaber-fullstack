@@ -8,5 +8,7 @@
         <a href="{{ route('faster-processing') }}">Schnellere Bearbeitung</a>
         <a href="{{ route('imprint') }}">Impressum</a>
         <a href="{{ route('privacy-policy') }}">Datenschutz</a>
-        <a href="{{ route('payment-participation') }}"></a></nav>
+        <a href="{{ route('payment-participation') }}">Zahlungsbedingungen</a>
+    </nav>
 </footer>
+

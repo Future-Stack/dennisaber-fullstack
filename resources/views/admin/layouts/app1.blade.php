@@ -19,7 +19,7 @@
     <meta name="robots" content="noindex, nofollow"/>
     <link rel="shortcut icon" href="/favicon.svg"/>
     <link rel="icon" href="/favicon.svg"/>
-    <meta name="codex-preview" content="development"/>
+    <meta name="csrf-token" content="{{ csrf_token() }}"/>
     <script>
         self.__VINEXT_RSC_PARAMS__ = {}
     </script>

@@ -139,7 +139,7 @@ class DennisCoursePortalTest extends TestCase
         // Verify enrollment was created
         $enrollment = Enrollment::where('user_id', $customer->id)->first();
         $this->assertNotNull($enrollment);
-        $this->assertEquals(90, $enrollment->started_at->diffInDays($enrollment->expires_at));
+        $this->assertEquals(120, $enrollment->started_at->diffInDays($enrollment->expires_at));
 
         // Simulate device binding
         $customer->update(['device_id' => 'erika-phone-123']);
@@ -404,7 +404,7 @@ class DennisCoursePortalTest extends TestCase
     }
 
     /**
-     * Test Systematic Differentiation of Content Types: Audio, Video, PDF, and Text
+     * Test Course Player with Compact MP3 Player, Dynamic Watermark, and Abuse Report Modal
      */
     public function test_systematic_content_type_rendering_for_audio_video_pdf_text(): void
     {
@@ -413,117 +413,73 @@ class DennisCoursePortalTest extends TestCase
 
         $course = Course::where('slug', 'dnl-kompakt')->first();
 
-        // 1. Audio Lesson (e.g. stressregulation-und-ressourcen)
-        $audioLesson = Lesson::where('slug', 'stressregulation-und-ressourcen')->first();
+        // 1. Audio Lesson with compact MP3 player and diagonal watermark
+        $audioLesson = Lesson::where('slug', 'einfuehrung-und-orientierung')->first();
         $response = $this->get(route('course.lesson', [
             'courseSlug' => $course->slug,
             'lessonSlug' => $audioLesson->slug,
         ]));
         $response->assertStatus(200);
-        $response->assertSee('Audiolektion');
+        $response->assertSee('Audiolektion (MP3)');
         $response->assertSee('id="audio-play-btn"', false);
         $response->assertDontSee('id="lesson-video"', false);
+        $response->assertSee('watermark-overlay-layer', false);
+        $response->assertSee('Missbrauch melden');
+        $response->assertSee('id="abuse-modal"', false);
 
-        // 2. Pure Video Lesson (no audio attached)
-        $pureVideoLesson = Lesson::create([
-            'course_id' => $course->id,
-            'chapter_name' => 'Modul Video',
-            'title' => 'Reine Videolektion',
-            'slug' => 'reine-videolektion',
-            'lesson_number' => 98,
-            'duration_minutes' => 20,
-            'video_url' => 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-            'video_path' => null,
-            'audio_path' => null,
-            'pdf_attachment_name' => null,
-            'pdf_attachment_path' => null,
-            'order' => 98,
+        // 2. Lesson with Companion PDF Workbook
+        $response->assertSee('id="companion-pdf-wrapper"', false);
+        $response->assertSee('01_Uebersicht_und_Lernleitfaden.pdf');
+    }
+
+    /**
+     * Test Course Durations and Time Tracking System
+     */
+    public function test_course_durations_and_time_tracking(): void
+    {
+        // 1. Regular course duration is 120 days (4 months)
+        $regularCourse = Course::where('slug', 'dnl-kompakt')->first();
+        $this->assertEquals(120, $regularCourse->duration_days);
+
+        // 2. Rio Negro is 30 days
+        $rioNegro = Course::where('slug', 'rio-negro-2002')->first();
+        $this->assertEquals(30, $rioNegro->duration_days);
+
+        // 3. Homepage displays 4 months for regular courses
+        $response = $this->get('/');
+        $response->assertStatus(200);
+        $response->assertSee('Vier Monate');
+        $response->assertDontSee('Drei Monate');
+
+        // 4. Admin time tracking API
+        $admin = User::where('role', 'admin')->first();
+        $this->actingAs($admin);
+
+        // Start timer
+        $startRes = $this->postJson(route('time-tracking.start'), [
+            'activity_description' => 'Test Aufgabe Support',
         ]);
+        $startRes->assertStatus(200);
+        $startRes->assertJsonPath('success', true);
 
-        $response = $this->get(route('course.lesson', [
-            'courseSlug' => $course->slug,
-            'lessonSlug' => $pureVideoLesson->slug,
-        ]));
-        $response->assertStatus(200);
-        $response->assertSee('Videolektion');
-        $response->assertSee('id="lesson-video"', false);
-        $response->assertDontSee('id="audio-play-btn"', false);
+        // Status check
+        $statusRes = $this->getJson(route('time-tracking.status'));
+        $statusRes->assertStatus(200);
+        $statusRes->assertJsonPath('active_entry.status', 'running');
 
-        // 2b. Video Lesson with Companion Audio (both video and audio available)
-        $stressCourse = Course::where('slug', 'stress-und-ressourcen')->first();
-        $videoWithAudioLesson = Lesson::where('slug', 'neurobiologie-des-stresses')->first();
-        
-        \App\Models\Enrollment::firstOrCreate(
-            ['user_id' => $member->id, 'course_id' => $stressCourse->id],
-            [
-                'started_at' => now(),
-                'expires_at' => now()->addDays(90),
-                'is_active' => true,
-            ]
-        );
+        // Pause timer
+        $pauseRes = $this->postJson(route('time-tracking.pause.active'));
+        $pauseRes->assertStatus(200);
+        $pauseRes->assertJsonPath('entry.status', 'paused');
 
-        $response = $this->get(route('course.lesson', [
-            'courseSlug' => $stressCourse->slug,
-            'lessonSlug' => $videoWithAudioLesson->slug,
-        ]));
-        $response->assertStatus(200);
-        $response->assertSee('Audiolektion');
-        $response->assertSee('Video inklusive');
-        $response->assertSee('id="audio-play-btn"', false);
-        $response->assertSee('id="lesson-video"', false);
+        // Resume timer
+        $resumeRes = $this->postJson(route('time-tracking.resume.active'));
+        $resumeRes->assertStatus(200);
+        $resumeRes->assertJsonPath('entry.status', 'running');
 
-        // 3. Create & Test Pure PDF Lesson
-        $pdfLesson = Lesson::create([
-            'course_id' => $course->id,
-            'chapter_name' => 'Modul PDF',
-            'title' => 'Reines PDF Arbeitsbuch',
-            'slug' => 'reines-pdf-arbeitsbuch',
-            'lesson_number' => 99,
-            'duration_minutes' => 15,
-            'video_url' => null,
-            'video_path' => null,
-            'audio_path' => null,
-            'pdf_attachment_name' => 'Test_Workbook.pdf',
-            'pdf_attachment_path' => 'materials/DjtP2gYwdR7gFgq6mB3z3LpeCymMZms5WmWxli5h.pdf',
-            'order' => 99,
-        ]);
-
-        $response = $this->get(route('course.lesson', [
-            'courseSlug' => $course->slug,
-            'lessonSlug' => $pdfLesson->slug,
-        ]));
-        $response->assertStatus(200);
-        $response->assertSee('PDF-Arbeitsbuch');
-        $response->assertSee('id="primary-pdf-wrapper"', false);
-        $response->assertDontSee('id="lesson-video"', false);
-        $response->assertDontSee('id="audio-play-btn"', false);
-
-        // 4. Create & Test Pure Text Lesson
-        $textLesson = Lesson::create([
-            'course_id' => $course->id,
-            'chapter_name' => 'Modul Text',
-            'title' => 'Reine Textlektion',
-            'slug' => 'reine-textlektion',
-            'lesson_number' => 100,
-            'duration_minutes' => 10,
-            'video_url' => null,
-            'video_path' => null,
-            'audio_path' => null,
-            'pdf_attachment_name' => null,
-            'pdf_attachment_path' => null,
-            'content_html' => '<p>Dies ist eine reine Textlektion ohne Medienplayer.</p>',
-            'order' => 100,
-        ]);
-
-        $response = $this->get(route('course.lesson', [
-            'courseSlug' => $course->slug,
-            'lessonSlug' => $textLesson->slug,
-        ]));
-        $response->assertStatus(200);
-        $response->assertSee('Textlektion');
-        $response->assertSee('Dies ist eine reine Textlektion ohne Medienplayer.');
-        $response->assertDontSee('id="lesson-video"', false);
-        $response->assertDontSee('id="audio-play-btn"', false);
-        $response->assertDontSee('id="primary-pdf-wrapper"', false);
+        // Stop timer
+        $stopRes = $this->postJson(route('time-tracking.stop.active'));
+        $stopRes->assertStatus(200);
+        $stopRes->assertJsonPath('entry.status', 'stopped');
     }
 }

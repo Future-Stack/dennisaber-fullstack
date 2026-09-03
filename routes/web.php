@@ -40,17 +40,38 @@ Route::post('/inquiry/mailto', [InquiryController::class, 'generateMailto'])->na
 |--------------------------------------------------------------------------
 */
 Route::view('/course/advanced', 'frontend.pages.course.advanced')->name('course-advanced');
+Route::view('/kurse/dnl-vertiefung', 'frontend.pages.course.advanced');
+
 Route::view('/course/compact', 'frontend.pages.course.compact')->name('course-compact');
+Route::view('/kurse/dnl-kompakt', 'frontend.pages.course.compact');
+
 Route::view('/course/make-decision', 'frontend.pages.course.make-decision')->name('course-make-decision');
+Route::view('/kurse/klar-entscheiden', 'frontend.pages.course.make-decision');
+
 Route::view('/course/nutrition', 'frontend.pages.course.nutrition')->name('course-nutrition');
+Route::view('/kurse/ernaehrung', 'frontend.pages.course.nutrition');
+
 Route::view('/course/premium', 'frontend.pages.course.premium')->name('course-premium');
+Route::view('/kurse/dnl-premium', 'frontend.pages.course.premium');
+
 Route::view('/course/press-public', 'frontend.pages.course.press-public')->name('course-press-public');
+Route::view('/kurse/presse-oeffentlichkeit', 'frontend.pages.course.press-public');
+
 Route::view('/course/under-pressure', 'frontend.pages.course.rhetoric-under-pressure')->name('course-under-pressure');
+Route::view('/kurse/rhetorik-unter-druck', 'frontend.pages.course.rhetoric-under-pressure');
+
 Route::view('/course/rio-negro', 'frontend.pages.course.rio-negro')->name('rio-negro');
+Route::view('/kurse/rio-negro-2002', 'frontend.pages.course.rio-negro');
 Route::view('/service/rio-negro', 'frontend.pages.course.rio-negro')->name('service-rio-negro');
+
 Route::view('/course/smoke-free', 'frontend.pages.course.smoke‑free')->name('smoke-free');
+Route::view('/kurse/rauchfrei', 'frontend.pages.course.smoke‑free');
+
 Route::view('/course/stress-resources', 'frontend.pages.course.stress-resources')->name('stress-resources');
+Route::view('/kurse/stress-und-ressourcen', 'frontend.pages.course.stress-resources');
+
 Route::view('/course/successful-startup', 'frontend.pages.course.successful‑startup')->name('successful-startup');
+Route::view('/kurse/erfolgreich-gruenden', 'frontend.pages.course.successful‑startup');
 Route::view('/gruenden', 'frontend.pages.course.successful‑startup')->name('gruenden');
 
 /*
@@ -140,9 +161,28 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
     // Admin Security Settings
     Route::post('/change-password', [AdminAuthController::class, 'changePassword'])->name('change-password');
+
+    // Admin Time Tracking Overview
+    Route::get('/time-tracking/overview', [\App\Http\Controllers\TimeTrackingController::class, 'adminOverview'])->name('time-tracking.overview');
 });
 
 // Alias for /verwaltung pointing to admin dashboard
 Route::middleware(['auth', 'admin'])->prefix('verwaltung')->name('verwaltung.')->group(function () {
     Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Internal Staff / Management Time Tracking & Abuse Report
+|--------------------------------------------------------------------------
+*/
+Route::middleware('auth')->prefix('api/time-tracking')->name('time-tracking.')->group(function () {
+    Route::get('/status', [\App\Http\Controllers\TimeTrackingController::class, 'status'])->name('status');
+    Route::post('/start', [\App\Http\Controllers\TimeTrackingController::class, 'start'])->name('start');
+    Route::post('/pause', [\App\Http\Controllers\TimeTrackingController::class, 'pause'])->name('pause.active');
+    Route::post('/resume', [\App\Http\Controllers\TimeTrackingController::class, 'resume'])->name('resume.active');
+    Route::post('/stop', [\App\Http\Controllers\TimeTrackingController::class, 'stop'])->name('stop.active');
+    Route::post('/{timeEntry}/pause', [\App\Http\Controllers\TimeTrackingController::class, 'pause'])->name('pause');
+    Route::post('/{timeEntry}/resume', [\App\Http\Controllers\TimeTrackingController::class, 'resume'])->name('resume');
+    Route::post('/{timeEntry}/stop', [\App\Http\Controllers\TimeTrackingController::class, 'stop'])->name('stop');
 });

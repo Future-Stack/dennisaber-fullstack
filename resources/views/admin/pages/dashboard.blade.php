@@ -82,12 +82,61 @@
                 <a href="#sicherheit"><span>06</span>Ablauf</a>
                 <a href="#naechste-version"><span>NV</span>Nächste Version ({{ $versionNotes->count() }})</a>
                 <a href="#pinnwand"><span>01</span>Notizen ({{ $adminNotes->count() }})</a>
-                <a href="https://dennisbesseler.papierkram.de/login?email=mail%40besseler.de" target="_blank" rel="noreferrer"><span>RE</span>Rechnungen</a>
             </div>
-            <div class="work-timer is-compact">
-                <button class="work-timer-toggle" id="timer-btn" type="button" aria-expanded="false" onclick="toggleTimer()">
-                    <span>Timer</span><b id="timer-display">00:00:00</b>
+            <div class="work-timer is-compact notranslate" translate="no" id="admin-work-timer-wrapper">
+                <button class="work-timer-toggle" id="admin-timer-toggle-btn" type="button" aria-expanded="false" onclick="toggleAdminWorkTimerPanel()">
+                    <span id="admin-timer-label">Timer</span>
+                    <b id="admin-timer-clock">00:00:00</b>
                 </button>
+                <div class="work-timer-panel" id="admin-timer-panel" style="display: none;">
+                    <div class="work-timer-panel-head">
+                        <strong>Zeitmessung</strong>
+                        <button type="button" aria-label="Timer minimieren" onclick="toggleAdminWorkTimerPanel(false)">
+                            <span aria-hidden="true">×</span> Minimieren
+                        </button>
+                    </div>
+
+                    {{-- Active Running Box --}}
+                    <div class="work-timer-running" id="admin-timer-running-box" style="display: none;">
+                        <span>Aktuelle Zeitmessung</span>
+                        <strong id="admin-timer-active-subject">Kundenbetreuung</strong>
+                        <b id="admin-timer-big-clock">00:00:00</b>
+                        <button type="button" onclick="adminStopTimer()">Zeit stoppen</button>
+                    </div>
+
+                    {{-- Start Form --}}
+                    <form id="admin-timer-start-form" onsubmit="adminStartTimer(event)">
+                        <label>
+                            <span>Betreff</span>
+                            <input required maxlength="120" id="admin-timer-input-subject" placeholder="Wofür wird die Zeit gestoppt?">
+                        </label>
+                        <button type="submit" id="admin-timer-start-submit-btn">Zeitmessung starten</button>
+                    </form>
+
+                    <p role="alert" id="admin-timer-alert" style="display: none; color: #f87171; font-size: 0.82rem; margin-top: 0.5rem;"></p>
+
+                    {{-- History --}}
+                    <div class="work-timer-history">
+                        <span>Die drei letzten Messungen</span>
+                        <p class="work-timer-limit" role="note">
+                            Wichtig: Es werden höchstens drei abgeschlossene Zeitmessungen gespeichert. Sobald eine vierte Messung abgeschlossen wird, wird der älteste Eintrag automatisch gelöscht.
+                        </p>
+                        <div id="admin-timer-history-container">
+                            <small>Noch keine abgeschlossene Zeitmessung.</small>
+                        </div>
+                    </div>
+
+                    {{-- Send to Dennis --}}
+                    <div class="work-timer-send">
+                        <strong>An Dennis übergeben</strong>
+                        <small>Es öffnet sich Ihr eigenes E-Mail-Programm. Das Portal versendet nichts automatisch.</small>
+                        <label>
+                            <input type="checkbox" id="admin-timer-cc-check" onchange="toggleAdminSendBtn()">
+                            <span>Ich weiß, dass ich mir im geöffneten E-Mail-Programm über „Cc/Kopie“ eine Kopie an meine eigene Adresse senden kann.</span>
+                        </label>
+                        <button type="button" id="admin-timer-send-btn" disabled onclick="adminSendTimerMail()">E-Mail vorbereiten</button>
+                    </div>
+                </div>
             </div>
             <a class="portal-jump-arrow portal-jump-down" href="#admin-page-end" aria-label="Zum unteren Ende des Verwaltungsbereichs">
                 <span aria-hidden="true">↓</span>
@@ -1498,27 +1547,218 @@
             });
         }
 
-        // Work Timer Script
-        let timerRunning = false;
-        let timerSeconds = 0;
-        let timerInterval = null;
+        // Work Timer Script (Dennis Besseler Original Implementation)
+        let adminTimerState = {
+            active: null,
+            completed: [],
+            durationSeconds: 0,
+            interval: null,
+            isPanelOpen: false
+        };
 
-        function toggleTimer() {
-            timerRunning = !timerRunning;
-            const btn = document.getElementById('timer-btn');
-            if (timerRunning) {
-                btn.classList.add('is-running');
-                timerInterval = setInterval(() => {
-                    timerSeconds++;
-                    const h = String(Math.floor(timerSeconds / 3600)).padStart(2, '0');
-                    const m = String(Math.floor((timerSeconds % 3600) / 60)).padStart(2, '0');
-                    const s = String(timerSeconds % 60).padStart(2, '0');
-                    document.getElementById('timer-display').innerText = `${h}:${m}:${s}`;
-                }, 1000);
+        function formatTimerClock(totalSec) {
+            const sec = Math.max(0, Math.floor(totalSec));
+            const hrs = String(Math.floor(sec / 3600)).padStart(2, '0');
+            const mins = String(Math.floor((sec % 3600) / 60)).padStart(2, '0');
+            const secs = String(sec % 60).padStart(2, '0');
+            return `${hrs}:${mins}:${secs}`;
+        }
+
+        function formatTimerHuman(totalSec) {
+            const hrs = Math.floor(totalSec / 3600);
+            const mins = Math.floor((totalSec % 3600) / 60);
+            if (hrs > 0) return `${hrs}h ${mins}m`;
+            return `${mins}m ${totalSec % 60}s`;
+        }
+
+        function toggleAdminWorkTimerPanel(force) {
+            const panel = document.getElementById('admin-timer-panel');
+            const toggleBtn = document.getElementById('admin-timer-toggle-btn');
+            if (typeof force === 'boolean') {
+                adminTimerState.isPanelOpen = force;
             } else {
-                btn.classList.remove('is-running');
-                clearInterval(timerInterval);
+                adminTimerState.isPanelOpen = !adminTimerState.isPanelOpen;
             }
+            if (panel) panel.style.display = adminTimerState.isPanelOpen ? 'block' : 'none';
+            if (toggleBtn) toggleBtn.setAttribute('aria-expanded', adminTimerState.isPanelOpen ? 'true' : 'false');
+        }
+
+        function updateAdminTimerUI() {
+            const toggleBtn = document.getElementById('admin-timer-toggle-btn');
+            const labelEl = document.getElementById('admin-timer-label');
+            const clockEl = document.getElementById('admin-timer-clock');
+            const bigClockEl = document.getElementById('admin-timer-big-clock');
+            const runningBox = document.getElementById('admin-timer-running-box');
+            const startForm = document.getElementById('admin-timer-start-form');
+            const activeSubject = document.getElementById('admin-timer-active-subject');
+            const historyContainer = document.getElementById('admin-timer-history-container');
+
+            const timeFormatted = formatTimerClock(adminTimerState.durationSeconds);
+            if (clockEl) clockEl.textContent = timeFormatted;
+            if (bigClockEl) bigClockEl.textContent = timeFormatted;
+
+            if (adminTimerState.active && adminTimerState.active.status === 'running') {
+                if (toggleBtn) toggleBtn.classList.add('is-running');
+                if (labelEl) labelEl.textContent = 'Timer läuft';
+                if (runningBox) runningBox.style.display = 'block';
+                if (startForm) startForm.style.display = 'none';
+                if (activeSubject) activeSubject.textContent = adminTimerState.active.activity_description || 'Zeitmessung';
+            } else {
+                if (toggleBtn) toggleBtn.classList.remove('is-running');
+                if (labelEl) labelEl.textContent = 'Timer';
+                if (runningBox) runningBox.style.display = 'none';
+                if (startForm) startForm.style.display = 'block';
+            }
+
+            // Render History (max 3 completed entries)
+            if (historyContainer) {
+                if (!adminTimerState.completed || adminTimerState.completed.length === 0) {
+                    historyContainer.innerHTML = '<small>Noch keine abgeschlossene Zeitmessung.</small>';
+                } else {
+                    let html = '';
+                    adminTimerState.completed.slice(0, 3).forEach(item => {
+                        const dateStr = item.ended_at ? new Date(item.ended_at).toLocaleString('de-DE') : (item.started_at ? new Date(item.started_at).toLocaleString('de-DE') : '');
+                        html += `
+                            <div>
+                                <strong>${item.activity_description || 'Aufgabe'}</strong>
+                                <b>${formatTimerHuman(item.duration_seconds || 0)}</b>
+                                <small>${dateStr}</small>
+                            </div>
+                        `;
+                    });
+                    historyContainer.innerHTML = html;
+                }
+            }
+
+            toggleAdminSendBtn();
+        }
+
+        function startAdminTimerLoop() {
+            stopAdminTimerLoop();
+            adminTimerState.interval = setInterval(() => {
+                adminTimerState.durationSeconds += 1;
+                const clockEl = document.getElementById('admin-timer-clock');
+                const bigClockEl = document.getElementById('admin-timer-big-clock');
+                const timeFormatted = formatTimerClock(adminTimerState.durationSeconds);
+                if (clockEl) clockEl.textContent = timeFormatted;
+                if (bigClockEl) bigClockEl.textContent = timeFormatted;
+            }, 1000);
+        }
+
+        function stopAdminTimerLoop() {
+            if (adminTimerState.interval) {
+                clearInterval(adminTimerState.interval);
+                adminTimerState.interval = null;
+            }
+        }
+
+        function fetchAdminTimerStatus() {
+            fetch("{{ route('time-tracking.status') }}", {
+                headers: { 'Accept': 'application/json' }
+            })
+            .then(res => res.json())
+            .then(data => {
+                adminTimerState.completed = data.recent_entries || [];
+                if (data.active_entry && data.active_entry.status === 'running') {
+                    adminTimerState.active = data.active_entry;
+                    adminTimerState.durationSeconds = data.current_duration || 0;
+                    startAdminTimerLoop();
+                } else {
+                    adminTimerState.active = null;
+                    adminTimerState.durationSeconds = 0;
+                    stopAdminTimerLoop();
+                }
+                updateAdminTimerUI();
+            })
+            .catch(err => console.error('Timer Status Error:', err));
+        }
+
+        function adminStartTimer(e) {
+            e.preventDefault();
+            const input = document.getElementById('admin-timer-input-subject');
+            const desc = (input && input.value.trim()) ? input.value.trim() : 'Kundenbetreuung & Portalverwaltung';
+
+            adminTimerState.active = { activity_description: desc, status: 'running' };
+            adminTimerState.durationSeconds = 0;
+            updateAdminTimerUI();
+            startAdminTimerLoop();
+
+            fetch("{{ route('time-tracking.start') }}", {
+                method: 'POST',
+                credentials: 'same-origin',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '{{ csrf_token() }}',
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({ activity_description: desc })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (input) input.value = '';
+                fetchAdminTimerStatus();
+            })
+            .catch(err => {
+                console.error('Start error:', err);
+                fetchAdminTimerStatus();
+            });
+        }
+
+        function adminStopTimer() {
+            adminTimerState.active = null;
+            stopAdminTimerLoop();
+            adminTimerState.durationSeconds = 0;
+            updateAdminTimerUI();
+
+            fetch("{{ route('time-tracking.stop.active') }}", {
+                method: 'POST',
+                credentials: 'same-origin',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '{{ csrf_token() }}',
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json'
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                fetchAdminTimerStatus();
+            })
+            .catch(err => {
+                console.error('Stop error:', err);
+                fetchAdminTimerStatus();
+            });
+        }
+
+        function toggleAdminSendBtn() {
+            const check = document.getElementById('admin-timer-cc-check');
+            const btn = document.getElementById('admin-timer-send-btn');
+            if (btn && check) {
+                btn.disabled = (!check.checked || adminTimerState.completed.length === 0);
+            }
+        }
+
+        function adminSendTimerMail() {
+            if (!adminTimerState.completed || adminTimerState.completed.length === 0) return;
+            const dateStr = new Date().toLocaleDateString('de-DE');
+            
+            let body = `Hallo Dennis,\n\nhiermit übermittle ich folgende Zeitinformationen:\n\n`;
+            adminTimerState.completed.slice(0, 3).forEach((item, idx) => {
+                const startStr = item.started_at ? new Date(item.started_at).toLocaleString('de-DE') : '';
+                const endStr = item.ended_at ? new Date(item.ended_at).toLocaleString('de-DE') : startStr;
+                body += `${idx + 1}. ${item.activity_description || 'Tätigkeit'}\n   Beginn: ${startStr}\n   Ende: ${endStr}\n   Dauer: ${formatTimerHuman(item.duration_seconds || 0)}\n\n`;
+            });
+            body += `Diese Nachricht dient ausschließlich der internen Information.\n\nViele Grüße`;
+
+            window.location.href = `mailto:mail@besseler.de?subject=${encodeURIComponent('Interne Zeitinformation ' + dateStr)}&body=${encodeURIComponent(body)}`;
+        }
+
+        // Initialize WorkTimer on load
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', fetchAdminTimerStatus);
+        } else {
+            fetchAdminTimerStatus();
         }
 
         // Course Management Scripts

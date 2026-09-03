@@ -4,6 +4,7 @@
 <head>
     <meta charSet="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="csrf-token" content="{{ csrf_token() }}"/>
     <link rel="stylesheet" href="{{ asset('admin') }}/assets/index-D96dYb_L.css" data-rsc-css-href="{{ asset('admin') }}/assets/index-D96dYb_L.css"
           data-precedence="vite-rsc/importer-resources"/>
     <link rel="modulepreload" href="{{ asset('admin') }}/assets/layout-segment-context-C4NyleVc.js" crossorigin=""/>
@@ -26,7 +27,6 @@
     <meta name="googlebot" content="noindex, nofollow, noarchive, noimageindex"/>
     <link rel="shortcut icon" href="{{ asset('admin') }}/favicon.svg"/>
     <link rel="icon" href="{{ asset('admin') }}/favicon.svg"/>
-    <meta name="codex-preview" content="development"/>
     <script>
         self.__VINEXT_RSC_PARAMS__ = {}
     </script>

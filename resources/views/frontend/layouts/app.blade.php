@@ -6,6 +6,7 @@
 <head>
     <meta charSet="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="csrf-token" content="{{ csrf_token() }}"/>
     <link rel="stylesheet" href="{{ asset('frontend') }}/assets/index-ChrHLfZ9.css" data-rsc-css-href="/assets/index-ChrHLfZ9.css"
           data-precedence="vite-rsc/importer-resources"/>
     <title>Dennis Besseler Kursportal</title>
@@ -13,7 +14,6 @@
           content="Elf digitale Kurse mit eigener Landingpage und persönlichem, geschütztem Kurszugang."/>
     <link rel="shortcut icon" href="{{ asset('frontend') }}/favicon.svg"/>
     <link rel="icon" href="{{ asset('frontend') }}/favicon.svg"/>
-    <meta name="codex-preview" content="development"/>
     <link rel="preload" href="{{ asset('frontend') }}/workspace/sites/besseler-kursportal/.vinext/fonts/geist-8ac0455e797f/geist-ff2310f5.woff2"
           as="font" type="font/woff2" crossorigin/>
     <link rel="preload" href="{{ asset('frontend') }}/workspace/sites/besseler-kursportal/.vinext/fonts/geist-8ac0455e797f/geist-875ccdd4.woff2"
@@ -234,5 +234,6 @@
     });
 </script>
 <script type="text/javascript" defer src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+@include('frontend.components.time-tracker')
 </body>
 </html>

@@ -21,7 +21,6 @@
           content="Elf digitale Kurse mit eigener Landingpage und persönlichem, geschütztem Kurszugang."/>
     <link rel="shortcut icon" href="favicon.svg"/>
     <link rel="icon" href="favicon.svg"/>
-    <meta name="codex-preview" content="development"/>
     <script>self.__VINEXT_RSC_PARAMS__ = {}</script>
     <script>self.__VINEXT_RSC_NAV__ = {"pathname": "/login", "searchParams": []}</script>
     <link rel="modulepreload" href="assets/index-DMSICxnM.js"/>
@@ -183,7 +182,7 @@
 <body class="__variable_geist_1vfytoh __variable_geist_mono_1gf5fol antialiased">
 <main class="customer-login-page cat-academy">
     <div class="portal-notice"><strong>Technisches Kursportal</strong><span>Keine Bestellung auf dieser Website. <a
-                href="../besseler-kursvorschau.dennis-bes.chatgpt.site/angebote/index.html">Kurse im Verkaufsportal ansehen →</a></span>
+                href="https://www.besseler.de">Kurse im Verkaufsportal ansehen →</a></span>
     </div>
     <header class="portal-header course-header"><a href="index.html" class="portal-brand"><strong>DENNIS
                 BESSELER</strong><span>Kursportal</span></a>

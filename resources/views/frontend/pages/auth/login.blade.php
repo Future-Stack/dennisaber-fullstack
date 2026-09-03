@@ -4,7 +4,7 @@
     <main class="customer-login-page cat-academy">
         <div class="portal-notice">
             <strong>Technisches Kursportal</strong>
-            <span>Keine Bestellung auf dieser Website. <a href="{{ route('home') }}">Kurse im Überblick ansehen →</a></span>
+            <span>Keine Bestellung auf dieser Website. <a href="https://www.besseler.de">Kurse im Verkaufsportal ansehen →</a></span>
         </div>
         <header class="portal-header course-header">
             <a href="{{ route('home') }}" class="portal-brand">
@@ -59,7 +59,7 @@
                 <form method="POST" action="{{ route('login.store') }}" autocomplete="off">
                     @csrf
                     <label>
-                        <span>Benutzername oder E-Mail</span>
+                        <span>Benutzername</span>
                         <input type="text" name="login" required autocomplete="username" value="{{ old('login') }}" placeholder="z. B. testkunde"/>
                     </label>
 
