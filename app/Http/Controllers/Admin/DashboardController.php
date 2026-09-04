@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\AccessRequest;
 use App\Models\AdminNote;
+use App\Models\AuditLog;
 use App\Models\Course;
 use App\Models\Enrollment;
 use App\Models\Lesson;
@@ -21,41 +22,57 @@ class DashboardController extends Controller
 {
     public function index(Request $request)
     {
+        $currentUser = Auth::user();
         $search = $request->input('search');
 
-        // Customer Query
-        $customersQuery = User::where('role', 'member')
-            ->with(['enrollments.course']);
+        // Customer Query (Only if admin or staff with view_customers permission)
+        $customers = collect();
+        if ($currentUser->isAdmin() || $currentUser->hasPermission('view_customers')) {
+            $customersQuery = User::where('role', 'member')
+                ->with(['enrollments.course']);
 
-        if ($search) {
-            $customersQuery->where(function ($q) use ($search) {
-                $q->where('first_name', 'like', "%{$search}%")
-                    ->orWhere('name', 'like', "%{$search}%")
-                    ->orWhere('username', 'like', "%{$search}%")
-                    ->orWhere('invoice_number', 'like', "%{$search}%")
-                    ->orWhere('email', 'like', "%{$search}%");
-            });
+            if ($search) {
+                $customersQuery->where(function ($q) use ($search) {
+                    $q->where('first_name', 'like', "%{$search}%")
+                        ->orWhere('name', 'like', "%{$search}%")
+                        ->orWhere('username', 'like', "%{$search}%")
+                        ->orWhere('invoice_number', 'like', "%{$search}%")
+                        ->orWhere('email', 'like', "%{$search}%");
+                });
+            }
+            $customers = $customersQuery->latest()->get();
         }
 
-        $customers = $customersQuery->latest()->get();
+        // Staff Users (Strict separation: Only Dennis/Admin sees staff)
+        $staffMembers = $currentUser->isAdmin()
+            ? User::where('role', 'staff')->latest()->get()
+            : collect();
 
-        // Staff Users
-        $staffMembers = User::where('role', 'staff')->latest()->get();
+        // Admin Personal Notes (Strictly only Dennis/Admin)
+        $adminNotes = $currentUser->isAdmin()
+            ? AdminNote::where(function ($q) {
+                $q->whereNull('expires_at')
+                    ->orWhere('expires_at', '>', now());
+            })->latest()->take(5)->get()
+            : collect();
 
-        // Admin Personal Notes (only non-expired, up to 5)
-        $adminNotes = AdminNote::where(function ($q) {
-            $q->whereNull('expires_at')
-                ->orWhere('expires_at', '>', now());
-        })->latest()->take(5)->get();
-
-        // Version Notes (permanent)
-        $versionNotes = VersionNote::latest()->get();
+        // Version Notes (Only Admin)
+        $versionNotes = $currentUser->isAdmin()
+            ? VersionNote::latest()->get()
+            : collect();
 
         // Access Requests
         $accessRequests = AccessRequest::where('status', 'open')->latest()->get();
 
         // Courses with all their lessons
         $courses = Course::with(['lessons'])->withCount('lessons')->orderBy('order')->get();
+
+        // Audit Logs (recent security events with pagination)
+        $auditLogs = AuditLog::with('user')
+            ->latest()
+            ->paginate(10, ['*'], 'audit_page')
+            ->withQueryString()
+            ->fragment('audit-log');
 
         return view('admin.pages.dashboard', compact(
             'customers',
@@ -64,12 +81,17 @@ class DashboardController extends Controller
             'versionNotes',
             'accessRequests',
             'courses',
+            'auditLogs',
             'search'
         ));
     }
 
     public function storeCustomer(Request $request)
     {
+        if (! Auth::user()->hasPermission('create_customers')) {
+            return back()->with('error', 'Keine Berechtigung zum Anlegen von Kundenkonten.');
+        }
+
         $request->validate([
             'first_name' => ['required', 'string', 'max:100'],
             'username' => ['required', 'string', 'max:100', 'unique:users,username'],
@@ -128,6 +150,10 @@ class DashboardController extends Controller
 
     public function toggleCustomerActive(User $user)
     {
+        if (! Auth::user()->hasPermission('toggle_active')) {
+            return back()->with('error', 'Keine Berechtigung zum Aktivieren oder Sperren von Kundenkonten.');
+        }
+
         if ($user->isAdmin()) {
             return back()->with('error', 'Administrator-Konto kann nicht gesperrt werden.');
         }
@@ -142,6 +168,10 @@ class DashboardController extends Controller
 
     public function resetCustomerDevice(User $user)
     {
+        if (! Auth::user()->hasPermission('manage_enrollments') && ! Auth::user()->hasPermission('reset_passwords')) {
+            return back()->with('error', 'Keine Berechtigung zum Zurücksetzen von Geräten.');
+        }
+
         $user->update([
             'device_id' => null,
             'device_name' => null,
@@ -149,11 +179,22 @@ class DashboardController extends Controller
             'last_device_activity_at' => null,
         ]);
 
-        return back()->with('success', "Gerätebindung für '{$user->username}' wurde zurückgesetzt. Der Kunde kann sich nun von einem neuen Gerät anmelden.");
+        AuditLog::create([
+            'user_id' => $user->id,
+            'event' => 'DEVICE_RESET',
+            'detail' => "Gerätebindung für '{$user->username}' durch " . (Auth::user()->isAdmin() ? 'Administrator' : 'Mitarbeiter (' . Auth::user()->username . ')') . " zurückgesetzt.",
+            'ip' => request()->ip(),
+        ]);
+
+        return back()->with('success', "Gerätebindung für '{$user->username}' erfolgreich zurückgesetzt.");
     }
 
     public function deleteCustomer(User $user)
     {
+        if (! Auth::user()->isAdmin()) {
+            return back()->with('error', 'Nur der Hauptadministrator kann Kundenkonten endgültig löschen.');
+        }
+
         if ($user->isAdmin()) {
             return back()->with('error', 'Administrator-Konto kann nicht gelöscht werden.');
         }
@@ -166,6 +207,10 @@ class DashboardController extends Controller
 
     public function storeStaff(Request $request)
     {
+        if (! Auth::user()->isAdmin()) {
+            return back()->with('error', 'Nur der Hauptadministrator kann Mitarbeiterkonten anlegen.');
+        }
+
         $request->validate([
             'name' => ['required', 'string', 'max:150'],
             'occupation' => ['required', 'string', 'max:150'],
@@ -201,6 +246,10 @@ class DashboardController extends Controller
 
     public function deleteStaff(User $user)
     {
+        if (! Auth::user()->isAdmin()) {
+            return back()->with('error', 'Nur der Hauptadministrator kann Mitarbeiterkonten entfernen.');
+        }
+
         if ($user->role !== 'staff') {
             return back()->with('error', 'Nur Mitarbeiterkonten können an dieser Stelle entfernt werden.');
         }

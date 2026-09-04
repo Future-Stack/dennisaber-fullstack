@@ -4,12 +4,17 @@
     <main class="admin-workspace" id="admin-page-top">
         <header class="admin-topbar">
             <div>
-                <span class="account-role-badge is-admin">ADMIN-KONTO</span>
-                <strong>DENNIS BESSELER · KUNDENZUGÄNGE</strong>
+                @if(Auth::user()->isAdmin())
+                    <span class="account-role-badge is-admin">ADMIN-KONTO</span>
+                    <strong>DENNIS BESSELER · KUNDENZUGÄNGE</strong>
+                @else
+                    <span class="account-role-badge is-staff">MITARBEITER-KONTO</span>
+                    <strong>DENNIS BESSELER · KUNDENBETREUUNG ({{ Auth::user()->name }})</strong>
+                @endif
             </div>
             <nav>
                 <a href="{{ route('home') }}" target="_blank">Kursportal öffnen</a>
-                <a href="{{ route('member.dashboard') }}" target="_blank">Kundenbereich</a>
+                <a href="{{ route('member.dashboard') }}" target="_blank">{{ Auth::user()->isStaff() ? 'Mitarbeiterbereich' : 'Kundenbereich' }}</a>
                 <form method="post" action="{{ route('admin.logout') }}" style="display:inline;">
                     @csrf
                     <button class="admin-logout-button" type="submit">Abmelden</button>
@@ -70,18 +75,27 @@
 
         <nav class="admin-index" id="admin-navigation" aria-label="Inhaltsverzeichnis">
             <div class="admin-index-links">
-                <a href="#arbeitsmittel"><span>00</span>Bank &amp; Cloud</a>
-                <a href="#mitarbeiter"><span>MA</span>Mitarbeiter ({{ $staffMembers->count() }})</a>
-                <a href="#hauptadmin-sicherheit"><span>SI</span>Admin-Sicherheit</a>
-                <a href="#datenaustausch"><span>DT</span>Datentausch</a>
+                @if(Auth::user()->isAdmin())
+                    <a href="#arbeitsmittel"><span>00</span>Bank &amp; Cloud</a>
+                    <a href="#mitarbeiter"><span>MA</span>Mitarbeiter ({{ $staffMembers->count() }})</a>
+                    <a href="#hauptadmin-sicherheit"><span>SI</span>Admin-Sicherheit</a>
+                    <a href="#datenaustausch"><span>DT</span>Datentausch</a>
+                @endif
                 <a href="#zugangsanfragen"><span>02</span>Anfragen ({{ $accessRequests->count() }})</a>
-                <a href="#kunden"><span>03</span>Kunden ({{ $customers->count() }})</a>
-                <a href="#anlegen"><span>04</span>Anlegen</a>
+                @if(Auth::user()->isAdmin() || Auth::user()->hasPermission('view_customers'))
+                    <a href="#kunden"><span>03</span>Kunden ({{ $customers->count() }})</a>
+                @endif
+                <a href="#audit-log"><span>AL</span>Audit-Protokoll</a>
+                @if(Auth::user()->isAdmin() || Auth::user()->hasPermission('create_customers'))
+                    <a href="#anlegen"><span>04</span>Anlegen</a>
+                @endif
                 <a href="#medien"><span>LM</span>Lektionen &amp; Medien</a>
-                <a href="#auslieferung"><span>05</span>Auslieferung</a>
-                <a href="#sicherheit"><span>06</span>Ablauf</a>
-                <a href="#naechste-version"><span>NV</span>Nächste Version ({{ $versionNotes->count() }})</a>
-                <a href="#pinnwand"><span>01</span>Notizen ({{ $adminNotes->count() }})</a>
+                @if(Auth::user()->isAdmin())
+                    <a href="#auslieferung"><span>05</span>Auslieferung</a>
+                    <a href="#sicherheit"><span>06</span>Ablauf</a>
+                    <a href="#naechste-version"><span>NV</span>Nächste Version ({{ $versionNotes->count() }})</a>
+                    <a href="#pinnwand"><span>01</span>Notizen ({{ $adminNotes->count() }})</a>
+                @endif
             </div>
             <div class="work-timer is-compact notranslate" translate="no" id="admin-work-timer-wrapper">
                 <button class="work-timer-toggle" id="admin-timer-toggle-btn" type="button" aria-expanded="false" onclick="toggleAdminWorkTimerPanel()">
@@ -144,6 +158,7 @@
         </nav>
 
         {{-- 00 Bank Card --}}
+        @if(Auth::user()->isAdmin())
         <section class="admin-bank-card" id="arbeitsmittel" aria-labelledby="business-account-title">
             <div>
                 <p class="eyebrow">Interne Zahlungsdaten</p>
@@ -185,6 +200,7 @@
                 <button type="button" onclick="copyToClipboard('{{ url('/login') }}', this)">Link kopieren</button>
             </div>
         </section>
+        @endif
 
         {{-- Admin Hero --}}
         <section class="admin-hero">
@@ -198,6 +214,7 @@
         </section>
 
         {{-- MA Mitarbeiter --}}
+        @if(Auth::user()->isAdmin())
         <section class="admin-section admin-staff" id="mitarbeiter">
             <header>
                 <div>
@@ -346,6 +363,7 @@
                 @endforelse
             </div>
         </section>
+        @endif
 
         {{-- DT Datenaustausch --}}
         <section class="admin-section cloud-transfer" id="datenaustausch" aria-labelledby="admin-cloud-transfer-title">
@@ -508,25 +526,29 @@
                                     </td>
                                     <td style="padding:1rem; text-align:right;">
                                         <div style="display:flex; justify-content:flex-end; gap:0.4rem;">
-                                            @if($customer->device_id)
+                                            @if($customer->device_id && (Auth::user()->isAdmin() || Auth::user()->hasPermission('reset_passwords') || Auth::user()->hasPermission('manage_enrollments')))
                                                 <form method="POST" action="{{ route('admin.customers.reset-device', $customer->id) }}" onsubmit="return confirm('Gerätebindung für {{ $customer->username }} zurücksetzen?');">
                                                     @csrf
-                                                    <button type="submit" style="background:#0284c7; color:#fff; border:none; padding:0.35rem 0.6rem; border-radius:4px; cursor:pointer; font-size:0.8rem;" title="Gerätebindung zurücksetzen">Gerät reset</button>
+                                                    <button type="submit" style="background:#0284c7; color:#fff; border:none; padding:0.35rem 0.6rem; border-radius:4px; cursor:pointer; font-size:0.8rem;" title="Gerätebindung zurücksetzen">Gerät zurücksetzen</button>
                                                 </form>
                                             @endif
 
-                                            <form method="POST" action="{{ route('admin.customers.toggle', $customer->id) }}">
-                                                @csrf
-                                                <button type="submit" style="background:{{ $customer->is_active ? '#ca8a04' : '#16a34a' }}; color:#fff; border:none; padding:0.35rem 0.6rem; border-radius:4px; cursor:pointer; font-size:0.8rem;">
-                                                    {{ $customer->is_active ? 'Sperren' : 'Aktivieren' }}
-                                                </button>
-                                            </form>
+                                            @if(Auth::user()->isAdmin() || Auth::user()->hasPermission('toggle_active'))
+                                                <form method="POST" action="{{ route('admin.customers.toggle', $customer->id) }}">
+                                                    @csrf
+                                                    <button type="submit" style="background:{{ $customer->is_active ? '#ca8a04' : '#16a34a' }}; color:#fff; border:none; padding:0.35rem 0.6rem; border-radius:4px; cursor:pointer; font-size:0.8rem;">
+                                                        {{ $customer->is_active ? 'Sperren' : 'Aktivieren' }}
+                                                    </button>
+                                                </form>
+                                            @endif
 
-                                            <form method="POST" action="{{ route('admin.customers.delete', $customer->id) }}" onsubmit="return confirm('Möchten Sie das Kundenkonto {{ $customer->username }} endgültig und datensparsam löschen?');">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" style="background:#dc2626; color:#fff; border:none; padding:0.35rem 0.6rem; border-radius:4px; cursor:pointer; font-size:0.8rem;">Löschen</button>
-                                            </form>
+                                            @if(Auth::user()->isAdmin())
+                                                <form method="POST" action="{{ route('admin.customers.delete', $customer->id) }}" onsubmit="return confirm('Möchten Sie das Kundenkonto {{ $customer->username }} endgültig und datensparsam löschen?');">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" style="background:#dc2626; color:#fff; border:none; padding:0.35rem 0.6rem; border-radius:4px; cursor:pointer; font-size:0.8rem;">Löschen</button>
+                                                </form>
+                                            @endif
                                         </div>
                                     </td>
                                 </tr>
@@ -542,7 +564,97 @@
             </div>
         </section>
 
+        {{-- AL Audit-Protokoll --}}
+        <section class="admin-section" id="audit-log">
+            <header>
+                <div>
+                    <span>AL</span>
+                    <p class="eyebrow">Sicherheits- &amp; Audit-Protokoll ({{ $auditLogs->total() }})</p>
+                </div>
+                <h2>Protokollierte Anmelde- und Geräteereignisse.</h2>
+            </header>
+
+            <div style="margin-top:1.5rem; overflow-x:auto;">
+                @if($auditLogs->count() > 0)
+                    <table style="width:100%; border-collapse:collapse; text-align:left; background:#1e293b; border-radius:8px; overflow:hidden;">
+                        <thead>
+                            <tr style="background:#0f172a; color:#94a3b8; font-size:0.85rem; text-transform:uppercase;">
+                                <th style="padding:1rem;">Zeitpunkt</th>
+                                <th style="padding:1rem;">Ereignis</th>
+                                <th style="padding:1rem;">Benutzer</th>
+                                <th style="padding:1rem;">Details</th>
+                                <th style="padding:1rem;">IP-Adresse</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($auditLogs as $log)
+                                <tr style="border-bottom:1px solid #334155; color:#f8fafc; font-size:0.9rem;">
+                                    <td style="padding:0.75rem 1rem; color:#94a3b8; white-space:nowrap;">
+                                        {{ $log->created_at->format('d.m.Y H:i:s') }}
+                                    </td>
+                                    <td style="padding:0.75rem 1rem;">
+                                        @if(str_contains($log->event, 'REJECTED') || str_contains($log->event, 'FAILED'))
+                                            <span style="background:#7f1d1d; color:#fca5a5; padding:0.2rem 0.5rem; border-radius:4px; font-weight:600; font-size:0.8rem;">⚠ {{ $log->event }}</span>
+                                        @elseif(str_contains($log->event, 'BOUND') || str_contains($log->event, 'SUCCESS'))
+                                            <span style="background:#14532d; color:#86efac; padding:0.2rem 0.5rem; border-radius:4px; font-weight:600; font-size:0.8rem;">✓ {{ $log->event }}</span>
+                                        @else
+                                            <span style="background:#1e3a5f; color:#38bdf8; padding:0.2rem 0.5rem; border-radius:4px; font-weight:600; font-size:0.8rem;">ℹ {{ $log->event }}</span>
+                                        @endif
+                                    </td>
+                                    <td style="padding:0.75rem 1rem;">
+                                        @if($log->user)
+                                            <strong>{{ $log->user->username }}</strong>
+                                        @else
+                                            <span style="color:#64748b;">—</span>
+                                        @endif
+                                    </td>
+                                    <td style="padding:0.75rem 1rem; color:#cbd5e1;">
+                                        {{ $log->detail }}
+                                    </td>
+                                    <td style="padding:0.75rem 1rem; color:#94a3b8; font-family:monospace;">
+                                        {{ $log->ip ?: '—' }}
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+
+                    {{-- Pagination Controls --}}
+                    @if($auditLogs->hasPages())
+                        <div style="margin-top: 1.25rem; display: flex; justify-content: space-between; align-items: center; background: #0f172a; padding: 0.85rem 1.25rem; border-radius: 8px; border: 1px solid #334155; flex-wrap: wrap; gap: 0.75rem;">
+                            <span style="color: #94a3b8; font-size: 0.85rem;">
+                                Einträge {{ $auditLogs->firstItem() }} bis {{ $auditLogs->lastItem() }} von insgesamt {{ $auditLogs->total() }} protokollierten Ereignissen
+                            </span>
+                            <div style="display: flex; gap: 0.5rem; align-items: center;">
+                                @if($auditLogs->onFirstPage())
+                                    <span style="background: #1e293b; color: #64748b; padding: 0.4rem 0.85rem; border-radius: 4px; font-size: 0.82rem; cursor: not-allowed; border: 1px solid #334155;">« Zurück</span>
+                                @else
+                                    <a href="{{ $auditLogs->previousPageUrl() }}" style="background: #1e3a5f; color: #38bdf8; padding: 0.4rem 0.85rem; border-radius: 4px; font-size: 0.82rem; text-decoration: none; border: 1px solid #0284c7; font-weight: 600;">« Zurück</a>
+                                @endif
+
+                                <span style="color: #cbd5e1; font-size: 0.85rem; padding: 0 0.5rem; font-weight: 600;">
+                                    Seite {{ $auditLogs->currentPage() }} von {{ $auditLogs->lastPage() }}
+                                </span>
+
+                                @if($auditLogs->hasMorePages())
+                                    <a href="{{ $auditLogs->nextPageUrl() }}" style="background: #1e3a5f; color: #38bdf8; padding: 0.4rem 0.85rem; border-radius: 4px; font-size: 0.82rem; text-decoration: none; border: 1px solid #0284c7; font-weight: 600;">Weiter »</a>
+                                @else
+                                    <span style="background: #1e293b; color: #64748b; padding: 0.4rem 0.85rem; border-radius: 4px; font-size: 0.82rem; cursor: not-allowed; border: 1px solid #334155;">Weiter »</span>
+                                @endif
+                            </div>
+                        </div>
+                    @endif
+                @else
+                    <div class="admin-empty">
+                        <strong>Noch keine Protokolleinträge</strong>
+                        <p>Anmeldeversuche und Sicherheitsereignisse werden hier automatisch erfasst.</p>
+                    </div>
+                @endif
+            </div>
+        </section>
+
         {{-- 04 Anlegen --}}
+        @if(Auth::user()->isAdmin() || Auth::user()->hasPermission('create_customers'))
         <section class="admin-section admin-public" id="anlegen">
             <header>
                 <div>
@@ -591,6 +703,7 @@
                 <button type="submit">Kundenkonto sicher anlegen</button>
             </form>
         </section>
+        @endif
 
         {{-- LM Lektionen & Medienverwaltung --}}
         <style>
@@ -1282,6 +1395,7 @@
         </section>
 
         {{-- 08 Hauptadmin-Sicherheit --}}
+        @if(Auth::user()->isAdmin())
         <section class="admin-section admin-security-settings" id="hauptadmin-sicherheit">
             <header>
                 <div>
@@ -1322,6 +1436,7 @@
                 </form>
             </div>
         </section>
+        @endif
 
         <div class="portal-bottom-navigation" id="admin-page-end">
             <a class="portal-jump-arrow portal-jump-up" href="#admin-page-top" aria-label="Zurück zum Seitenanfang">

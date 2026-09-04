@@ -59,6 +59,24 @@
                 <form method="POST" action="{{ route('login.store') }}" autocomplete="off">
                     @csrf
                     <label>
+                        <span>Kurs</span>
+                        <select name="slug" required>
+                            <option value="" disabled selected>Kurs auswählen</option>
+                            <option value="dnl-kompakt" {{ old('slug') == 'dnl-kompakt' ? 'selected' : '' }}>5-Tage-Kompaktlehrgang</option>
+                            <option value="dnl-vertiefung" {{ old('slug') == 'dnl-vertiefung' ? 'selected' : '' }}>Vertiefungsausbildung</option>
+                            <option value="dnl-premium" {{ old('slug') == 'dnl-premium' ? 'selected' : '' }}>Premium-Seminar</option>
+                            <option value="stress-und-ressourcen" {{ old('slug') == 'stress-und-ressourcen' ? 'selected' : '' }}>Stress und Ressourcen</option>
+                            <option value="rauchfrei" {{ old('slug') == 'rauchfrei' ? 'selected' : '' }}>Rauchfrei</option>
+                            <option value="ernaehrung" {{ old('slug') == 'ernaehrung' ? 'selected' : '' }}>Ernährung</option>
+                            <option value="klar-entscheiden" {{ old('slug') == 'klar-entscheiden' ? 'selected' : '' }}>Klar entscheiden</option>
+                            <option value="erfolgreich-gruenden" {{ old('slug') == 'erfolgreich-gruenden' ? 'selected' : '' }}>Erfolgreich gründen</option>
+                            <option value="presse-oeffentlichkeit" {{ old('slug') == 'presse-oeffentlichkeit' ? 'selected' : '' }}>Presse &amp; Öffentlichkeit</option>
+                            <option value="rhetorik-unter-druck" {{ old('slug') == 'rhetorik-unter-druck' ? 'selected' : '' }}>Rhetorik unter Druck</option>
+                            <option value="rio-negro-2002" {{ old('slug') == 'rio-negro-2002' ? 'selected' : '' }}>Rio Negro 2002</option>
+                        </select>
+                    </label>
+
+                    <label>
                         <span>Benutzername</span>
                         <input type="text" name="login" required autocomplete="username" value="{{ old('login') }}" placeholder="z. B. testkunde"/>
                     </label>
@@ -114,20 +132,53 @@
 
     <script>
         (() => {
-            const deviceName = navigator.platform + " | " + navigator.userAgent;
-            const raw = navigator.userAgent + navigator.platform + screen.width + screen.height + Intl.DateTimeFormat().resolvedOptions().timeZone;
-
-            async function sha256(text) {
-                const buffer = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
-                return [...new Uint8Array(buffer)].map(b => b.toString(16).padStart(2, "0")).join("");
+            function getBesselerDeviceId() {
+                const key = 'besseler-device-id';
+                let id = '';
+                try {
+                    id = window.localStorage.getItem(key);
+                    if (id && /^[0-9a-f]{64}$/.test(id)) {
+                        return id;
+                    }
+                    const bytes = new Uint8Array(32);
+                    window.crypto.getRandomValues(bytes);
+                    id = Array.from(bytes, b => b.toString(16).padStart(2, '0')).join('');
+                    window.localStorage.setItem(key, id);
+                    return id;
+                } catch (e) {
+                    const bytes = new Uint8Array(32);
+                    window.crypto.getRandomValues(bytes);
+                    return Array.from(bytes, b => b.toString(16).padStart(2, '0')).join('');
+                }
             }
 
-            sha256(raw).then(hash => {
-                const idEl = document.getElementById('customer_device_id');
-                const nameEl = document.getElementById('customer_device_name');
-                if (idEl) idEl.value = hash;
-                if (nameEl) nameEl.value = deviceName;
-            });
+            function getBesselerDeviceName() {
+                const platform = navigator.platform || 'Desktop';
+                const ua = navigator.userAgent || '';
+                let browser = 'Browser';
+                if (ua.indexOf('Firefox') !== -1) browser = 'Firefox';
+                else if (ua.indexOf('Edg') !== -1 || ua.indexOf('Edge') !== -1) browser = 'Edge';
+                else if (ua.indexOf('Chrome') !== -1) browser = 'Chrome';
+                else if (ua.indexOf('Safari') !== -1) browser = 'Safari';
+                return platform + ' · ' + browser;
+            }
+
+            const deviceId = getBesselerDeviceId();
+            const deviceName = getBesselerDeviceName();
+
+            const idEl = document.getElementById('customer_device_id');
+            const nameEl = document.getElementById('customer_device_name');
+            if (idEl) idEl.value = deviceId;
+            if (nameEl) nameEl.value = deviceName;
+
+            const form = document.querySelector('form');
+            if (form) {
+                form.addEventListener('submit', () => {
+                    const currentId = getBesselerDeviceId();
+                    if (idEl) idEl.value = currentId;
+                    if (nameEl) nameEl.value = deviceName;
+                });
+            }
         })();
     </script>
 @endsection

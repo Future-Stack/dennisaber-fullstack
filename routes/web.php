@@ -32,6 +32,19 @@ Route::view('/impressum', 'frontend.pages.imprint')->name('impressum');
 Route::view('/pages/payment-participation', 'frontend.pages.payment-participation')->name('payment-participation');
 Route::view('/zahlungsbedingungen', 'frontend.pages.payment-participation')->name('zahlungsbedingungen');
 
+// Legacy .html redirects to prevent 404s
+Route::redirect('/zahlung.html', '/payment', 301);
+Route::redirect('/payment.html', '/payment', 301);
+Route::redirect('/kopierschutz.html', '/copy-protection', 301);
+Route::redirect('/datenschutz.html', '/pages/privacy-policy', 301);
+Route::redirect('/impressum.html', '/pages/imprint', 301);
+Route::redirect('/zahlungsbedingungen.html', '/pages/payment-participation', 301);
+Route::redirect('/login.html', '/login', 301);
+Route::redirect('/passwort-vergessen.html', '/forgot-password', 301);
+Route::get('/kurse/{slug}.html', function ($slug) {
+    return redirect('/kurse/' . $slug, 301);
+});
+
 Route::post('/inquiry/mailto', [InquiryController::class, 'generateMailto'])->name('inquiry.mailto');
 
 /*
@@ -64,15 +77,15 @@ Route::view('/course/rio-negro', 'frontend.pages.course.rio-negro')->name('rio-n
 Route::view('/kurse/rio-negro-2002', 'frontend.pages.course.rio-negro');
 Route::view('/service/rio-negro', 'frontend.pages.course.rio-negro')->name('service-rio-negro');
 
-Route::view('/course/smoke-free', 'frontend.pages.course.smoke‑free')->name('smoke-free');
-Route::view('/kurse/rauchfrei', 'frontend.pages.course.smoke‑free');
+Route::view('/course/smoke-free', 'frontend.pages.course.smoke-free')->name('smoke-free');
+Route::view('/kurse/rauchfrei', 'frontend.pages.course.smoke-free');
 
 Route::view('/course/stress-resources', 'frontend.pages.course.stress-resources')->name('stress-resources');
 Route::view('/kurse/stress-und-ressourcen', 'frontend.pages.course.stress-resources');
 
-Route::view('/course/successful-startup', 'frontend.pages.course.successful‑startup')->name('successful-startup');
-Route::view('/kurse/erfolgreich-gruenden', 'frontend.pages.course.successful‑startup');
-Route::view('/gruenden', 'frontend.pages.course.successful‑startup')->name('gruenden');
+Route::view('/course/successful-startup', 'frontend.pages.course.successful-startup')->name('successful-startup');
+Route::view('/kurse/erfolgreich-gruenden', 'frontend.pages.course.successful-startup');
+Route::view('/gruenden', 'frontend.pages.course.successful-startup')->name('gruenden');
 
 /*
 |--------------------------------------------------------------------------

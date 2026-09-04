@@ -229,9 +229,47 @@
 
             try {
                 if (typeof qrcode !== 'undefined') {
-                    const qr = qrcode(0, 'M');
-                    qr.addData(epcPayload);
-                    qr.make();
+                    if (qrcode.stringToBytesFuncs && qrcode.stringToBytesFuncs['UTF-8']) {
+                        qrcode.stringToBytes = qrcode.stringToBytesFuncs['UTF-8'];
+                    }
+
+                    let qr = null;
+                    // Try auto-detect (0) with M error correction
+                    try {
+                        const candidate = qrcode(0, 'M');
+                        candidate.addData(epcPayload);
+                        candidate.make();
+                        qr = candidate;
+                    } catch (e0) {
+                        // If auto-detect fails, iteratively search suitable type number (1 to 40)
+                        for (let t = 1; t <= 40; t++) {
+                            try {
+                                const candidate = qrcode(t, 'M');
+                                candidate.addData(epcPayload);
+                                candidate.make();
+                                qr = candidate;
+                                break;
+                            } catch (et) {}
+                        }
+                    }
+
+                    // Fallback to L error correction if still not fitting
+                    if (!qr) {
+                        for (let t = 1; t <= 40; t++) {
+                            try {
+                                const candidate = qrcode(t, 'L');
+                                candidate.addData(epcPayload);
+                                candidate.make();
+                                qr = candidate;
+                                break;
+                            } catch (et) {}
+                        }
+                    }
+
+                    if (!qr) {
+                        throw new Error('QR Code Kapazität überschritten');
+                    }
+
                     const svgTag = qr.createSvgTag({ scalable: true });
                     outputContainer.innerHTML = `
                         <div style="background: #ffffff; padding: 14px; border-radius: 8px; display: inline-block; max-width: 220px; width: 100%; box-shadow: 0 4px 12px rgba(0,0,0,0.4); margin: 0 auto;">

@@ -213,6 +213,64 @@ class DennisCoursePortalTest extends TestCase
     }
 
     /**
+     * Test Customer Device Binding Strict Mismatch Rejection and Audit Log
+     */
+    public function test_customer_device_binding_rejection_and_audit_logging(): void
+    {
+        $member = User::where('username', 'testkunde')->first();
+        $initialDeviceId = 'device-hash-primary-001';
+        $secondDeviceId = 'device-hash-secondary-002';
+
+        // 1. First login binds primary device
+        $response = $this->post(route('login.store'), [
+            'login' => 'testkunde',
+            'password' => 'KundeTest2026!',
+            'device_id' => $initialDeviceId,
+            'device_name' => 'Chrome Windows',
+        ]);
+        $response->assertRedirect(route('member.dashboard'));
+        $member->refresh();
+        $this->assertEquals($initialDeviceId, $member->device_id);
+
+        auth()->logout();
+
+        // 2. Second login with different device (Incognito/Second PC) is rejected
+        $rejectResponse = $this->post(route('login.store'), [
+            'login' => 'testkunde',
+            'password' => 'KundeTest2026!',
+            'device_id' => $secondDeviceId,
+            'device_name' => 'Firefox Incognito',
+        ]);
+        $rejectResponse->assertSessionHasErrors('login');
+        $this->assertGuest();
+
+        // Verify Audit Log records LOGIN_REJECTED_DEVICE_MISMATCH
+        $this->assertDatabaseHas('audit_logs', [
+            'user_id' => $member->id,
+            'event' => 'LOGIN_REJECTED_DEVICE_MISMATCH',
+        ]);
+
+        // 3. Admin resets the device
+        $admin = User::where('role', 'admin')->first();
+        $this->actingAs($admin)->post(route('admin.customers.reset-device', $member->id));
+        $member->refresh();
+        $this->assertNull($member->device_id);
+
+        auth()->logout();
+
+        // 4. Now second device can log in and becomes the new primary device
+        $rebindResponse = $this->post(route('login.store'), [
+            'login' => 'testkunde',
+            'password' => 'KundeTest2026!',
+            'device_id' => $secondDeviceId,
+            'device_name' => 'Firefox Incognito',
+        ]);
+        $rebindResponse->assertRedirect(route('member.dashboard'));
+        $member->refresh();
+        $this->assertEquals($secondDeviceId, $member->device_id);
+    }
+
+    /**
      * Test Unauthenticated and Unauthorized Protected Media Access
      */
     public function test_unauthenticated_media_access_is_forbidden(): void

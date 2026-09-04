@@ -20,17 +20,50 @@
 
     <script>
         (() => {
-            const deviceName = navigator.platform + " | " + navigator.userAgent;
-            const raw = navigator.userAgent + navigator.platform + screen.width + screen.height + Intl.DateTimeFormat().resolvedOptions().timeZone;
-
-            async function sha256(text) {
-                const buffer = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
-                return [...new Uint8Array(buffer)].map(b => b.toString(16).padStart(2, "0")).join("");
+            function getBesselerDeviceId() {
+                const key = 'besseler-device-id';
+                let id = '';
+                try {
+                    id = window.localStorage.getItem(key);
+                    if (id && /^[0-9a-f]{64}$/.test(id)) {
+                        return id;
+                    }
+                    const bytes = new Uint8Array(32);
+                    window.crypto.getRandomValues(bytes);
+                    id = Array.from(bytes, b => b.toString(16).padStart(2, '0')).join('');
+                    window.localStorage.setItem(key, id);
+                    return id;
+                } catch (e) {
+                    const bytes = new Uint8Array(32);
+                    window.crypto.getRandomValues(bytes);
+                    return Array.from(bytes, b => b.toString(16).padStart(2, '0')).join('');
+                }
             }
 
-            sha256(raw).then(hash => {
-                document.querySelectorAll('.course_device_id').forEach(el => el.value = hash);
-                document.querySelectorAll('.course_device_name').forEach(el => el.value = deviceName);
+            function getBesselerDeviceName() {
+                const platform = navigator.platform || 'Desktop';
+                const ua = navigator.userAgent || '';
+                let browser = 'Browser';
+                if (ua.indexOf('Firefox') !== -1) browser = 'Firefox';
+                else if (ua.indexOf('Edg') !== -1 || ua.indexOf('Edge') !== -1) browser = 'Edge';
+                else if (ua.indexOf('Chrome') !== -1) browser = 'Chrome';
+                else if (ua.indexOf('Safari') !== -1) browser = 'Safari';
+                return platform + ' · ' + browser;
+            }
+
+            const deviceId = getBesselerDeviceId();
+            const deviceName = getBesselerDeviceName();
+
+            document.querySelectorAll('.course_device_id').forEach(el => el.value = deviceId);
+            document.querySelectorAll('.course_device_name').forEach(el => el.value = deviceName);
+
+            const forms = document.querySelectorAll('form');
+            forms.forEach(form => {
+                form.addEventListener('submit', () => {
+                    const currentId = getBesselerDeviceId();
+                    document.querySelectorAll('.course_device_id').forEach(el => el.value = currentId);
+                    document.querySelectorAll('.course_device_name').forEach(el => el.value = deviceName);
+                });
             });
         })();
     </script>

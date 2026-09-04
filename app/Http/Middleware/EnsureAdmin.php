@@ -19,10 +19,22 @@ class EnsureAdmin
                 ->with('error', 'Bitte melden Sie sich als Administrator an.');
         }
 
-        if (! Auth::user()->isAdmin()) {
-            Auth::logout();
-            return redirect()->route('admin.login')
-                ->with('error', 'Zugriff verweigert. Nur Administratoren haben hier Zugang.');
+        $user = Auth::user();
+
+        if (! $user->isAdmin() && ! $user->isStaff()) {
+            return redirect()->route('login')
+                ->with('error', 'Zugriff verweigert. Dieser Bereich ist nur für autorisierte Mitarbeiter und Administratoren zugänglich.');
+        }
+
+        if ($user->isStaff()) {
+            if ($user->access_from && now()->lt($user->access_from)) {
+                return redirect()->route('member.dashboard')
+                    ->with('error', 'Ihr Mitarbeiterzugang ist noch nicht aktiv.');
+            }
+            if ($user->access_until && now()->gt($user->access_until->endOfDay())) {
+                return redirect()->route('member.dashboard')
+                    ->with('error', 'Ihr Mitarbeiterzugang ist abgelaufen.');
+            }
         }
 
         return $next($request);

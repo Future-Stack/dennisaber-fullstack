@@ -69,6 +69,19 @@ class User extends Authenticatable
         return $this->role === 'staff';
     }
 
+    public function hasPermission(string $perm): bool
+    {
+        if ($this->isAdmin()) {
+            return true;
+        }
+
+        if (! $this->isStaff()) {
+            return false;
+        }
+
+        return ! empty($this->permissions[$perm]);
+    }
+
     public function enrollments(): HasMany
     {
         return $this->hasMany(Enrollment::class);

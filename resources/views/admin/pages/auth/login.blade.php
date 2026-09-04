@@ -32,7 +32,7 @@
                     @csrf
 
                     <label>
-                        <span>E-Mail Address</span>
+                        <span>E-Mail-Adresse</span>
 
                         <input
                             type="email"
@@ -48,7 +48,7 @@
                     </label>
 
                     <label>
-                        <span>Password</span>
+                        <span>Passwort</span>
 
                         <input
                             type="password"
@@ -62,7 +62,7 @@
                     </label>
 
                     <label>
-                        <span>Security Code</span>
+                        <span>Sicherheitscode</span>
 
                         <input
                             type="password"
@@ -83,11 +83,11 @@
                     <input type="hidden" name="device_name" id="device_name">
 
                     <small>
-                        Additional security verification for the main administrator.
+                        Zusätzliche Sicherheitsüberprüfung für das Hauptadministratorkonto.
                     </small>
 
                     <button type="submit">
-                        Secure Login
+                        Sicher anmelden <span>→</span>
                     </button>
                 </form>
 
@@ -98,35 +98,49 @@
 
     <script>
         (() => {
-
-            const deviceName =
-                navigator.platform +
-                " | " +
-                navigator.userAgent;
-
-            const raw =
-                navigator.userAgent +
-                navigator.platform +
-                screen.width +
-                screen.height +
-                Intl.DateTimeFormat().resolvedOptions().timeZone;
-
-            async function sha256(text) {
-                const buffer = await crypto.subtle.digest(
-                    "SHA-256",
-                    new TextEncoder().encode(text)
-                );
-
-                return [...new Uint8Array(buffer)]
-                    .map(b => b.toString(16).padStart(2, "0"))
-                    .join("");
+            function getBesselerDeviceId() {
+                const key = 'besseler-admin-device-id';
+                let id = '';
+                try {
+                    id = window.localStorage.getItem(key);
+                    if (id && /^[0-9a-f]{64}$/.test(id)) {
+                        return id;
+                    }
+                    const bytes = new Uint8Array(32);
+                    window.crypto.getRandomValues(bytes);
+                    id = Array.from(bytes, b => b.toString(16).padStart(2, '0')).join('');
+                    window.localStorage.setItem(key, id);
+                    return id;
+                } catch (e) {
+                    const bytes = new Uint8Array(32);
+                    window.crypto.getRandomValues(bytes);
+                    return Array.from(bytes, b => b.toString(16).padStart(2, '0')).join('');
+                }
             }
 
-            sha256(raw).then(hash => {
-                document.getElementById('device_id').value = hash;
-                document.getElementById('device_name').value = deviceName;
-            });
+            function getBesselerDeviceName() {
+                const platform = navigator.platform || 'Desktop';
+                const ua = navigator.userAgent || '';
+                let browser = 'Browser';
+                if (ua.indexOf('Firefox') !== -1) browser = 'Firefox';
+                else if (ua.indexOf('Edg') !== -1 || ua.indexOf('Edge') !== -1) browser = 'Edge';
+                else if (ua.indexOf('Chrome') !== -1) browser = 'Chrome';
+                else if (ua.indexOf('Safari') !== -1) browser = 'Safari';
+                return platform + ' · ' + browser;
+            }
 
+            const idEl = document.getElementById('device_id');
+            const nameEl = document.getElementById('device_name');
+            if (idEl) idEl.value = getBesselerDeviceId();
+            if (nameEl) nameEl.value = getBesselerDeviceName();
+
+            const form = document.querySelector('form');
+            if (form) {
+                form.addEventListener('submit', () => {
+                    if (idEl) idEl.value = getBesselerDeviceId();
+                    if (nameEl) nameEl.value = getBesselerDeviceName();
+                });
+            }
         })();
     </script>
 @endsection

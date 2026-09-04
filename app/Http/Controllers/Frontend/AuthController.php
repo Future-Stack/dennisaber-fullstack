@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 use App\Models\AccessRequest;
+use App\Models\AuditLog;
+use App\Models\Course;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -29,6 +31,7 @@ class AuthController extends Controller
         $request->validate([
             'login' => ['required', 'string'],
             'password' => ['required', 'string'],
+            'slug' => ['nullable', 'string', 'max:150'],
             // 'device_id' => ['required', 'string', 'max:255'],
             // 'device_name' => ['nullable', 'string', 'max:255'],
         ]);
@@ -42,12 +45,35 @@ class AuthController extends Controller
         })->first();
 
         if (! $user || ! Hash::check($request->password, $user->password)) {
+            if ($user) {
+                AuditLog::create([
+                    'user_id' => $user->id,
+                    'event' => 'LOGIN_FAILED_CREDENTIALS',
+                    'detail' => "Fehlgeschlagener Anmeldeversuch für Benutzer '{$login}' (falsches Passwort).",
+                    'ip' => $request->ip(),
+                ]);
+            } else {
+                AuditLog::create([
+                    'user_id' => null,
+                    'event' => 'LOGIN_FAILED_UNKNOWN_USER',
+                    'detail' => "Anmeldeversuch mit unbekanntem Benutzernamen '{$login}'.",
+                    'ip' => $request->ip(),
+                ]);
+            }
+
             throw ValidationException::withMessages([
                 'login' => __('Ungültiger Benutzername bzw. E-Mail-Adresse oder falsches Passwort.'),
             ]);
         }
 
         if (! $user->is_active) {
+            AuditLog::create([
+                'user_id' => $user->id,
+                'event' => 'LOGIN_FAILED_INACTIVE',
+                'detail' => "Anmeldeversuch auf deaktiviertem oder abgelaufenem Kundenkonto '{$user->username}'.",
+                'ip' => $request->ip(),
+            ]);
+
             throw ValidationException::withMessages([
                 'login' => __('Dieses Kundenkonto ist derzeit nicht aktiv oder abgelaufen. Bitte wenden Sie sich an den Support.'),
             ]);
@@ -68,35 +94,69 @@ class AuthController extends Controller
         }
 
         // Dynamic One-Device Binding for Members & Staff
-        if ($request->filled('device_id')) {
-            $deviceId = $request->device_id;
-            $deviceName = $request->device_name ?: 'Kundenbrowser';
+        $deviceId = $request->input('device_id');
+        $deviceName = $request->input('device_name') ?: 'Kundenbrowser';
 
-            if (blank($user->device_id)) {
-                // First login → dynamically bind device
-                $user->update([
-                    'device_id' => $deviceId,
-                    'device_name' => $deviceName,
-                    'device_bound_at' => now(),
-                    'last_device_activity_at' => now(),
-                ]);
-            } elseif ($user->device_id !== $deviceId) {
-                throw ValidationException::withMessages([
-                    'login' => __('Dieses Konto ist bereits an ein anderes Gerät gebunden. Aus Sicherheits- und Urheberrechtsgründen kann der Kurs nur auf Ihrem registrierten Erstgerät genutzt werden. Bei einem Gerätewechsel wenden Sie sich bitte an den Support.'),
-                ]);
-            } else {
-                $user->update([
-                    'last_device_activity_at' => now(),
-                    'device_name' => $deviceName,
-                ]);
-            }
+        if (empty($deviceId)) {
+            $deviceId = hash('sha256', (string) $request->header('User-Agent') . (string) $request->header('Accept-Language'));
         }
+
+        if (blank($user->device_id)) {
+            // First login → dynamically bind device
+            $user->update([
+                'device_id' => $deviceId,
+                'device_name' => $deviceName,
+                'device_bound_at' => now(),
+                'last_device_activity_at' => now(),
+            ]);
+
+            AuditLog::create([
+                'user_id' => $user->id,
+                'event' => 'DEVICE_BOUND',
+                'detail' => "Erstgerät erfolgreich gebunden: {$deviceName} (Hash: " . substr($deviceId, 0, 16) . "...)",
+                'ip' => $request->ip(),
+            ]);
+        } elseif ($user->device_id !== $deviceId) {
+            // Device mismatch → Log event and reject
+            AuditLog::create([
+                'user_id' => $user->id,
+                'event' => 'LOGIN_REJECTED_DEVICE_MISMATCH',
+                'detail' => "Abgewiesener Anmeldeversuch von Fremdgerät. Gespeichert: " . substr($user->device_id, 0, 16) . "..., Übermittelt: " . substr($deviceId, 0, 16) . "... ({$deviceName})",
+                'ip' => $request->ip(),
+            ]);
+
+            throw ValidationException::withMessages([
+                'login' => __('Dieses Konto ist bereits an ein anderes Gerät gebunden. Aus Sicherheits- und Urheberrechtsgründen kann der Kurs nur auf Ihrem registrierten Erstgerät genutzt werden. Bei einem Gerätewechsel wenden Sie sich bitte an den Support.'),
+            ]);
+        } else {
+            $user->update([
+                'last_device_activity_at' => now(),
+                'device_name' => $deviceName,
+            ]);
+        }
+
+        AuditLog::create([
+            'user_id' => $user->id,
+            'event' => 'LOGIN_SUCCESS',
+            'detail' => "Erfolgreiche Anmeldung des Benutzers '{$user->username}'.",
+            'ip' => $request->ip(),
+        ]);
 
         Auth::login($user, true);
         $request->session()->regenerate();
 
         if ($user->isAdmin()) {
             return redirect()->intended(route('admin.dashboard'));
+        }
+
+        // Redirect to selected course if requested
+        if ($request->filled('slug')) {
+            $courseSlug = $request->slug;
+            $course = Course::where('slug', $courseSlug)->first();
+            if ($course) {
+                return redirect()->route('course.show', $courseSlug)
+                    ->with('success', 'Willkommen zurück, ' . ($user->first_name ?: $user->name) . '!');
+            }
         }
 
         return redirect()->intended(route('member.dashboard'))

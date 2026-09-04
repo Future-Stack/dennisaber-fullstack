@@ -1,10 +1,7 @@
 <!DOCTYPE html>
 <html lang="de">
-<!-- Mirrored from besseler-kursportal.dennis-bes.chatgpt.site/ by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 28 Jul 2026 23:25:39 GMT -->
-<!-- Added by HTTrack -->
-<meta http-equiv="content-type" content="text/html;charset=utf-8"/><!-- /Added by HTTrack -->
 <head>
-    <meta charSet="utf-8"/>
+    <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <meta name="csrf-token" content="{{ csrf_token() }}"/>
     <link rel="stylesheet" href="{{ asset('frontend') }}/assets/index-ChrHLfZ9.css" data-rsc-css-href="/assets/index-ChrHLfZ9.css"
