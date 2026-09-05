@@ -54,12 +54,16 @@
 
         {{-- History Section --}}
         <div style="border-top: 1px solid #1e293b; padding-top: 12px; margin-bottom: 14px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                <strong style="font-size: 0.78rem; color: #cbd5e1; text-transform: uppercase; letter-spacing: 0.05em;">Letzte Einträge</strong>
-                <span id="tt-today-total" style="font-size: 0.75rem; color: #38bdf8; font-weight: 600;">Heute: 0h 0m</span>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                <strong style="font-size: 0.78rem; color: #cbd5e1; text-transform: uppercase; letter-spacing: 0.05em;">Die drei letzten Messungen</strong>
+                <span id="tt-today-total" style="font-size: 0.75rem; color: #38bdf8; font-weight: 600;">Gesamt: 0h 0m</span>
             </div>
-            <div id="tt-history-list" style="max-height: 140px; overflow-y: auto; font-size: 0.78rem; color: #94a3b8; display: flex; flex-direction: column; gap: 6px;">
-                <div style="text-align: center; padding: 10px 0; color: #64748b;">Keine Einträge vorhanden</div>
+            {{-- Yellow Note as in Dennis's reference --}}
+            <div style="background: rgba(245, 158, 11, 0.12); border-left: 3px solid #f59e0b; padding: 6px 8px; border-radius: 4px; margin-bottom: 8px; font-size: 0.72rem; color: #fbbf24; line-height: 1.35;">
+                <strong>Wichtig:</strong> Es werden höchstens drei abgeschlossene Zeitmessungen gespeichert. Sobald eine vierte Messung abgeschlossen wird, wird der älteste Eintrag automatisch gelöscht.
+            </div>
+            <div id="tt-history-list" style="max-height: 160px; overflow-y: auto; font-size: 0.78rem; color: #94a3b8; display: flex; flex-direction: column; gap: 6px;">
+                <div style="text-align: center; padding: 10px 0; color: #64748b;">Noch keine abgeschlossene Zeitmessung.</div>
             </div>
         </div>
 
@@ -157,17 +161,17 @@
         if (!listEl) return;
 
         if (!ttState.recentEntries || ttState.recentEntries.length === 0) {
-            listEl.innerHTML = '<div style="text-align: center; padding: 10px 0; color: #64748b;">Keine Einträge vorhanden</div>';
+            listEl.innerHTML = '<div style="text-align: center; padding: 10px 0; color: #64748b;">Noch keine abgeschlossene Zeitmessung.</div>';
             if (totalEl) totalEl.textContent = 'Gesamt: 0h 0m';
             return;
         }
 
         let totalSec = 0;
         let html = '';
-        ttState.recentEntries.forEach(item => {
+        ttState.recentEntries.slice(0, 3).forEach((item, idx) => {
             totalSec += (item.duration_seconds || 0);
             const durationFormatted = formatDurationHuman(item.duration_seconds || 0);
-            const dateStr = item.started_at ? new Date(item.started_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '';
+            const dateStr = item.ended_at ? new Date(item.ended_at).toLocaleString('de-DE') : (item.started_at ? new Date(item.started_at).toLocaleString('de-DE') : '');
             
             html += `
                 <div style="display: flex; justify-content: space-between; align-items: center; background: #020617; padding: 6px 8px; border-radius: 4px; border: 1px solid #1e293b;">
@@ -194,9 +198,9 @@
         let body = `Hallo Dennis,\n\nhier ist die Zusammenfassung meiner erfassten Arbeitszeiten für den ${dateStr}:\n\n`;
         let totalSec = 0;
         if (ttState.recentEntries && ttState.recentEntries.length > 0) {
-            ttState.recentEntries.forEach(e => {
+            ttState.recentEntries.slice(0, 3).forEach((e, idx) => {
                 totalSec += (e.duration_seconds || 0);
-                body += `- ${e.activity_description || 'Tätigkeit'}: ${formatDurationHuman(e.duration_seconds || 0)}\n`;
+                body += `${idx + 1}. ${e.activity_description || 'Tätigkeit'}: ${formatDurationHuman(e.duration_seconds || 0)}\n`;
             });
         }
         body += `\nGesamtarbeitszeit: ${formatDurationHuman(totalSec)}\n\nBeste Grüße,\n${ttState.userName || ''}`;
@@ -214,7 +218,11 @@
                     ttState.activeEntry = data.active_entry;
                     ttState.status = data.active_entry.status;
                     ttState.durationSeconds = data.current_duration || 0;
-                    startTimerLoop();
+                    if (data.active_entry.status === 'running') {
+                        startTimerLoop();
+                    } else {
+                        stopTimerLoop();
+                    }
                 } else {
                     ttState.activeEntry = null;
                     ttState.status = 'stopped';

@@ -112,10 +112,14 @@
 
                     {{-- Active Running Box --}}
                     <div class="work-timer-running" id="admin-timer-running-box" style="display: none;">
-                        <span>Aktuelle Zeitmessung</span>
+                        <span id="admin-timer-status-headline">Aktuelle Zeitmessung</span>
                         <strong id="admin-timer-active-subject">Kundenbetreuung</strong>
                         <b id="admin-timer-big-clock">00:00:00</b>
-                        <button type="button" onclick="adminStopTimer()">Zeit stoppen</button>
+                        <div style="display: flex; gap: 0.5rem; justify-content: center; margin-top: 0.5rem; flex-wrap: wrap;">
+                            <button type="button" id="admin-timer-pause-btn" onclick="adminPauseTimer()" style="background: #d97706; color: #fff; border: none; padding: 6px 14px; border-radius: 4px; font-size: 0.85rem; font-weight: 600; cursor: pointer;">❚❚ Pausieren</button>
+                            <button type="button" id="admin-timer-resume-btn" onclick="adminResumeTimer()" style="display: none; background: #16a34a; color: #fff; border: none; padding: 6px 14px; border-radius: 4px; font-size: 0.85rem; font-weight: 600; cursor: pointer;">▶ Fortsetzen</button>
+                            <button type="button" onclick="adminStopTimer()" style="background: #dc2626; color: #fff; border: none; padding: 6px 14px; border-radius: 4px; font-size: 0.85rem; font-weight: 600; cursor: pointer;">Zeit stoppen</button>
+                        </div>
                     </div>
 
                     {{-- Start Form --}}
@@ -1712,12 +1716,27 @@
             if (clockEl) clockEl.textContent = timeFormatted;
             if (bigClockEl) bigClockEl.textContent = timeFormatted;
 
-            if (adminTimerState.active && adminTimerState.active.status === 'running') {
+            const pauseBtn = document.getElementById('admin-timer-pause-btn');
+            const resumeBtn = document.getElementById('admin-timer-resume-btn');
+            const statusHeadline = document.getElementById('admin-timer-status-headline');
+
+            if (adminTimerState.active && (adminTimerState.active.status === 'running' || adminTimerState.active.status === 'paused')) {
                 if (toggleBtn) toggleBtn.classList.add('is-running');
-                if (labelEl) labelEl.textContent = 'Timer läuft';
                 if (runningBox) runningBox.style.display = 'block';
                 if (startForm) startForm.style.display = 'none';
                 if (activeSubject) activeSubject.textContent = adminTimerState.active.activity_description || 'Zeitmessung';
+
+                if (adminTimerState.active.status === 'running') {
+                    if (labelEl) labelEl.textContent = 'Timer läuft';
+                    if (statusHeadline) statusHeadline.textContent = 'Aktuelle Zeitmessung (Läuft)';
+                    if (pauseBtn) pauseBtn.style.display = 'inline-block';
+                    if (resumeBtn) resumeBtn.style.display = 'none';
+                } else {
+                    if (labelEl) labelEl.textContent = 'Timer pausiert';
+                    if (statusHeadline) statusHeadline.textContent = 'Aktuelle Zeitmessung (Pausiert)';
+                    if (pauseBtn) pauseBtn.style.display = 'none';
+                    if (resumeBtn) resumeBtn.style.display = 'inline-block';
+                }
             } else {
                 if (toggleBtn) toggleBtn.classList.remove('is-running');
                 if (labelEl) labelEl.textContent = 'Timer';
@@ -1774,10 +1793,14 @@
             .then(res => res.json())
             .then(data => {
                 adminTimerState.completed = data.recent_entries || [];
-                if (data.active_entry && data.active_entry.status === 'running') {
+                if (data.active_entry && (data.active_entry.status === 'running' || data.active_entry.status === 'paused')) {
                     adminTimerState.active = data.active_entry;
                     adminTimerState.durationSeconds = data.current_duration || 0;
-                    startAdminTimerLoop();
+                    if (data.active_entry.status === 'running') {
+                        startAdminTimerLoop();
+                    } else {
+                        stopAdminTimerLoop();
+                    }
                 } else {
                     adminTimerState.active = null;
                     adminTimerState.durationSeconds = 0;
@@ -1816,6 +1839,60 @@
             })
             .catch(err => {
                 console.error('Start error:', err);
+                fetchAdminTimerStatus();
+            });
+        }
+
+        function adminPauseTimer() {
+            if (adminTimerState.active) {
+                adminTimerState.active.status = 'paused';
+            }
+            stopAdminTimerLoop();
+            updateAdminTimerUI();
+
+            fetch("{{ route('time-tracking.pause.active') }}", {
+                method: 'POST',
+                credentials: 'same-origin',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '{{ csrf_token() }}',
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json'
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                fetchAdminTimerStatus();
+            })
+            .catch(err => {
+                console.error('Pause error:', err);
+                fetchAdminTimerStatus();
+            });
+        }
+
+        function adminResumeTimer() {
+            if (adminTimerState.active) {
+                adminTimerState.active.status = 'running';
+            }
+            startAdminTimerLoop();
+            updateAdminTimerUI();
+
+            fetch("{{ route('time-tracking.resume.active') }}", {
+                method: 'POST',
+                credentials: 'same-origin',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '{{ csrf_token() }}',
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json'
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                fetchAdminTimerStatus();
+            })
+            .catch(err => {
+                console.error('Resume error:', err);
                 fetchAdminTimerStatus();
             });
         }

@@ -27,7 +27,7 @@ class TimeTrackingController extends Controller
         $recentEntries = TimeEntry::where('user_id', $user->id)
             ->where('status', 'stopped')
             ->latest('ended_at')
-            ->take(15)
+            ->take(3)
             ->get();
 
         $currentDuration = 0;
@@ -72,6 +72,18 @@ class TimeTrackingController extends Controller
                 'status' => 'stopped',
                 'ended_at' => now(),
             ]);
+
+            // Enforce Dennis's reference rule: Maximum 3 completed entries.
+            // As soon as a 4th measurement is completed, the oldest entry is automatically deleted.
+            $completed = TimeEntry::where('user_id', $user->id)
+                ->where('status', 'stopped')
+                ->orderBy('ended_at', 'desc')
+                ->get();
+
+            if ($completed->count() > 3) {
+                $toDelete = $completed->slice(3);
+                TimeEntry::whereIn('id', $toDelete->pluck('id'))->delete();
+            }
         }
 
         $entry = TimeEntry::create([
@@ -180,6 +192,18 @@ class TimeTrackingController extends Controller
             'duration_seconds' => max(0, $totalSeconds),
             'last_resumed_at' => null,
         ]);
+
+        // Dennis's Reference Rule: Maximum 3 completed entries are stored.
+        // As soon as a 4th measurement is completed, the oldest entry is automatically deleted.
+        $completed = TimeEntry::where('user_id', $user->id)
+            ->where('status', 'stopped')
+            ->orderBy('ended_at', 'desc')
+            ->get();
+
+        if ($completed->count() > 3) {
+            $toDelete = $completed->slice(3);
+            TimeEntry::whereIn('id', $toDelete->pluck('id'))->delete();
+        }
 
         return response()->json([
             'success' => true,
