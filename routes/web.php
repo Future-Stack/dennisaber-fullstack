@@ -144,10 +144,18 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('/customers', [AdminDashboardController::class, 'storeCustomer'])->name('customers.store');
     Route::post('/customers/{user}/toggle-active', [AdminDashboardController::class, 'toggleCustomerActive'])->name('customers.toggle');
     Route::post('/customers/{user}/reset-device', [AdminDashboardController::class, 'resetCustomerDevice'])->name('customers.reset-device');
+    Route::post('/customers/{user}/reset-password', [AdminDashboardController::class, 'resetCustomerPassword'])->name('customers.reset-password');
+    Route::post('/customers/{user}/assign-course', [AdminDashboardController::class, 'assignCustomerCourse'])->name('customers.assign-course');
     Route::delete('/customers/{user}', [AdminDashboardController::class, 'deleteCustomer'])->name('customers.delete');
+    Route::post('/enrollments/{enrollment}/update', [AdminDashboardController::class, 'updateEnrollment'])->name('enrollments.update');
+    Route::post('/enrollments/{enrollment}/toggle', [AdminDashboardController::class, 'toggleEnrollment'])->name('enrollments.toggle');
+    Route::post('/enrollments/{enrollment}/immediate-start', [AdminDashboardController::class, 'immediateStartEnrollment'])->name('enrollments.immediate-start');
 
     // Staff Management
     Route::post('/staff', [AdminDashboardController::class, 'storeStaff'])->name('staff.store');
+    Route::post('/staff/{user}/update', [AdminDashboardController::class, 'updateStaff'])->name('staff.update');
+    Route::post('/staff/{user}/reset-password', [AdminDashboardController::class, 'resetStaffPassword'])->name('staff.reset-password');
+    Route::post('/staff/{user}/toggle-active', [AdminDashboardController::class, 'toggleStaffActive'])->name('staff.toggle-active');
     Route::delete('/staff/{user}', [AdminDashboardController::class, 'deleteStaff'])->name('staff.delete');
 
     // Personal Admin Notes (10-day auto-expiry)
@@ -178,6 +186,24 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Admin Time Tracking Overview
     Route::get('/time-tracking/overview', [\App\Http\Controllers\TimeTrackingController::class, 'adminOverview'])->name('time-tracking.overview');
 });
+
+// Reference A Internal Links & Workspaces
+Route::get('/mitarbeiter-login', [CustomerAuthController::class, 'loginPage'])->name('staff.login');
+Route::get('/mitarbeiter', [MemberDashboardController::class, 'index'])->name('staff.workspace')->middleware('auth');
+Route::get('/mitarbeiter-passwort', [CustomerAuthController::class, 'forgotPasswordPage'])->name('staff.forgot-password');
+Route::get('/verwaltung/mitarbeiter-vorschau', [AdminDashboardController::class, 'staffPreview'])->name('verwaltung.staff-preview')->middleware(['auth', 'admin']);
+Route::get('/verwaltung/audio-website', function () {
+    return redirect()->route('service-rio-negro');
+})->name('verwaltung.audio-website');
+Route::get('/kurs-test', function () {
+    return redirect()->route('course-compact');
+})->name('kurs-test');
+Route::get('/kurs-test/ernaehrung', function () {
+    return redirect()->route('course-nutrition');
+})->name('kurs-test.nutrition');
+Route::get('/kurs-test/presse-oeffentlichkeit', function () {
+    return redirect()->route('course-press-public');
+})->name('kurs-test.press');
 
 // Alias for /verwaltung pointing to admin dashboard
 Route::middleware(['auth', 'admin'])->prefix('verwaltung')->name('verwaltung.')->group(function () {

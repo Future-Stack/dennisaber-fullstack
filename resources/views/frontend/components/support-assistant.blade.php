@@ -1,4 +1,182 @@
 {{-- Support Assistant Component (Vanilla JS, Zero Dependency) --}}
+<style>
+.support-assistant {
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.65rem;
+}
+.support-assistant__toggle {
+    color: #fff;
+    cursor: pointer;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: #11110f;
+    border: 1px solid #4f4d48;
+    min-height: 46px;
+    padding: 0.85rem 1.15rem;
+    font-size: 0.68rem;
+    font-weight: 850;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+    transition: background 0.15s, border-color 0.15s;
+}
+.support-assistant__toggle:hover {
+    background: #1e1e1b;
+    border-color: #88857e;
+}
+.support-assistant__panel {
+    border-top: 6px solid #b45309;
+    color: #171715;
+    background: #f8f5ee;
+    width: min(430px, calc(100vw - 2rem));
+    max-height: calc(100vh - 82px);
+    padding: 1.25rem;
+    overflow-y: auto;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    border-radius: 0 0 6px 6px;
+}
+.support-assistant__panel header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.75rem;
+    border-bottom: 1px solid #e5e0d3;
+    padding-bottom: 0.75rem;
+}
+.support-assistant__panel header span {
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #78756e;
+    font-weight: 800;
+    display: block;
+}
+.support-assistant__panel header h2 {
+    font-size: 1.15rem;
+    margin: 0.2rem 0 0 0;
+    color: #171715;
+}
+.support-assistant__panel header button {
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    line-height: 1;
+    color: #78756e;
+    padding: 0 0.25rem;
+}
+.support-assistant__notice {
+    font-size: 0.78rem;
+    color: #78756e;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+}
+.support-assistant__topics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: 1rem;
+}
+.support-assistant__topics button {
+    background: #ede9de;
+    border: 1px solid #dcd7ca;
+    padding: 0.35rem 0.65rem;
+    font-size: 0.75rem;
+    border-radius: 4px;
+    cursor: pointer;
+    color: #2e2c28;
+    font-weight: 600;
+}
+.support-assistant__topics button:hover {
+    background: #e2ded2;
+}
+.support-assistant__search {
+    margin-bottom: 1rem;
+}
+.support-assistant__search label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin-bottom: 0.35rem;
+    display: block;
+    color: #45433e;
+}
+.support-assistant__search div {
+    display: flex;
+    gap: 0.5rem;
+}
+.support-assistant__search input {
+    flex: 1;
+    padding: 0.6rem 0.8rem;
+    border: 1px solid #d0cbbe;
+    background: #fff;
+    font-size: 0.85rem;
+    border-radius: 4px;
+}
+.support-assistant__search button {
+    background: #11110f;
+    color: #fff;
+    border: none;
+    padding: 0.6rem 1rem;
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 4px;
+}
+.support-assistant__results {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+}
+.support-assistant__results article {
+    background: #fff;
+    border: 1px solid #e5e0d3;
+    padding: 0.85rem;
+    border-radius: 4px;
+}
+.support-assistant__results article small {
+    color: #b45309;
+    font-weight: 800;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+}
+.support-assistant__results article h3 {
+    margin: 0.25rem 0 0.4rem;
+    font-size: 0.95rem;
+    color: #171715;
+}
+.support-assistant__results article p {
+    font-size: 0.82rem;
+    line-height: 1.5;
+    color: #45433e;
+    margin: 0 0 0.5rem;
+}
+.support-assistant__actions a,
+.support-assistant__panel footer a {
+    font-size: 0.78rem;
+    color: #0284c7;
+    font-weight: 600;
+    text-decoration: none;
+}
+.support-assistant__actions a:hover,
+.support-assistant__panel footer a:hover {
+    text-decoration: underline;
+}
+.support-assistant__panel footer {
+    margin-top: 1.25rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid #e5e0d3;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.75rem;
+}
+</style>
+
 <aside class="support-assistant" id="portal-support-assistant" aria-label="Support">
     <section class="support-assistant__panel" id="support-assistant-panel" style="display: none;">
         <header>

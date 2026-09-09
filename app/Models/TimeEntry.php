@@ -12,7 +12,13 @@ class TimeEntry extends Model
 
     protected $fillable = [
         'user_id',
+        'assigned_staff_id',
         'activity_description',
+        'activity_1',
+        'activity_2',
+        'activity_3',
+        'activity_4',
+        'activity_5',
         'started_at',
         'ended_at',
         'duration_seconds',
@@ -30,6 +36,38 @@ class TimeEntry extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function assignedStaff()
+    {
+        return $this->belongsTo(User::class, 'assigned_staff_id');
+    }
+
+    /**
+     * Get list of all 5 activity entries
+     */
+    public function getActivitiesListAttribute(): array
+    {
+        $activities = [];
+        for ($i = 1; $i <= 5; $i++) {
+            $prop = "activity_{$i}";
+            if (!empty($this->$prop)) {
+                $activities[] = $this->$prop;
+            }
+        }
+
+        if (empty($activities) && !empty($this->activity_description)) {
+            $decoded = json_decode($this->activity_description, true);
+            if (is_array($decoded)) {
+                return array_filter($decoded);
+            }
+            if (str_contains($this->activity_description, ' · ')) {
+                return explode(' · ', $this->activity_description);
+            }
+            return [$this->activity_description];
+        }
+
+        return $activities;
     }
 
     public function getFormattedDurationAttribute(): string

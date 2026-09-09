@@ -215,19 +215,54 @@
             }
         });
 
+        // Translate placeholders
+        document.querySelectorAll('[data-i18n-placeholder-de]').forEach(el => {
+            const ph = isEn ? el.getAttribute('data-i18n-placeholder-en') : el.getAttribute('data-i18n-placeholder-de');
+            if (ph) {
+                el.setAttribute('placeholder', ph);
+            }
+        });
+
+        // Translate titles & aria-labels
+        document.querySelectorAll('[data-i18n-title-de]').forEach(el => {
+            const t = isEn ? el.getAttribute('data-i18n-title-en') : el.getAttribute('data-i18n-title-de');
+            if (t) {
+                el.setAttribute('title', t);
+                el.setAttribute('aria-label', t);
+            }
+        });
+
         // If Google translate select is available in DOM, change it
         const select = document.querySelector('.goog-te-combo');
         if (select) {
             select.value = isEn ? 'en' : 'de';
             select.dispatchEvent(new Event('change'));
         }
+
+        // Trigger custom event for components to react
+        window.dispatchEvent(new CustomEvent('portalLanguageChanged', { detail: { lang: lang, isEn: isEn } }));
     }
 
     document.addEventListener('DOMContentLoaded', () => {
         const savedLang = localStorage.getItem('portal_lang') || 'de';
-        if (savedLang === 'en') {
+        const isCookieEn = document.cookie.includes('googtrans=/de/en');
+        if (savedLang === 'en' || isCookieEn) {
             setGlobalPortalLanguage('en');
         }
+
+        // Observer for Chrome automatic Google Translate
+        const observer = new MutationObserver(() => {
+            const isTranslated = document.documentElement.classList.contains('translated-ltr') || 
+                                 document.documentElement.classList.contains('translated-rtl') ||
+                                 document.cookie.includes('googtrans=/de/en');
+            if (isTranslated) {
+                document.querySelectorAll('[data-i18n-placeholder-de]').forEach(el => {
+                    const ph = el.getAttribute('data-i18n-placeholder-en');
+                    if (ph) el.setAttribute('placeholder', ph);
+                });
+            }
+        });
+        observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class', 'lang'] });
     });
 </script>
 <script type="text/javascript" defer src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>

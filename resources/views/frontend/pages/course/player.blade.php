@@ -75,8 +75,23 @@
 
         {{-- Media Type Detection & Watermark Payload --}}
         @php
-            $hasAudio = true; // Dennis's audio courses use pure compact MP3 playback
+            // Systematically detect content types from lesson data
+            $hasAudio = !empty($lesson->audio_path);
+            $hasVideo = !empty($lesson->video_path) || !empty($lesson->video_url);
             $hasPdf = !empty($lesson->pdf_attachment_name) || !empty($lesson->pdf_attachment_path);
+            $hasText = !empty($lesson->content_html);
+
+            // Determine primary content type for player selection
+            // Priority: Audio > Video > PDF > Text (Pure Audio courses strictly prioritize MP3 player)
+            if ($hasAudio) {
+                $contentType = 'audio';
+            } elseif ($hasVideo) {
+                $contentType = 'video';
+            } elseif ($hasPdf) {
+                $contentType = 'pdf';
+            } else {
+                $contentType = 'text';
+            }
 
             $watermarkText = (Auth::user()->first_name ?: Auth::user()->name) . ' · ' . (Auth::user()->invoice_number ?: 'RN-7X4K-2026');
         @endphp
@@ -99,15 +114,25 @@
                             </h1>
                         </div>
 
-                        {{-- Content Type Badges --}}
+                        {{-- Content Type Badges (dynamic based on actual content and priority) --}}
                         <div style="display: inline-flex; gap: 0.4rem; flex-wrap: wrap; align-items: center;">
-                            <span style="background: rgba(74, 222, 128, 0.15); color: #4ade80; border: 1px solid rgba(74, 222, 128, 0.3); padding: 0.25rem 0.65rem; border-radius: 6px; font-size: 0.78rem; font-weight: 700; display: inline-flex; align-items: center; gap: 0.35rem;">
-                                🎧 Audiolektion (MP3)
-                            </span>
-
+                            @if($contentType === 'audio')
+                                <span style="background: rgba(74, 222, 128, 0.15); color: #4ade80; border: 1px solid rgba(74, 222, 128, 0.3); padding: 0.25rem 0.65rem; border-radius: 6px; font-size: 0.78rem; font-weight: 700; display: inline-flex; align-items: center; gap: 0.35rem;">
+                                    🎧 Audiolektion (MP3)
+                                </span>
+                            @elseif($contentType === 'video')
+                                <span style="background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); padding: 0.25rem 0.65rem; border-radius: 6px; font-size: 0.78rem; font-weight: 700; display: inline-flex; align-items: center; gap: 0.35rem;">
+                                    🎬 Videolektion
+                                </span>
+                            @endif
                             @if($hasPdf)
                                 <span style="background: rgba(192, 132, 252, 0.15); color: #c084fc; border: 1px solid rgba(192, 132, 252, 0.3); padding: 0.25rem 0.65rem; border-radius: 6px; font-size: 0.78rem; font-weight: 700; display: inline-flex; align-items: center; gap: 0.35rem;">
                                     📄 PDF-Arbeitsbuch
+                                </span>
+                            @endif
+                            @if($contentType === 'text')
+                                <span style="background: rgba(148, 163, 184, 0.15); color: #94a3b8; border: 1px solid rgba(148, 163, 184, 0.3); padding: 0.25rem 0.65rem; border-radius: 6px; font-size: 0.78rem; font-weight: 700; display: inline-flex; align-items: center; gap: 0.35rem;">
+                                    📝 Textlektion
                                 </span>
                             @endif
                         </div>
@@ -120,11 +145,59 @@
                 </div>
 
                 {{-- ========================================================= --}}
-                {{-- COMPACT PURE AUDIO MP3 PLAYER (Single Slim Diagonal Stripe) --}}
+                {{-- MEDIA PLAYER: Systematically differentiated by content type --}}
+                {{-- Audio = compact audio player, Video = video player,         --}}
+                {{-- PDF-only = no player, Text-only = no player                 --}}
                 {{-- ========================================================= --}}
+
+                @if($contentType === 'video')
+                {{-- ======================== VIDEO PLAYER ======================== --}}
+                <div style="background: #0b1120; border-radius: 12px; border: 1px solid #334155; margin-bottom: 2rem; overflow: hidden; position: relative; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);">
+                    {{-- Watermark Overlay --}}
+                    <div class="watermark-overlay-layer" aria-hidden="true" style="position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 10;">
+                        <div style="position: absolute; top: 50%; left: 50%; width: 200%; transform: translate(-50%, -50%) rotate(-24deg); background: rgba(255, 255, 255, 0.025); border-top: 1px solid rgba(255, 255, 255, 0.04); border-bottom: 1px solid rgba(255, 255, 255, 0.04); padding: 5px 0; display: flex; justify-content: center; user-select: none;">
+                            <span style="color: rgba(255, 255, 255, 0.1); font-size: 0.76rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; white-space: nowrap;">
+                                {{ $watermarkText }} &nbsp;&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;&nbsp; {{ $watermarkText }}
+                            </span>
+                        </div>
+                    </div>
+
+                    {{-- Video Header --}}
+                    <div style="padding: 0.85rem 1.25rem; background: #0f172a; border-bottom: 1px solid #1e293b; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; position: relative; z-index: 2;">
+                        <div style="display: flex; align-items: center; gap: 0.6rem;">
+                            <span style="font-size: 1.25rem; color: #38bdf8;">🎬</span>
+                            <div>
+                                <span style="font-size: 0.72rem; color: #38bdf8; text-transform: uppercase; font-weight: 800; letter-spacing: 0.08em; display: block;">Videolektion · Dennis Besseler</span>
+                                <strong style="color: #f8fafc; font-size: 0.98rem; display: block;">{{ $lesson->title }}</strong>
+                            </div>
+                        </div>
+                        <span style="background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); padding: 0.2rem 0.55rem; border-radius: 20px; font-size: 0.72rem; font-weight: 700;">● Video bereit</span>
+                    </div>
+
+                    {{-- HTML5 Video Element --}}
+                    <div style="position: relative; width: 100%; background: #000;">
+                        <video id="lesson-video" controls controlsList="nodownload" disablepictureinpicture oncontextmenu="return false;" preload="metadata" style="width: 100%; max-height: 600px; display: block;">
+                            @if($lesson->video_path)
+                                <source src="{{ route('media.stream', ['courseSlug' => $course->slug, 'lessonSlug' => $lesson->slug, 'type' => 'video']) }}" type="video/mp4">
+                            @elseif($lesson->video_url)
+                                <source src="{{ $lesson->video_url }}" type="video/mp4">
+                            @endif
+                            Ihr Browser unterstützt das Video-Element nicht.
+                        </video>
+                    </div>
+
+                    {{-- Video Footer --}}
+                    <div style="padding: 0.65rem 1.25rem; background: #0f172a; border-top: 1px solid #1e293b; display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; color: #64748b; flex-wrap: wrap; gap: 0.5rem;">
+                        <span>🔒 Urheberrechtlich geschützt · Nur zur persönlichen Nutzung</span>
+                        <span>Lizenznehmer: {{ $watermarkText }}</span>
+                    </div>
+                </div>
+                @endif
+
+                @if($contentType === 'audio')
+                {{-- ======================== COMPACT AUDIO PLAYER ======================== --}}
                 <div style="background: linear-gradient(135deg, #0f172a 0%, #172554 100%); border-radius: 12px; padding: 1.25rem 1.5rem; border: 1px solid #334155; margin-bottom: 2rem; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4); position: relative; overflow: hidden;">
-                    
-                    {{-- Exactly ONE Single Slim Diagonal Watermark Overlay Stripe --}}
+                    {{-- Watermark Overlay Stripe --}}
                     <div class="watermark-overlay-layer" aria-hidden="true" style="position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 10; border-radius: 12px;">
                         <div style="position: absolute; top: 50%; left: 50%; width: 200%; transform: translate(-50%, -50%) rotate(-24deg); background: rgba(255, 255, 255, 0.035); border-top: 1px solid rgba(255, 255, 255, 0.06); border-bottom: 1px solid rgba(255, 255, 255, 0.06); padding: 5px 0; display: flex; justify-content: center; user-select: none;">
                             <span style="color: rgba(255, 255, 255, 0.15); font-size: 0.76rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; white-space: nowrap;">
@@ -133,32 +206,23 @@
                         </div>
                     </div>
 
-                    {{-- Compact Audio Top: Track Meta & Format Status --}}
+                    {{-- Audio Track Meta --}}
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.9rem; flex-wrap: wrap; gap: 0.5rem; position: relative; z-index: 2;">
                         <div style="display: flex; align-items: center; gap: 0.6rem;">
                             <span style="font-size: 1.25rem; color: #38bdf8;">🎧</span>
                             <div>
-                                <span style="font-size: 0.72rem; color: #38bdf8; text-transform: uppercase; font-weight: 800; letter-spacing: 0.08em; display: block;">
-                                    Original-Audioaufzeichnung · Dennis Besseler
-                                </span>
-                                <strong style="color: #f8fafc; font-size: 0.98rem; display: block;">
-                                    {{ $lesson->title }}
-                                </strong>
+                                <span style="font-size: 0.72rem; color: #38bdf8; text-transform: uppercase; font-weight: 800; letter-spacing: 0.08em; display: block;">Original-Audioaufzeichnung · Dennis Besseler</span>
+                                <strong style="color: #f8fafc; font-size: 0.98rem; display: block;">{{ $lesson->title }}</strong>
                             </div>
                         </div>
-                        <span style="background: rgba(74, 222, 128, 0.15); color: #4ade80; border: 1px solid rgba(74, 222, 128, 0.3); padding: 0.2rem 0.55rem; border-radius: 20px; font-size: 0.72rem; font-weight: 700;">
-                            ● MP3 bereit
-                        </span>
+                        <span style="background: rgba(74, 222, 128, 0.15); color: #4ade80; border: 1px solid rgba(74, 222, 128, 0.3); padding: 0.2rem 0.55rem; border-radius: 20px; font-size: 0.72rem; font-weight: 700;">● MP3 bereit</span>
                     </div>
 
                     {{-- Compact Audio Controls Bar --}}
                     <div style="display: flex; align-items: center; gap: 1rem; background: #020617; padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid #1e293b; position: relative; z-index: 2; flex-wrap: wrap;">
-                        {{-- Play / Pause Button --}}
                         <button type="button" id="audio-play-btn" onclick="toggleAudioPlay()" style="width: 42px; height: 42px; border-radius: 50%; background: #38bdf8; color: #0b1120; border: none; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; cursor: pointer; font-weight: bold; flex-shrink: 0; box-shadow: 0 0 15px rgba(56, 189, 248, 0.4); transition: transform 0.15s, background 0.15s;">
                             <span id="audio-play-icon">▶</span>
                         </button>
-
-                        {{-- Time & Interactive Scrubber --}}
                         <div style="flex: 1; min-width: 180px; display: flex; flex-direction: column; gap: 0.3rem;">
                             <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: #94a3b8; font-family: monospace;">
                                 <span id="audio-current-time">00:00</span>
@@ -166,18 +230,10 @@
                             </div>
                             <input type="range" id="audio-scrubber" min="0" max="100" value="0" step="0.1" oninput="onScrubberInput(this.value)" onchange="onScrubberChange(this.value)" style="width: 100%; cursor: pointer; accent-color: #38bdf8; height: 5px;">
                         </div>
-
-                        {{-- Skip ±10s Buttons --}}
                         <div style="display: flex; align-items: center; gap: 0.35rem;">
-                            <button type="button" onclick="skipAudio(-10)" title="10 Sekunden zurück" style="background: #1e293b; color: #cbd5e1; border: 1px solid #334155; padding: 0.35rem 0.6rem; border-radius: 4px; cursor: pointer; font-size: 0.75rem; font-weight: 600;">
-                                ↺ -10s
-                            </button>
-                            <button type="button" onclick="skipAudio(10)" title="10 Sekunden vor" style="background: #1e293b; color: #cbd5e1; border: 1px solid #334155; padding: 0.35rem 0.6rem; border-radius: 4px; cursor: pointer; font-size: 0.75rem; font-weight: 600;">
-                                ↻ +10s
-                            </button>
+                            <button type="button" onclick="skipAudio(-10)" title="10 Sekunden zurück" style="background: #1e293b; color: #cbd5e1; border: 1px solid #334155; padding: 0.35rem 0.6rem; border-radius: 4px; cursor: pointer; font-size: 0.75rem; font-weight: 600;">↺ -10s</button>
+                            <button type="button" onclick="skipAudio(10)" title="10 Sekunden vor" style="background: #1e293b; color: #cbd5e1; border: 1px solid #334155; padding: 0.35rem 0.6rem; border-radius: 4px; cursor: pointer; font-size: 0.75rem; font-weight: 600;">↻ +10s</button>
                         </div>
-
-                        {{-- Playback Speed Switcher --}}
                         <div style="display: flex; align-items: center; gap: 0.25rem;">
                             <button type="button" onclick="setAudioSpeed(1.0, this)" class="speed-btn active" style="background: #38bdf8; color: #0f172a; border: none; padding: 0.3rem 0.5rem; border-radius: 4px; font-size: 0.72rem; font-weight: bold; cursor: pointer;">1.0x</button>
                             <button type="button" onclick="setAudioSpeed(1.25, this)" class="speed-btn" style="background: #1e293b; color: #cbd5e1; border: 1px solid #334155; padding: 0.3rem 0.5rem; border-radius: 4px; font-size: 0.72rem; font-weight: 600; cursor: pointer;">1.25x</button>
@@ -190,6 +246,31 @@
                         <source src="{{ route('media.stream', ['courseSlug' => $course->slug, 'lessonSlug' => $lesson->slug, 'type' => 'audio']) }}" type="audio/mpeg">
                     </audio>
                 </div>
+                @endif
+
+                @if($contentType === 'pdf' && !$hasAudio && !$hasVideo)
+                {{-- ======================== PDF-ONLY LESSON (no media player) ======================== --}}
+                <div style="background: #0f172a; border-radius: 10px; border: 1px solid #7c3aed; padding: 1.25rem; margin-bottom: 2rem; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+                    <span style="font-size: 2rem; color: #c084fc;">📄</span>
+                    <div>
+                        <span style="font-size: 0.72rem; color: #c084fc; text-transform: uppercase; font-weight: 800; letter-spacing: 0.08em; display: block;">PDF-Lektion · Arbeitsmaterial</span>
+                        <strong style="color: #f8fafc; font-size: 1.05rem; display: block;">{{ $lesson->title }}</strong>
+                        <span style="color: #94a3b8; font-size: 0.82rem;">Bitte bearbeiten Sie das eingebettete PDF-Dokument unten.</span>
+                    </div>
+                </div>
+                @endif
+
+                @if($contentType === 'text')
+                {{-- ======================== TEXT-ONLY LESSON (no media player) ======================== --}}
+                <div style="background: #0f172a; border-radius: 10px; border: 1px solid #334155; padding: 1.25rem; margin-bottom: 2rem; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+                    <span style="font-size: 2rem; color: #94a3b8;">📝</span>
+                    <div>
+                        <span style="font-size: 0.72rem; color: #94a3b8; text-transform: uppercase; font-weight: 800; letter-spacing: 0.08em; display: block;">Textlektion · Lernmaterial</span>
+                        <strong style="color: #f8fafc; font-size: 1.05rem; display: block;">{{ $lesson->title }}</strong>
+                        <span style="color: #94a3b8; font-size: 0.82rem;">Bitte lesen Sie die Lektionsinhalte und führen Sie die Übungen durch.</span>
+                    </div>
+                </div>
+                @endif
 
                 {{-- Lesson Completion & Navigation Action Bar --}}
                 <div style="background: #0f172a; padding: 1.15rem 1.35rem; border-radius: 8px; border: 1px solid #1e293b; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem;">
@@ -321,9 +402,16 @@
                                                     {{ $item->lesson_number }}. {{ $item->title }}
                                                 </span>
                                                 <div style="display: flex; gap: 0.4rem; font-size: 0.7rem; color: #64748b; margin-top: 0.15rem; flex-wrap: wrap;">
-                                                    <span style="color: #4ade80;">🎧 Audio (MP3)</span>
+                                                    @if(!empty($item->audio_path))
+                                                        <span style="color: #4ade80;">🎧 Audio</span>
+                                                    @elseif(!empty($item->video_path) || !empty($item->video_url))
+                                                        <span style="color: #38bdf8;">🎬 Video</span>
+                                                    @endif
                                                     @if($itemHasPdf)
-                                                        <span style="color: #c084fc;">+ Arbeitsbuch</span>
+                                                        <span style="color: #c084fc;">📄 PDF</span>
+                                                    @endif
+                                                    @if(empty($item->audio_path) && empty($item->video_path) && empty($item->video_url) && !$itemHasPdf)
+                                                        <span style="color: #94a3b8;">📝 Text</span>
                                                     @endif
                                                 </div>
                                             </div>
@@ -396,8 +484,9 @@
     {{-- Interactive JavaScript for Audio Controls, PDF Fullscreen, Progress & Abuse Reporting --}}
     <script>
         // ==========================================
-        // 1. Audio Player Interaction Logic (MP3)
+        // 1. Media Player Interaction Logic
         // ==========================================
+        const contentType = '{{ $contentType }}';
         const audioEl = document.getElementById('lesson-audio');
         const playBtn = document.getElementById('audio-play-btn');
         const playIcon = document.getElementById('audio-play-icon');
