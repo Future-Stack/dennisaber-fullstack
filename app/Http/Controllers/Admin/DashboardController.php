@@ -189,6 +189,134 @@ class DashboardController extends Controller
         return back()->with('success', "Gerätebindung für '{$user->username}' erfolgreich zurückgesetzt.");
     }
 
+    public function resetCustomerPassword(User $user)
+    {
+        if (! Auth::user()->hasPermission('reset_passwords')) {
+            return back()->with('error', 'Keine Berechtigung zum Zurücksetzen von Kundenpasswörtern.');
+        }
+
+        if ($user->isAdmin()) {
+            return back()->with('error', 'Admin-Passwort kann hier nicht geändert werden.');
+        }
+
+        $newPassword = Str::password(12, true, true, false);
+        $user->update([
+            'password' => Hash::make($newPassword),
+        ]);
+
+        AuditLog::create([
+            'user_id' => $user->id,
+            'event' => 'CUSTOMER_PASSWORD_RESET',
+            'detail' => "Neues Passwort für Kunde '{$user->username}' durch " . (Auth::user()->isAdmin() ? 'Administrator' : 'Mitarbeiter (' . Auth::user()->username . ')') . " erzeugt.",
+            'ip' => request()->ip(),
+        ]);
+
+        return back()->with('reset_customer_credentials', [
+            'username' => $user->username,
+            'password' => $newPassword,
+        ])->with('success', "Neues Passwort für '{$user->username}' erzeugt.");
+    }
+
+    public function assignCustomerCourse(Request $request, User $user)
+    {
+        if (! Auth::user()->hasPermission('manage_courses') && ! Auth::user()->hasPermission('manage_enrollments')) {
+            return back()->with('error', 'Keine Berechtigung zur Kursfreigabe.');
+        }
+
+        $request->validate([
+            'course_slug' => ['required', 'string', 'exists:courses,slug'],
+            'starts_at' => ['nullable', 'date'],
+            'expires_at' => ['nullable', 'date'],
+            'early_start_confirmed' => ['nullable', 'boolean'],
+            'is_immediate' => ['nullable', 'boolean'],
+        ]);
+
+        $course = Course::where('slug', $request->course_slug)->firstOrFail();
+
+        if ($request->boolean('is_immediate')) {
+            $startDate = now();
+            $durationDays = $course->duration_days ?: 120;
+            $expiresDate = $startDate->copy()->addDays($durationDays);
+            $startsAt = $startDate->toDateString();
+            $expiresAt = $expiresDate->toDateString();
+            $earlyConfirmed = true;
+        } else {
+            $startsAt = $request->starts_at ?: now()->addDays(14)->toDateString();
+            $expiresAt = $request->expires_at ?: now()->addDays(134)->toDateString();
+            $earlyConfirmed = $request->boolean('early_start_confirmed');
+        }
+
+        Enrollment::updateOrCreate(
+            ['user_id' => $user->id, 'course_id' => $course->id],
+            [
+                'invoice_number' => $user->invoice_number,
+                'started_at' => $startsAt,
+                'expires_at' => $expiresAt,
+                'is_active' => true,
+                'early_start_agreed' => $earlyConfirmed,
+            ]
+        );
+
+        return back()->with('success', "Kurs '{$course->catalog_title}' für '{$user->username}' erfolgreich freigegeben.");
+    }
+
+    public function updateEnrollment(Request $request, Enrollment $enrollment)
+    {
+        if (! Auth::user()->hasPermission('manage_courses') && ! Auth::user()->hasPermission('manage_enrollments')) {
+            return back()->with('error', 'Keine Berechtigung zur Änderung von Laufzeiten.');
+        }
+
+        $request->validate([
+            'starts_at' => ['required', 'date'],
+            'expires_at' => ['required', 'date', 'after:starts_at'],
+            'early_start_confirmed' => ['nullable', 'boolean'],
+        ]);
+
+        $enrollment->update([
+            'started_at' => $request->starts_at,
+            'expires_at' => $request->expires_at,
+            'early_start_agreed' => $request->boolean('early_start_confirmed'),
+        ]);
+
+        return back()->with('success', 'Start- und Enddatum wurden gespeichert.');
+    }
+
+    public function toggleEnrollment(Enrollment $enrollment)
+    {
+        if (! Auth::user()->hasPermission('manage_courses') && ! Auth::user()->hasPermission('manage_enrollments')) {
+            return back()->with('error', 'Keine Berechtigung zur Änderung des Kursstatus.');
+        }
+
+        $enrollment->update([
+            'is_active' => ! $enrollment->is_active,
+        ]);
+
+        $statusText = $enrollment->is_active ? 'aktiviert' : 'gesperrt';
+
+        return back()->with('success', "Kurszugang wurde erfolgreich {$statusText}.");
+    }
+
+    public function immediateStartEnrollment(Enrollment $enrollment)
+    {
+        if (! Auth::user()->hasPermission('manage_courses') && ! Auth::user()->hasPermission('manage_enrollments')) {
+            return back()->with('error', 'Keine Berechtigung zum Sofortstart.');
+        }
+
+        $course = $enrollment->course;
+        $durationDays = $course ? ($course->duration_days ?: 120) : 120;
+        $startDate = now();
+        $expiresDate = $startDate->copy()->addDays($durationDays);
+
+        $enrollment->update([
+            'started_at' => $startDate->toDateString(),
+            'expires_at' => $expiresDate->toDateString(),
+            'early_start_agreed' => true,
+            'is_active' => true,
+        ]);
+
+        return back()->with('success', 'Sofortstart wurde gesetzt und die volle Kurslaufzeit neu berechnet.');
+    }
+
     public function deleteCustomer(User $user)
     {
         if (! Auth::user()->isAdmin()) {
@@ -237,14 +365,99 @@ class DashboardController extends Controller
             'is_active' => true,
         ]);
 
-        return back()->with('created_staff', [
-            'name' => $request->name,
+        return back()->with('staff_credentials', [
             'username' => $request->username,
             'password' => $plainPassword,
+            'title' => 'Mitarbeiterzugang – nur jetzt vollständig sichtbar',
         ])->with('success', "Mitarbeiterkonto für '{$request->name}' erfolgreich angelegt.");
     }
 
-    public function deleteStaff(User $user)
+    public function updateStaff(Request $request, User $user)
+    {
+        if (! Auth::user()->isAdmin()) {
+            return back()->with('error', 'Nur der Hauptadministrator kann Mitarbeiterdaten ändern.');
+        }
+
+        if ($user->role !== 'staff') {
+            return back()->with('error', 'Nur Mitarbeiterkonten können an dieser Stelle bearbeitet werden.');
+        }
+
+        $request->validate([
+            'name' => ['required', 'string', 'max:150'],
+            'occupation' => ['required', 'string', 'max:150'],
+            'access_from' => ['required', 'date'],
+            'access_until' => ['required', 'date', 'after_or_equal:access_from'],
+            'permissions' => ['nullable', 'array'],
+        ]);
+
+        $user->update([
+            'name' => $request->name,
+            'first_name' => explode(' ', $request->name)[0],
+            'occupation' => $request->occupation,
+            'access_from' => $request->access_from,
+            'access_until' => $request->access_until,
+            'permissions' => $request->permissions ?: [],
+        ]);
+
+        return back()->with('success', "Tätigkeit, Zeitraum und Berechtigungen für '{$user->name}' wurden gespeichert.");
+    }
+
+    public function resetStaffPassword(User $user)
+    {
+        if (! Auth::user()->isAdmin()) {
+            return back()->with('error', 'Nur der Hauptadministrator kann Mitarbeiterpasswörter zurücksetzen.');
+        }
+
+        if ($user->role !== 'staff') {
+            return back()->with('error', 'Nur Mitarbeiterkonten können an dieser Stelle zurückgesetzt werden.');
+        }
+
+        $plainPassword = Str::password(12, true, true, false);
+        $user->update([
+            'password' => Hash::make($plainPassword),
+        ]);
+
+        return back()->with('staff_credentials', [
+            'username' => $user->username,
+            'password' => $plainPassword,
+            'title' => 'Neues Mitarbeiterpasswort – Zugangsdaten jetzt sicher übermitteln',
+        ])->with('success', "Neues Passwort für Mitarbeiter '{$user->name}' erzeugt.");
+    }
+
+    public function toggleStaffActive(User $user)
+    {
+        if (! Auth::user()->isAdmin()) {
+            return back()->with('error', 'Nur der Hauptadministrator kann Mitarbeiterkonten aktivieren oder sperren.');
+        }
+
+        if ($user->role !== 'staff') {
+            return back()->with('error', 'Nur Mitarbeiterkonten können an dieser Stelle gesteuert werden.');
+        }
+
+        $newActive = ! $user->is_active;
+
+        if ($newActive) {
+            $plainPassword = Str::password(12, true, true, false);
+            $user->update([
+                'is_active' => true,
+                'password' => Hash::make($plainPassword),
+            ]);
+
+            return back()->with('staff_credentials', [
+                'username' => $user->username,
+                'password' => $plainPassword,
+                'title' => 'Mitarbeiterzugang aktiviert – neue Zugangsdaten',
+            ])->with('success', "Mitarbeiterzugang für '{$user->name}' mit neuen Zugangsdaten aktiviert.");
+        } else {
+            $user->update([
+                'is_active' => false,
+            ]);
+
+            return back()->with('success', "Mitarbeiterzugang für '{$user->name}' wurde gesperrt. Alle Sitzungen sind jetzt ungültig.");
+        }
+    }
+
+    public function deleteStaff(Request $request, User $user)
     {
         if (! Auth::user()->isAdmin()) {
             return back()->with('error', 'Nur der Hauptadministrator kann Mitarbeiterkonten entfernen.');
@@ -254,8 +467,19 @@ class DashboardController extends Controller
             return back()->with('error', 'Nur Mitarbeiterkonten können an dieser Stelle entfernt werden.');
         }
 
+        if (! $request->boolean('cloud_access_revoked')) {
+            return back()->with('error', 'Vor dem Löschen muss bestätigt werden, dass der Google-Drive-Zugriff dieses Mitarbeiters entzogen wurde.');
+        }
+
+        $name = $user->name;
         $user->delete();
-        return back()->with('success', 'Mitarbeiterkonto wurde erfolgreich gelöscht.');
+
+        return back()->with('success', "Mitarbeiterkonto '{$name}' wurde gelöscht. Der Google-Drive-Zugriff war zuvor als entzogen bestätigt.");
+    }
+
+    public function staffPreview()
+    {
+        return redirect()->route('admin.dashboard', ['#mitarbeiter']);
     }
 
     public function storeAdminNote(Request $request)

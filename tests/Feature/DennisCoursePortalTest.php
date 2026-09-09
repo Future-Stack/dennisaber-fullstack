@@ -540,4 +540,22 @@ class DennisCoursePortalTest extends TestCase
         $stopRes->assertStatus(200);
         $stopRes->assertJsonPath('entry.status', 'stopped');
     }
+
+    public function test_admin_dashboard_with_audit_page_2(): void
+    {
+        $admin = User::where('role', 'admin')->first();
+        $this->actingAs($admin);
+
+        for ($i = 0; $i < 15; $i++) {
+            \App\Models\AuditLog::create([
+                'user_id' => $admin->id,
+                'event' => 'TEST_EVENT_' . $i,
+                'detail' => 'Test detail ' . $i,
+                'ip' => '127.0.0.1',
+            ]);
+        }
+
+        $response = $this->get('/admin/dashboard?audit_page=2');
+        $response->assertStatus(200);
+    }
 }

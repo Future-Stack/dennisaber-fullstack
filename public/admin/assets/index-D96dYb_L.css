@@ -5775,6 +5775,37 @@ textarea {
     line-height: 1.55
 }
 
+.admin-toolbar {
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    gap: 1rem;
+    display: grid;
+    margin-top: 1.5rem;
+}
+
+.admin-toolbar label {
+    gap: .45rem;
+    display: grid;
+}
+
+.admin-toolbar label span {
+    color: var(--muted);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    font-size: .62rem;
+    font-weight: 850;
+}
+
+.admin-toolbar input {
+    background: #fff;
+    border: 1px solid #c9c5bc;
+    width: 100%;
+    min-height: 50px;
+    padding: .8rem;
+    font-size: .85rem;
+    font-weight: 500;
+}
+
 .admin-primary-link {
     background: var(--academy);
     color: #fff;

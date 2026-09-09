@@ -203,6 +203,101 @@
 @yield('contents')
 
 @include('frontend.components.support-assistant')
+
+{{-- Global Language & Translation Script --}}
+<div id="google_translate_element" style="display:none;"></div>
+<script type="text/javascript">
+    function googleTranslateElementInit() {
+        if (window.google && window.google.translate) {
+            new google.translate.TranslateElement({
+                pageLanguage: 'de',
+                includedLanguages: 'de,en,fr,es,it',
+                autoDisplay: false
+            }, 'google_translate_element');
+        }
+    }
+
+    function setGlobalPortalLanguage(lang) {
+        localStorage.setItem('portal_lang', lang);
+        const isEn = lang === 'en';
+
+        // Update Button States
+        document.querySelectorAll('#global-lang-btn-de, #lang-btn-de, #admin-lang-btn-de, #tt-lang-btn-de').forEach(btn => {
+            btn.style.background = isEn ? 'transparent' : '#0284c7';
+            btn.style.color = isEn ? '#94a3b8' : '#fff';
+        });
+        document.querySelectorAll('#global-lang-btn-en, #lang-btn-en, #admin-lang-btn-en, #tt-lang-btn-en').forEach(btn => {
+            btn.style.background = isEn ? '#0284c7' : 'transparent';
+            btn.style.color = isEn ? '#fff' : '#94a3b8';
+        });
+
+        // Trigger Google Translate cookie
+        document.cookie = "googtrans=" + (isEn ? "/de/en" : "/de/de") + "; path=/; domain=" + window.location.hostname;
+        document.cookie = "googtrans=" + (isEn ? "/de/en" : "/de/de") + "; path=/;";
+
+        // Translate data-i18n attributes if available
+        document.querySelectorAll('[data-i18n-de]').forEach(el => {
+            const text = isEn ? el.getAttribute('data-i18n-en') : el.getAttribute('data-i18n-de');
+            if (text) {
+                if (text.includes('<br/>') || text.includes('<strong>') || text.includes('<span>')) {
+                    el.innerHTML = text;
+                } else {
+                    el.innerText = text;
+                }
+            }
+        });
+
+        // Translate placeholders
+        document.querySelectorAll('[data-i18n-placeholder-de]').forEach(el => {
+            const ph = isEn ? el.getAttribute('data-i18n-placeholder-en') : el.getAttribute('data-i18n-placeholder-de');
+            if (ph) {
+                el.setAttribute('placeholder', ph);
+            }
+        });
+
+        // Translate titles & aria-labels
+        document.querySelectorAll('[data-i18n-title-de]').forEach(el => {
+            const t = isEn ? el.getAttribute('data-i18n-title-en') : el.getAttribute('data-i18n-title-de');
+            if (t) {
+                el.setAttribute('title', t);
+                el.setAttribute('aria-label', t);
+            }
+        });
+
+        // If Google translate select is available in DOM, change it
+        const select = document.querySelector('.goog-te-combo');
+        if (select) {
+            select.value = isEn ? 'en' : 'de';
+            select.dispatchEvent(new Event('change'));
+        }
+
+        // Trigger custom event for components to react
+        window.dispatchEvent(new CustomEvent('portalLanguageChanged', { detail: { lang: lang, isEn: isEn } }));
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const savedLang = localStorage.getItem('portal_lang') || 'de';
+        const isCookieEn = document.cookie.includes('googtrans=/de/en');
+        if (savedLang === 'en' || isCookieEn) {
+            setGlobalPortalLanguage('en');
+        }
+
+        // Observer for Chrome automatic Google Translate
+        const observer = new MutationObserver(() => {
+            const isTranslated = document.documentElement.classList.contains('translated-ltr') || 
+                                 document.documentElement.classList.contains('translated-rtl') ||
+                                 document.cookie.includes('googtrans=/de/en');
+            if (isTranslated) {
+                document.querySelectorAll('[data-i18n-placeholder-de]').forEach(el => {
+                    const ph = el.getAttribute('data-i18n-placeholder-en');
+                    if (ph) el.setAttribute('placeholder', ph);
+                });
+            }
+        });
+        observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class', 'lang'] });
+    });
+</script>
+<script type="text/javascript" defer src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 
 </html>
