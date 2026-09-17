@@ -232,23 +232,29 @@ class PdfWatermarkService
 
     private function applyWatermarkLayer(WatermarkPdfEngine $pdf, string $watermarkText, string $customerName, string $invoiceNumber, string $courseTitle, string $lessonTitle, float $width, float $height): void
     {
-        // 1. Diagonal Watermark across document (single angled watermark stripe)
-        $pdf->SetTextColor(180, 205, 230); // Soft visible blue-gray watermark
-        $pdf->SetFont('Helvetica', 'B', 8.5);
-
-        // Center diagonal line
-        $pdf->Rotate(32, $width / 2, $height * 0.5);
-        $pdf->Text($width * 0.05, $height * 0.5, $watermarkText);
-        $pdf->Rotate(0);
-
-        // 2. Top Header Security Line
+        // 1. Top Header Security Line
         $pdf->SetTextColor(100, 116, 139);
-        $pdf->SetFont('Helvetica', 'B', 6.5);
+        $pdf->SetFont('Helvetica', 'B', 7);
         $topBanner = @iconv('UTF-8', 'windows-1252//TRANSLIT', "LIZENZ-NACHWEIS: {$customerName} | RECHNUNG: {$invoiceNumber} | NICHT ZUR WEITERGABE");
         $pdf->SetXY(10, 4);
         $pdf->Cell($width - 20, 4, $topBanner, 0, 0, 'R');
 
+        // 2. Visible Diagonal Watermark Ribbon Track across the page (Matching Reference Portal 1:1)
+        $pdf->SetTextColor(160, 165, 175);
+        $pdf->SetFont('Helvetica', 'B', 9.5);
+        $ribbonText = @iconv('UTF-8', 'windows-1252//TRANSLIT', "{$customerName}   *   RECHNUNGSNR. {$invoiceNumber}   *   {$customerName}   *   RECHNUNGSNR. {$invoiceNumber}   *   {$customerName}");
+
+        // Diagonal Track across center
+        $pdf->Rotate(31, $width * 0.5, $height * 0.5);
+        $pdf->SetDrawColor(190, 195, 205);
+        $pdf->Line(-60, $height * 0.5 - 3.5, $width + 60, $height * 0.5 - 3.5);
+        $pdf->Text(-30, $height * 0.5 + 2, $ribbonText);
+        $pdf->Line(-60, $height * 0.5 + 5.5, $width + 60, $height * 0.5 + 5.5);
+        $pdf->Rotate(0);
+
         // 3. Bottom Footer Security Line
+        $pdf->SetTextColor(100, 116, 139);
+        $pdf->SetFont('Helvetica', 'B', 7);
         $bottomBanner = @iconv('UTF-8', 'windows-1252//TRANSLIT', "(c) Dennis Besseler Kursportal - Personalisiert fuer {$customerName} - Rechnungs-Nr. {$invoiceNumber}");
         $pdf->SetXY(10, $height - 8);
         $pdf->Cell($width - 20, 4, $bottomBanner, 0, 0, 'C');

@@ -4,9 +4,11 @@ use App\Http\Controllers\Admin\AuthController as AdminAuthController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Frontend\AuthController as CustomerAuthController;
 use App\Http\Controllers\Frontend\CoursePlayerController;
+use App\Http\Controllers\Frontend\CoursePreviewController;
 use App\Http\Controllers\Frontend\InquiryController;
 use App\Http\Controllers\Frontend\MediaController;
 use App\Http\Controllers\Frontend\MemberDashboardController;
+use App\Http\Controllers\TimeTrackingController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,6 +22,7 @@ Route::view('/payment', 'frontend.pages.payment')->name('payment');
 Route::view('/zahlung', 'frontend.pages.payment')->name('zahlung');
 
 Route::view('/faster-processing', 'frontend.pages.faster-processing')->name('faster-processing');
+Route::view('/schnelle-abwicklung', 'frontend.pages.faster-processing')->name('schnelle-abwicklung');
 Route::view('/copy-protection', 'frontend.pages.copy-protection')->name('copy-protection');
 Route::view('/kopierschutz', 'frontend.pages.copy-protection')->name('kopierschutz');
 
@@ -85,7 +88,38 @@ Route::view('/kurse/stress-und-ressourcen', 'frontend.pages.course.stress-resour
 
 Route::view('/course/successful-startup', 'frontend.pages.course.successful-startup')->name('successful-startup');
 Route::view('/kurse/erfolgreich-gruenden', 'frontend.pages.course.successful-startup');
-Route::view('/gruenden', 'frontend.pages.course.successful-startup')->name('gruenden');
+
+Route::get('/kurse/{slug}', function ($slug) {
+    $course = \App\Models\Course::where('slug', $slug)->first();
+    if ($course) {
+        return redirect($course->public_course_url);
+    }
+    abort(404);
+});
+
+/*
+|--------------------------------------------------------------------------
+| Course Previews (1:1 Proben Designs with Audios & PDFs)
+|--------------------------------------------------------------------------
+*/
+Route::get('/akademie/bildungsurlaub', [CoursePreviewController::class, 'render'])->defaults('pageKey', 'dnl-kompakt')->name('preview.compact');
+Route::get('/akademie/vertiefung', [CoursePreviewController::class, 'render'])->defaults('pageKey', 'dnl-vertiefung')->name('preview.advanced');
+Route::get('/akademie/premium', [CoursePreviewController::class, 'render'])->defaults('pageKey', 'dnl-premium')->name('preview.premium');
+
+Route::get('/praevention/stress', [CoursePreviewController::class, 'render'])->defaults('pageKey', 'stress-und-ressourcen')->name('preview.stress');
+Route::get('/praevention/rauchfrei', [CoursePreviewController::class, 'render'])->defaults('pageKey', 'rauchfrei')->name('preview.rauchfrei');
+Route::get('/praevention/ernaehrung', [CoursePreviewController::class, 'render'])->defaults('pageKey', 'ernaehrung')->name('preview.ernaehrung');
+Route::get('/praevention/klar-entscheiden', [CoursePreviewController::class, 'render'])->defaults('pageKey', 'klar-entscheiden')->name('preview.make-decision');
+
+Route::get('/gruenden', [CoursePreviewController::class, 'render'])->defaults('pageKey', 'erfolgreich-gruenden')->name('preview.gruenden');
+Route::get('/presse', [CoursePreviewController::class, 'render'])->defaults('pageKey', 'presse-oeffentlichkeit')->name('preview.presse');
+Route::get('/rhetorik', [CoursePreviewController::class, 'render'])->defaults('pageKey', 'rhetorik-unter-druck')->name('preview.rhetorik');
+Route::get('/rausgehen-reicht-nicht/abenteuer', [CoursePreviewController::class, 'render'])->defaults('pageKey', 'rio-negro-2002')->name('preview.abenteuer');
+Route::get('/angebote', [CoursePreviewController::class, 'render'])->defaults('pageKey', 'angebote')->name('preview.angebote');
+
+Route::get('/vorschau/{slug}', function ($slug) {
+    return app(CoursePreviewController::class)->render($slug);
+})->name('preview.slug');
 
 /*
 |--------------------------------------------------------------------------
@@ -184,7 +218,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('/change-password', [AdminAuthController::class, 'changePassword'])->name('change-password');
 
     // Admin Time Tracking Overview
-    Route::get('/time-tracking/overview', [\App\Http\Controllers\TimeTrackingController::class, 'adminOverview'])->name('time-tracking.overview');
+    Route::get('/time-tracking/overview', [TimeTrackingController::class, 'adminOverview'])->name('time-tracking.overview');
 });
 
 // Reference A Internal Links & Workspaces
@@ -206,7 +240,7 @@ Route::get('/kurs-test/presse-oeffentlichkeit', function () {
 })->name('kurs-test.press');
 
 // Alias for /verwaltung pointing to admin dashboard
-Route::middleware(['auth', 'admin'])->prefix('verwaltung')->name('verwaltung.')->group(function () {
+Route::middleware(['admin'])->prefix('verwaltung')->name('verwaltung.')->group(function () {
     Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
 });
 
@@ -216,12 +250,12 @@ Route::middleware(['auth', 'admin'])->prefix('verwaltung')->name('verwaltung.')-
 |--------------------------------------------------------------------------
 */
 Route::middleware('auth')->prefix('api/time-tracking')->name('time-tracking.')->group(function () {
-    Route::get('/status', [\App\Http\Controllers\TimeTrackingController::class, 'status'])->name('status');
-    Route::post('/start', [\App\Http\Controllers\TimeTrackingController::class, 'start'])->name('start');
-    Route::post('/pause', [\App\Http\Controllers\TimeTrackingController::class, 'pause'])->name('pause.active');
-    Route::post('/resume', [\App\Http\Controllers\TimeTrackingController::class, 'resume'])->name('resume.active');
-    Route::post('/stop', [\App\Http\Controllers\TimeTrackingController::class, 'stop'])->name('stop.active');
-    Route::post('/{timeEntry}/pause', [\App\Http\Controllers\TimeTrackingController::class, 'pause'])->name('pause');
-    Route::post('/{timeEntry}/resume', [\App\Http\Controllers\TimeTrackingController::class, 'resume'])->name('resume');
-    Route::post('/{timeEntry}/stop', [\App\Http\Controllers\TimeTrackingController::class, 'stop'])->name('stop');
+    Route::get('/status', [TimeTrackingController::class, 'status'])->name('status');
+    Route::post('/start', [TimeTrackingController::class, 'start'])->name('start');
+    Route::post('/pause', [TimeTrackingController::class, 'pause'])->name('pause.active');
+    Route::post('/resume', [TimeTrackingController::class, 'resume'])->name('resume.active');
+    Route::post('/stop', [TimeTrackingController::class, 'stop'])->name('stop.active');
+    Route::post('/{timeEntry}/pause', [TimeTrackingController::class, 'pause'])->name('pause');
+    Route::post('/{timeEntry}/resume', [TimeTrackingController::class, 'resume'])->name('resume');
+    Route::post('/{timeEntry}/stop', [TimeTrackingController::class, 'stop'])->name('stop');
 });

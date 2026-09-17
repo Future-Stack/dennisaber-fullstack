@@ -35,25 +35,16 @@ class MediaController extends Controller
                 }
 
                 $sourcePath = null;
-                if ($lesson->pdf_attachment_path && Storage::disk('public')->exists($lesson->pdf_attachment_path)) {
+                if ($lesson->pdf_attachment_path && file_exists(public_path($lesson->pdf_attachment_path))) {
+                    $sourcePath = public_path($lesson->pdf_attachment_path);
+                } elseif ($lesson->pdf_attachment_path && Storage::disk('public')->exists($lesson->pdf_attachment_path)) {
                     $sourcePath = Storage::disk('public')->path($lesson->pdf_attachment_path);
                 }
 
-                if ($sourcePath && file_exists($sourcePath)) {
-                    return response()->file($sourcePath, [
-                        'Content-Type' => 'application/pdf',
-                        'Content-Disposition' => 'inline; filename="' . $filename . '"',
-                        'Cache-Control' => 'private, no-cache, no-store, must-revalidate',
-                        'Pragma' => 'no-cache',
-                        'Expires' => '0',
-                        'X-Content-Type-Options' => 'nosniff',
-                    ]);
-                }
-
                 $watermarkService = new \App\Services\PdfWatermarkService();
-                $cleanPdfBinary = $watermarkService->generateCleanPdf($course, $lesson);
+                $watermarkedPdfBinary = $watermarkService->generateWatermarkedPdf($user, $course, $lesson, $sourcePath);
 
-                return response($cleanPdfBinary, 200, [
+                return response($watermarkedPdfBinary, 200, [
                     'Content-Type' => 'application/pdf',
                     'Content-Disposition' => 'inline; filename="' . $filename . '"',
                     'Cache-Control' => 'private, no-cache, no-store, must-revalidate',
@@ -79,25 +70,63 @@ class MediaController extends Controller
 
             case 'audio':
                 $audioDisk = Storage::disk('public');
-                $targetAudioPath = $lesson->audio_path;
-
-                // If path doesn't exist directly, check available files in audio directory
-                if (!$targetAudioPath || !$audioDisk->exists($targetAudioPath)) {
-                    $available = $audioDisk->files('audio');
-                    if (!empty($available)) {
-                        $targetAudioPath = $available[0];
+                $targetAudioPath = $lesson->audio_path ? ltrim($lesson->audio_path, '/') : null;
+                if (! $targetAudioPath) {
+                    $cdata = json_decode($lesson->content_html, true);
+                    if (is_array($cdata) && !empty($cdata['audio'])) {
+                        $targetAudioPath = ltrim($cdata['audio'], '/');
                     }
                 }
 
-                if ($targetAudioPath && $audioDisk->exists($targetAudioPath)) {
+                $fullPath = null;
+                if ($targetAudioPath && file_exists(public_path($targetAudioPath))) {
+                    $fullPath = public_path($targetAudioPath);
+                } elseif ($targetAudioPath && $audioDisk->exists($targetAudioPath)) {
                     $fullPath = $audioDisk->path($targetAudioPath);
-                    $mimeType = str_ends_with(strtolower($fullPath), '.wav') ? 'audio/wav' : 'audio/mpeg';
+                } elseif ($targetAudioPath && file_exists(base_path($targetAudioPath))) {
+                    $fullPath = base_path($targetAudioPath);
+                } else {
+                    $basename = basename($targetAudioPath ?? '');
+                    if ($basename && file_exists(public_path("audio/{$courseSlug}/{$basename}"))) {
+                        $fullPath = public_path("audio/{$courseSlug}/{$basename}");
+                    } elseif ($basename && file_exists(public_path("audio/{$basename}"))) {
+                        $fullPath = public_path("audio/{$basename}");
+                    }
+                }
+
+                if (! $fullPath || ! file_exists($fullPath)) {
+                    $courseDir = public_path("audio/{$courseSlug}");
+                    if (is_dir($courseDir)) {
+                        $files = glob($courseDir . '/*.{mp3,wav,m4a,ogg}', GLOB_BRACE);
+                        if (!empty($files)) {
+                            $fullPath = $files[0];
+                        }
+                    }
+                }
+
+                if (! $fullPath || ! file_exists($fullPath)) {
+                    $available = glob(public_path('audio/*/*.{mp3,wav,m4a,ogg}'), GLOB_BRACE);
+                    if (!empty($available)) {
+                        $fullPath = $available[0];
+                    }
+                }
+
+                if ($fullPath && file_exists($fullPath)) {
+                    $ext = strtolower(pathinfo($fullPath, PATHINFO_EXTENSION));
+                    $mimeType = match($ext) {
+                        'wav' => 'audio/wav',
+                        'ogg' => 'audio/ogg',
+                        'm4a' => 'audio/mp4',
+                        default => 'audio/mpeg',
+                    };
                     
-                    return response()->file($fullPath, [
+                    $response = response()->file($fullPath, [
                         'Content-Type' => $mimeType,
                         'Accept-Ranges' => 'bytes',
                         'Cache-Control' => 'private, no-cache, no-store, must-revalidate',
                     ]);
+                    $response->prepare($request);
+                    return $response;
                 }
 
                 return response()->json(['error' => 'Keine Audiodatei vorhanden'], 404);

@@ -11,6 +11,7 @@ use App\Models\Enrollment;
 use App\Models\Lesson;
 use App\Models\User;
 use App\Models\VersionNote;
+use App\Models\TimeEntry;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -48,6 +49,11 @@ class DashboardController extends Controller
             ? User::where('role', 'staff')->latest()->get()
             : collect();
 
+        // Staff Time Tracking Entries Overview (Dennis/Admin overview)
+        $staffTimeEntries = $currentUser->isAdmin()
+            ? TimeEntry::with(['user', 'assignedStaff'])->latest()->take(15)->get()
+            : collect();
+
         // Admin Personal Notes (Strictly only Dennis/Admin)
         $adminNotes = $currentUser->isAdmin()
             ? AdminNote::where(function ($q) {
@@ -77,6 +83,7 @@ class DashboardController extends Controller
         return view('admin.pages.dashboard', compact(
             'customers',
             'staffMembers',
+            'staffTimeEntries',
             'adminNotes',
             'versionNotes',
             'accessRequests',
@@ -477,9 +484,37 @@ class DashboardController extends Controller
         return back()->with('success', "Mitarbeiterkonto '{$name}' wurde gelöscht. Der Google-Drive-Zugriff war zuvor als entzogen bestätigt.");
     }
 
-    public function staffPreview()
+    public function staffPreview(Request $request)
     {
-        return redirect()->route('admin.dashboard', ['#mitarbeiter']);
+        $currentUser = Auth::user();
+        $isStaffPreview = true;
+        $search = $request->input('search');
+
+        $customers = User::where('role', 'member')
+            ->with(['enrollments.course'])
+            ->latest()
+            ->get();
+
+        $staffMembers = collect();
+        $staffTimeEntries = collect();
+        $adminNotes = collect();
+        $versionNotes = collect();
+        $accessRequests = AccessRequest::where('status', 'open')->latest()->get();
+        $courses = Course::with(['lessons'])->withCount('lessons')->orderBy('order')->get();
+        $auditLogs = new \Illuminate\Pagination\LengthAwarePaginator([], 0, 10);
+
+        return view('admin.pages.dashboard', compact(
+            'customers',
+            'staffMembers',
+            'staffTimeEntries',
+            'adminNotes',
+            'versionNotes',
+            'accessRequests',
+            'courses',
+            'auditLogs',
+            'search',
+            'isStaffPreview'
+        ));
     }
 
     public function storeAdminNote(Request $request)

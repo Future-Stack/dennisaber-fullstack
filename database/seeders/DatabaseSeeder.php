@@ -588,5 +588,7 @@ class DatabaseSeeder extends Seeder
                 'status' => 'open',
             ]
         );
+
+        $this->call(CourseAndLessonSeeder::class);
     }
 }

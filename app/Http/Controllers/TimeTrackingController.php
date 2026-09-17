@@ -126,6 +126,7 @@ class TimeTrackingController extends Controller
             $completed = TimeEntry::where('user_id', $user->id)
                 ->where('status', 'stopped')
                 ->orderBy('ended_at', 'desc')
+                ->orderBy('id', 'desc')
                 ->get();
 
             if ($completed->count() > 3) {
@@ -259,6 +260,7 @@ class TimeTrackingController extends Controller
         $completed = TimeEntry::where('user_id', $user->id)
             ->where('status', 'stopped')
             ->orderBy('ended_at', 'desc')
+            ->orderBy('id', 'desc')
             ->get();
 
         if ($completed->count() > 3) {

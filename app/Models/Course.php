@@ -82,4 +82,40 @@ class Course extends Model
             ->pluck('lesson_id')
             ->toArray();
     }
+
+    public function getCatalogTitleAttribute(): string
+    {
+        return match ($this->slug) {
+            'dnl-kompakt' => '5-Tage-Kompaktlehrgang',
+            'dnl-vertiefung' => 'Vertiefungsausbildung',
+            'dnl-premium' => 'Premium-Seminar',
+            'stress-und-ressourcen' => 'Stress und Ressourcen',
+            'rauchfrei' => 'Rauchfrei',
+            'ernaehrung' => 'Ernährung',
+            'klar-entscheiden' => 'Klar entscheiden',
+            'erfolgreich-gruenden' => 'Erfolgreich gründen',
+            'presse-oeffentlichkeit' => 'Presse & Öffentlichkeit',
+            'rhetorik-unter-druck' => 'Rhetorik unter Druck',
+            'rio-negro-2002' => 'Rio Negro 2002',
+            default => $this->title,
+        };
+    }
+
+    public function getPublicCourseUrlAttribute(): string
+    {
+        return match ($this->slug) {
+            'dnl-kompakt' => url('/akademie/bildungsurlaub'),
+            'dnl-vertiefung' => url('/akademie/vertiefung'),
+            'dnl-premium' => url('/akademie/premium'),
+            'stress-und-ressourcen' => url('/praevention/stress'),
+            'rauchfrei' => url('/praevention/rauchfrei'),
+            'ernaehrung' => url('/praevention/ernaehrung'),
+            'klar-entscheiden' => url('/praevention/klar-entscheiden'),
+            'erfolgreich-gruenden' => url('/gruenden'),
+            'presse-oeffentlichkeit' => url('/presse'),
+            'rhetorik-unter-druck' => url('/rhetorik'),
+            'rio-negro-2002' => url('/service/rio-negro'),
+            default => url('/kurse/' . $this->slug),
+        };
+    }
 }

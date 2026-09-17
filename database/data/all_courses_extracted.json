@@ -1,0 +1,1464 @@
+{
+    "dnl-kompakt": {
+        "slug": "dnl-kompakt",
+        "categoryLabel": "DNL-Akademie",
+        "catalogTitle": "5-Tage-Kompaktlehrgang",
+        "access": "Drei Monate ab Freischaltung",
+        "workbook": "Vollständiges Executive Workbook · 37 Seiten",
+        "units": [
+            {
+                "number": "1-A01",
+                "title": "Einführung und Orientierung",
+                "duration": "3:47",
+                "summary": "Eine reale Entscheidung begleitet dich durch den gesamten ersten Tag.",
+                "task": "Beschreibe die Situation in einem Satz – ohne Erklärung.",
+                "audio": "\/audio\/dnl-kompakt\/1-A01.mp3"
+            },
+            {
+                "number": "1-A02",
+                "title": "Was ist wirklich da?",
+                "duration": "3:06",
+                "summary": "Wahrnehmung ist das, was eine Kamera aufzeichnen würde. Interpretation ist der Film.",
+                "task": "Trenne Wahrnehmung und Interpretation.",
+                "audio": "\/audio\/dnl-kompakt\/1-A02.mp3"
+            },
+            {
+                "number": "1-A03",
+                "title": "Blinde Flecken",
+                "duration": "3:17",
+                "summary": "Auch fehlende Informationen können entscheidend sein.",
+                "task": "Identifiziere drei mögliche blinde Flecken.",
+                "audio": "\/audio\/dnl-kompakt\/1-A03.mp3"
+            },
+            {
+                "number": "1-A04",
+                "title": "Wahrnehmen in der Führung",
+                "duration": "4:03",
+                "summary": "Gut funktionierende Systeme können Informationslücken erzeugen.",
+                "task": "Prüfe, was dich erreicht und was systematisch fehlt.",
+                "audio": "\/audio\/dnl-kompakt\/1-A04.mp3"
+            },
+            {
+                "number": "1-A05",
+                "title": "Wahrnehmungsfallen",
+                "duration": "3:45",
+                "summary": "Zu frühe Interpretation, Bestätigungsfehler und Kontextverschmutzung verzerren die Grundlage.",
+                "task": "Bestimme deine häufigste Wahrnehmungsfalle.",
+                "audio": "\/audio\/dnl-kompakt\/1-A05.mp3"
+            },
+            {
+                "number": "1-A06",
+                "title": "Tagesabschluss und Transfer",
+                "duration": "2:19",
+                "summary": "Die Erkenntnisse werden in eine konkrete Entscheidung übersetzt.",
+                "task": "Schließe Tag 1 mit drei Transfersätzen ab.",
+                "audio": "\/audio\/dnl-kompakt\/1-A06.mp3"
+            },
+            {
+                "number": "2-A07",
+                "title": "Kontext schlägt Inhalt",
+                "duration": "3:44",
+                "summary": "Dieselbe Beobachtung kann mehrere Bedeutungen haben.",
+                "task": "Formuliere drei mögliche Bedeutungen deiner Situation.",
+                "audio": "\/audio\/dnl-kompakt\/2-A07.mp3"
+            },
+            {
+                "number": "2-A08",
+                "title": "Alternative Bedeutungen",
+                "duration": "2:44",
+                "summary": "Wer mehr Kontexte kennt, ordnet präziser ein.",
+                "task": "Suche ausdrücklich nach einer unbequemen dritten Bedeutung.",
+                "audio": "\/audio\/dnl-kompakt\/2-A08.mp3"
+            },
+            {
+                "number": "2-A09",
+                "title": "Was ist handlungsrelevant?",
+                "duration": "2:49",
+                "summary": "Wissen wird von handlungsrelevanter Information getrennt.",
+                "task": "Reduziere die Situation auf den handlungsrelevanten Kern.",
+                "audio": "\/audio\/dnl-kompakt\/2-A09.mp3"
+            },
+            {
+                "number": "2-A10",
+                "title": "Ressourcenentscheidung neu einordnen",
+                "duration": "2:38",
+                "summary": "Entscheidend ist, ob ein Mittel dem Ziel dient.",
+                "task": "Ordne Ziel, Mittel und Ressource neu.",
+                "audio": "\/audio\/dnl-kompakt\/2-A10.mp3"
+            },
+            {
+                "number": "2-A11",
+                "title": "Eine Person neu einordnen",
+                "duration": "2:53",
+                "summary": "Fakten werden von vermuteten Interpretationen getrennt.",
+                "task": "Entwickle eine alternative Einordnung.",
+                "audio": "\/audio\/dnl-kompakt\/2-A11.mp3"
+            },
+            {
+                "number": "2-A12",
+                "title": "Transfer und Abschluss",
+                "duration": "2:21",
+                "summary": "Tag 2 endet mit einer konkreten Einordnungsentscheidung.",
+                "task": "Notiere drei Transfersätze und einen Termin.",
+                "audio": "\/audio\/dnl-kompakt\/2-A12.mp3"
+            },
+            {
+                "number": "3-A13",
+                "title": "Kurs setzen, wenn die Karte fehlt",
+                "duration": "3:18",
+                "summary": "Ein tragfähiger Kurs entsteht trotz unvollständiger Informationen.",
+                "task": "Trenne Bekanntes von Unbekanntem und setze einen Kurs.",
+                "audio": "\/audio\/dnl-kompakt\/3-A13.mp3"
+            },
+            {
+                "number": "3-A14",
+                "title": "Der Preis jeder Entscheidung",
+                "duration": "4:02",
+                "summary": "Jede Entscheidung hat den Preis des Handelns und des Nicht-Handelns.",
+                "task": "Vergleiche beide Preise.",
+                "audio": "\/audio\/dnl-kompakt\/3-A14.mp3"
+            },
+            {
+                "number": "3-A15",
+                "title": "Was verdient jetzt eine Entscheidung?",
+                "duration": "4:02",
+                "summary": "Offene Entscheidungen werden nach Wirkung priorisiert.",
+                "task": "Bestimme die Entscheidung mit der höchsten Wirkung.",
+                "audio": "\/audio\/dnl-kompakt\/3-A15.mp3"
+            },
+            {
+                "number": "3-A16",
+                "title": "Entscheidungsfallen",
+                "duration": "4:38",
+                "summary": "Versunkene Kosten, Bestätigung und Ankereffekt können den Kurs verfälschen.",
+                "task": "Identifiziere Falle und wirksamen Moment.",
+                "audio": "\/audio\/dnl-kompakt\/3-A16.mp3"
+            },
+            {
+                "number": "3-A17",
+                "title": "Wer entscheidet – und wer trägt es?",
+                "duration": "3:16",
+                "summary": "Formale Zuständigkeit und tatsächliche Verantwortung sind nicht dasselbe.",
+                "task": "Benenne den realen Verantwortungsträger.",
+                "audio": "\/audio\/dnl-kompakt\/3-A17.mp3"
+            },
+            {
+                "number": "3-A18",
+                "title": "Tagesabschluss und Transfer",
+                "duration": "2:21",
+                "summary": "Entscheidung, Termin und Verantwortung machen aus einem Wunsch einen Kurs.",
+                "task": "Formuliere Entscheidung, Termin und Verantwortung.",
+                "audio": "\/audio\/dnl-kompakt\/3-A18.mp3"
+            },
+            {
+                "number": "4-A19",
+                "title": "Wer nicht geht, kommt nicht an",
+                "duration": "3:08",
+                "summary": "Der erste Schritt muss eine Richtung erzeugen, nicht perfekt sein.",
+                "task": "Bestimme Schritt, Datum und Uhrzeit.",
+                "audio": "\/audio\/dnl-kompakt\/4-A19.mp3"
+            },
+            {
+                "number": "4-A20",
+                "title": "Handlungsblockaden",
+                "duration": "3:07",
+                "summary": "Blockaden werden in konkrete Auflösungsschritte übersetzt.",
+                "task": "Benenne Blockade und Auflösungsschritt.",
+                "audio": "\/audio\/dnl-kompakt\/4-A20.mp3"
+            },
+            {
+                "number": "4-A21",
+                "title": "Kurs halten, wenn Widerstand kommt",
+                "duration": "3:26",
+                "summary": "Widerstand ist nicht automatisch ein Grund zum Abbruch.",
+                "task": "Prüfe die drei Bedingungen zum Kurshalten.",
+                "audio": "\/audio\/dnl-kompakt\/4-A21.mp3"
+            },
+            {
+                "number": "4-A22",
+                "title": "Kurs anpassen",
+                "duration": "3:54",
+                "summary": "Neue Informationen verlangen Anpassung, wenn sie die Einordnung verändern.",
+                "task": "Entscheide zwischen Halten und Anpassen.",
+                "audio": "\/audio\/dnl-kompakt\/4-A22.mp3"
+            },
+            {
+                "number": "4-A23",
+                "title": "DNL-Kreislauf schließen",
+                "duration": "3:22",
+                "summary": "Handlung erzeugt neue Informationen und eine neue Entscheidung.",
+                "task": "Dokumentiere einen vollständigen Kreislauf.",
+                "audio": "\/audio\/dnl-kompakt\/4-A23.mp3"
+            },
+            {
+                "number": "4-A24",
+                "title": "Tagesabschluss",
+                "duration": "2:32",
+                "summary": "Der nächste Schritt wird terminiert und zugeordnet.",
+                "task": "Notiere Schritt, Termin und Zuständigkeit.",
+                "audio": "\/audio\/dnl-kompakt\/4-A24.mp3"
+            },
+            {
+                "number": "5-A25",
+                "title": "Persönlicher Navigationsgrund",
+                "duration": "3:46",
+                "summary": "Nicht nur das Ziel zählt, sondern warum es wichtig ist.",
+                "task": "Formuliere deinen Navigationsgrund.",
+                "audio": "\/audio\/dnl-kompakt\/5-A25.mp3"
+            },
+            {
+                "number": "5-A26",
+                "title": "Orientierung als Führungsprinzip",
+                "duration": "3:52",
+                "summary": "Auch ohne funktionierenden Plan bleibt Orientierung möglich.",
+                "task": "Bestimme den nächsten orientierenden Schritt.",
+                "audio": "\/audio\/dnl-kompakt\/5-A26.mp3"
+            },
+            {
+                "number": "5-A27",
+                "title": "Navigation unter dauerhafter Unsicherheit",
+                "duration": "4:10",
+                "summary": "Für wiederkehrende Unsicherheit wird die passende Einstiegsphase gewählt.",
+                "task": "Ordne drei Bereichen einen Einstiegspunkt zu.",
+                "audio": "\/audio\/dnl-kompakt\/5-A27.mp3"
+            },
+            {
+                "number": "5-A28",
+                "title": "Persönliche Navigationsroutine",
+                "duration": "3:44",
+                "summary": "Eine tägliche Frage und eine wöchentliche Praxis sichern die Anwendung.",
+                "task": "Formuliere deine Routine in drei Sätzen.",
+                "audio": "\/audio\/dnl-kompakt\/5-A28.mp3"
+            },
+            {
+                "number": "5-A29",
+                "title": "Transfer in den Führungsalltag – 30 Tage",
+                "duration": "4:05",
+                "summary": "Drei konkrete Maßnahmen sichern den Transfer.",
+                "task": "Lege drei terminierte Maßnahmen fest.",
+                "audio": "\/audio\/dnl-kompakt\/5-A29.mp3"
+            },
+            {
+                "number": "5-A30",
+                "title": "Abschluss und persönlicher Aktionsplan",
+                "duration": "3:36",
+                "summary": "Erkenntnis, Entscheidung und erster Schritt werden zu einem Aktionsplan.",
+                "task": "Schließe das DNL-Logbuch ab.",
+                "audio": "\/audio\/dnl-kompakt\/5-A30.mp3"
+            }
+        ],
+        "premiumSupport": true
+    },
+    "dnl-premium": {
+        "slug": "dnl-premium",
+        "categoryLabel": "DNL-Akademie",
+        "catalogTitle": "Premium-Seminar",
+        "access": "Drei Monate ab Freischaltung",
+        "workbook": "Digitales Arbeitsmaterial",
+        "units": [
+            {
+                "number": "Wahrnehmen",
+                "title": "Eigene Situation klären",
+                "duration": "",
+                "summary": "Kurseinheit aus dem vollständigen Lehrgang.",
+                "task": "Audio- und Arbeitsmaterial werden im freigeschalteten Kundenkonto bereitgestellt."
+            },
+            {
+                "number": "Einordnen",
+                "title": "Fragen direkt zuspitzen",
+                "duration": "",
+                "summary": "Kurseinheit aus dem vollständigen Lehrgang.",
+                "task": "Audio- und Arbeitsmaterial werden im freigeschalteten Kundenkonto bereitgestellt."
+            },
+            {
+                "number": "Entscheiden",
+                "title": "Methode anwenden",
+                "duration": "",
+                "summary": "Kurseinheit aus dem vollständigen Lehrgang.",
+                "task": "Audio- und Arbeitsmaterial werden im freigeschalteten Kundenkonto bereitgestellt."
+            },
+            {
+                "number": "Handeln",
+                "title": "Transfer mit Direktkontakt",
+                "duration": "",
+                "summary": "Kurseinheit aus dem vollständigen Lehrgang.",
+                "task": "Audio- und Arbeitsmaterial werden im freigeschalteten Kundenkonto bereitgestellt."
+            }
+        ],
+        "premiumSupport": true
+    },
+    "dnl-vertiefung": {
+        "slug": "dnl-vertiefung",
+        "categoryLabel": "DNL-Akademie",
+        "catalogTitle": "Vertiefungsausbildung",
+        "access": "Drei Monate ab Freischaltung",
+        "workbook": "DNL Vertiefungsausbildung · 48 Seiten",
+        "units": [
+            {
+                "number": "VA-01",
+                "title": "Automatische Reaktionen in Arbeitssituationen erkennen",
+                "duration": "1:01",
+                "summary": "Originaleinheit aus Woche 1 der DNL-Vertiefungsausbildung.",
+                "task": "Beschreiben Sie eine Arbeitssituation der letzten zwei Wochen, in der Sie unmittelbar reagiert haben, ohne die Situation vorher bewusst zu prüfen.",
+                "audio": "\/audio\/dnl-vertiefung\/A01.mp3"
+            },
+            {
+                "number": "VA-02",
+                "title": "Der Unterschied zwischen Wahrnehmen und Bewerten",
+                "duration": "0:56",
+                "summary": "Originaleinheit aus Woche 1 der DNL-Vertiefungsausbildung.",
+                "task": "Sie notieren zu einer aktuellen Arbeitssituation getrennt: Was wurde beobachtet? Was wurde daraus interpretiert?",
+                "audio": "\/audio\/dnl-vertiefung\/A02.mp3"
+            },
+            {
+                "number": "VA-03",
+                "title": "Zeitdruck als Wahrnehmungsfilter",
+                "duration": "0:48",
+                "summary": "Originaleinheit aus Woche 1 der DNL-Vertiefungsausbildung.",
+                "task": "Beschreiben Sie eine Entscheidung, die Sie kürzlich unter Zeitdruck getroffen haben, und benennen Sie eine Information, die dabei möglicherweise nicht berücksichtigt wurde.",
+                "audio": "\/audio\/dnl-vertiefung\/A03.mp3"
+            },
+            {
+                "number": "VA-04",
+                "title": "Fallbeispiel: Eskalierende E-Mail-Situation",
+                "duration": "0:50",
+                "summary": "Originaleinheit aus Woche 1 der DNL-Vertiefungsausbildung.",
+                "task": "Formulieren Sie zu der beschriebenen E-Mail eine Antwort, die ausschließlich auf den Fakten der Situation aufbaut, ohne auf den vermuteten Ton der Nachricht einzugehen.",
+                "audio": "\/audio\/dnl-vertiefung\/A04.mp3"
+            },
+            {
+                "number": "VA-05",
+                "title": "Wahrnehmungslücken im Arbeitsalltag",
+                "duration": "0:57",
+                "summary": "Originaleinheit aus Woche 1 der DNL-Vertiefungsausbildung.",
+                "task": "Benennen Sie einen Arbeitsablauf, in dem regelmäßig dieselbe Art von Information fehlt, und beschreiben Sie, an welcher Stelle im Ablauf dies auftritt.",
+                "audio": "\/audio\/dnl-vertiefung\/A05.mp3"
+            },
+            {
+                "number": "VA-06",
+                "title": "Rückblick: Wahrnehmen",
+                "duration": "1:17",
+                "summary": "Originaleinheit aus Woche 1 der DNL-Vertiefungsausbildung.",
+                "task": "Beschreiben Sie einen konkreten Anwendungsfall aus Ihrem Arbeitsalltag, in dem mindestens zwei der heutigen Aspekte gemeinsam eine Rolle spielen.",
+                "audio": "\/audio\/dnl-vertiefung\/A06.mp3"
+            },
+            {
+                "number": "VA-07",
+                "title": "Informationsflut strukturieren",
+                "duration": "0:58",
+                "summary": "Originaleinheit aus Woche 1 der DNL-Vertiefungsausbildung.",
+                "task": "Notieren Sie drei Informationen, die Sie heute erreicht haben, in der Reihenfolge ihres tatsächlichen Eingangs. Ordnen Sie sie anschließend danach, ob sie sich auf eine anstehende Entscheidung auswirken.",
+                "audio": "\/audio\/dnl-vertiefung\/A07.mp3"
+            },
+            {
+                "number": "VA-08",
+                "title": "Relevanz vs. Dringlichkeit",
+                "duration": "0:49",
+                "summary": "Originaleinheit aus Woche 2 der DNL-Vertiefungsausbildung.",
+                "task": "Nehmen Sie die drei Informationen aus der vorherigen Einheit. Bewerten Sie jede einzeln nach Dringlichkeit und nach Relevanz, unabhängig voneinander.",
+                "audio": "\/audio\/dnl-vertiefung\/A08.mp3"
+            },
+            {
+                "number": "VA-09",
+                "title": "Quellen bewerten",
+                "duration": "0:48",
+                "summary": "Originaleinheit aus Woche 2 der DNL-Vertiefungsausbildung.",
+                "task": "Wählen Sie eine Information, die Sie in der letzten Woche erhalten haben, ohne sie direkt selbst geprüft zu haben. Beantworten Sie die drei Fragen zu Beobachtung, Zuständigkeit und Aktualität.",
+                "audio": "\/audio\/dnl-vertiefung\/A09.mp3"
+            },
+            {
+                "number": "VA-10",
+                "title": "Fallbeispiel: Widersprüchliche Angaben aus zwei Abteilungen",
+                "duration": "0:25",
+                "summary": "Originaleinheit aus Woche 2 der DNL-Vertiefungsausbildung.",
+                "task": "Formulieren Sie eine Rückfrage, die klärt, ob sich die beiden Angaben tatsächlich widersprechen oder ob sie sich auf unterschiedliche Teilschritte beziehen.",
+                "audio": "\/audio\/dnl-vertiefung\/A10.mp3"
+            },
+            {
+                "number": "VA-11",
+                "title": "Eigene Kriterien für Informationsbewertung prüfen",
+                "duration": "0:23",
+                "summary": "Originaleinheit aus Woche 2 der DNL-Vertiefungsausbildung.",
+                "task": "Notieren Sie zwei Kriterien, nach denen Sie Informationen im Arbeitsalltag bislang einordnen, ohne dass Sie diese bisher ausdrücklich formuliert hatten.",
+                "audio": "\/audio\/dnl-vertiefung\/A11.mp3"
+            },
+            {
+                "number": "VA-12",
+                "title": "Rückblick: Einordnen",
+                "duration": "0:20",
+                "summary": "Originaleinheit aus Woche 2 der DNL-Vertiefungsausbildung.",
+                "task": "Beschreiben Sie einen Anwendungsfall aus Ihrem Arbeitsalltag, in dem mindestens zwei der heutigen Bausteine gemeinsam eine Rolle spielen.",
+                "audio": "\/audio\/dnl-vertiefung\/A12.mp3"
+            },
+            {
+                "number": "VA-13",
+                "title": "Entscheidungsdruck vs. Entscheidungsqualität",
+                "duration": "0:50",
+                "summary": "Originaleinheit aus Woche 2 der DNL-Vertiefungsausbildung.",
+                "task": "Beschreiben Sie eine Entscheidung, die Sie kürzlich unter hohem Druck getroffen haben. Benennen Sie, welche bereits vorliegende Information Sie dabei tatsächlich genutzt haben.",
+                "audio": "\/audio\/dnl-vertiefung\/A13.mp3"
+            },
+            {
+                "number": "VA-14",
+                "title": "Reversible vs. irreversible Entscheidungen",
+                "duration": "0:22",
+                "summary": "Originaleinheit aus Woche 2 der DNL-Vertiefungsausbildung.",
+                "task": "Nehmen Sie die Entscheidung aus der vorherigen Einheit. Prüfen Sie, ob sie reversibel oder irreversibel war, und ob der Prüfaufwand dazu passte.",
+                "audio": "\/audio\/dnl-vertiefung\/A14.mp3"
+            },
+            {
+                "number": "VA-15",
+                "title": "Entscheiden mit unvollständigen Daten",
+                "duration": "0:16",
+                "summary": "Originaleinheit aus Woche 3 der DNL-Vertiefungsausbildung.",
+                "task": "Beschreiben Sie eine anstehende Entscheidung, bei der Ihnen derzeit relevante Information fehlt. Benennen Sie konkret, was fehlt.",
+                "audio": "\/audio\/dnl-vertiefung\/A15.mp3"
+            },
+            {
+                "number": "VA-16",
+                "title": "Fallbeispiel: Kurzfristige Terminentscheidung",
+                "duration": "0:14",
+                "summary": "Originaleinheit aus Woche 3 der DNL-Vertiefungsausbildung.",
+                "task": "Formulieren Sie zu dem beschriebenen Fall, welche der beiden Handlungsoptionen Sie wählen würden und welche einzelne Rückfrage Sie vorher stellen würden.",
+                "audio": "\/audio\/dnl-vertiefung\/A16.mp3"
+            },
+            {
+                "number": "VA-17",
+                "title": "Muster, die Entscheidungen im Beruf verzögern",
+                "duration": "0:21",
+                "summary": "Originaleinheit aus Woche 3 der DNL-Vertiefungsausbildung.",
+                "task": "Betrachten Sie die letzten drei Entscheidungen, die Sie verzögert haben. Benennen Sie ein Muster, das sich wiederholt.",
+                "audio": "\/audio\/dnl-vertiefung\/A17.mp3"
+            },
+            {
+                "number": "VA-18",
+                "title": "Rückblick: Entscheiden",
+                "duration": "0:43",
+                "summary": "Originaleinheit aus Woche 3 der DNL-Vertiefungsausbildung.",
+                "task": "Beschreiben Sie einen Anwendungsfall aus Ihrem Arbeitsalltag, in dem mindestens zwei der heutigen Bausteine gemeinsam eine Rolle spielen.",
+                "audio": "\/audio\/dnl-vertiefung\/A18.mp3"
+            },
+            {
+                "number": "VA-19",
+                "title": "Vom Entschluss zur Handlung",
+                "duration": "0:49",
+                "summary": "Originaleinheit aus Woche 3 der DNL-Vertiefungsausbildung.",
+                "task": "Wählen Sie eine kürzlich getroffene berufliche Entscheidung, deren Umsetzung noch nicht begonnen hat oder nur schleppend vorankommt. Legen Sie schriftlich fest: Welche konkrete erste Handlung ist notwendig? Zu welchem Zeitpunkt wird diese Handlung ausgeführt? Wer ist dafür zuständig?",
+                "audio": "\/audio\/dnl-vertiefung\/A19.mp3"
+            },
+            {
+                "number": "VA-20",
+                "title": "Handeln unter Zeitdruck",
+                "duration": "0:14",
+                "summary": "Originaleinheit aus Woche 3 der DNL-Vertiefungsausbildung.",
+                "task": "Denken Sie an eine aktuelle oder kürzlich erlebte berufliche Situation mit mehreren gleichzeitig notwendigen Handlungsschritten unter Zeitdruck. Ordnen Sie jeden Schritt einer der beiden Kategorien zu - Sofortmaßnahme oder nachgelagerter Schritt. Begründen Sie die Zuordnung anhand der Prüffrage: Verschlechtert sich die Lage, wenn dieser Schritt jetzt nicht ausgeführt wird?",
+                "audio": "\/audio\/dnl-vertiefung\/A20.mp3"
+            },
+            {
+                "number": "VA-21",
+                "title": "Priorisierung bei paralleler Handlungsnotwendigkeit",
+                "duration": "0:17",
+                "summary": "Originaleinheit aus Woche 3 der DNL-Vertiefungsausbildung.",
+                "task": "Beschreiben Sie eine berufliche Situation mit mehreren gleichzeitig notwendigen, nicht zeitkritischen Handlungen. Ordnen Sie diese nach ihrer Wirkung auf die Gesamtsituation.",
+                "audio": "\/audio\/dnl-vertiefung\/A21.mp3"
+            },
+            {
+                "number": "VA-22",
+                "title": "Handlungsfähigkeit bei unvollständiger Information",
+                "duration": "0:19",
+                "summary": "Originaleinheit aus Woche 3 der DNL-Vertiefungsausbildung.",
+                "task": "Erinnern Sie sich an eine Situation, in der eine eigene Handlung durch das Warten auf vollständige Information unnötig verzögert wurde. Beschreiben Sie rückblickend, welche Informationen tatsächlich notwendig gewesen wären, um verantwortbar zu handeln.",
+                "audio": "\/audio\/dnl-vertiefung\/A22.mp3"
+            },
+            {
+                "number": "VA-23",
+                "title": "Verantwortung und Dokumentation von Handlungsergebnissen",
+                "duration": "0:16",
+                "summary": "Originaleinheit aus Woche 4 der DNL-Vertiefungsausbildung.",
+                "task": "Dokumentieren Sie eine kürzlich ausgeführte berufliche Handlung. Was wurde getan, wann, von wem, und welches Ergebnis wurde erwartet?",
+                "audio": "\/audio\/dnl-vertiefung\/A23.mp3"
+            },
+            {
+                "number": "VA-24",
+                "title": "Nachsteuerung: Handeln, wenn sich die Lage ändert",
+                "duration": "0:21",
+                "summary": "Originaleinheit aus Woche 4 der DNL-Vertiefungsausbildung.",
+                "task": "Erinnern Sie sich an eine Situation mit veränderten Umständen während der Umsetzung. Beschreiben Sie, ob das Ziel oder nur der Weg dorthin betroffen war, und wie das Vorgehen angepasst wurde oder angepasst werden müsste.",
+                "audio": "\/audio\/dnl-vertiefung\/A24.mp3"
+            },
+            {
+                "number": "VA-25",
+                "title": "Die vier Phasen im Zusammenspiel",
+                "duration": "0:18",
+                "summary": "Originaleinheit aus Woche 4 der DNL-Vertiefungsausbildung.",
+                "task": "Wählen Sie eine eigene berufliche Situation und beschreiben Sie kurz, wie sie durch alle vier Phasen verlaufen ist oder verlaufen könnte.",
+                "audio": "\/audio\/dnl-vertiefung\/A25.mp3"
+            },
+            {
+                "number": "VA-26",
+                "title": "Anwendung auf typische berufliche Situationen",
+                "duration": "0:22",
+                "summary": "Originaleinheit aus Woche 4 der DNL-Vertiefungsausbildung.",
+                "task": "Wählen Sie eine aktuelle, noch ungelöste berufliche Situation. Führen Sie diese eigenständig durch alle vier Phasen und legen Sie den ersten Handlungsschritt fest.",
+                "audio": "\/audio\/dnl-vertiefung\/A26.mp3"
+            },
+            {
+                "number": "VA-27",
+                "title": "DNL in der Zusammenarbeit mit anderen",
+                "duration": "0:31",
+                "summary": "Originaleinheit aus Woche 4 der DNL-Vertiefungsausbildung.",
+                "task": "Identifizieren Sie eine berufliche Situation, die eine gemeinsame Entscheidung mit anderen Beteiligten erfordert. Beschreiben Sie, wie Wahrnehmung, Einordnung, Entscheidung und Handlung zwischen den Beteiligten abgestimmt werden oder abgestimmt werden sollten.",
+                "audio": "\/audio\/dnl-vertiefung\/A27.mp3"
+            },
+            {
+                "number": "VA-28",
+                "title": "Auswertung von Handlungsergebnissen",
+                "duration": "0:36",
+                "summary": "Originaleinheit aus Woche 4 der DNL-Vertiefungsausbildung.",
+                "task": "Wählen Sie eine eigene, bereits dokumentierte Handlung. Vergleichen Sie erwartetes mit tatsächlichem Ergebnis und formulieren Sie einen sachlichen Schluss für künftige Anwendungen.",
+                "audio": "\/audio\/dnl-vertiefung\/A28.mp3"
+            },
+            {
+                "number": "VA-29",
+                "title": "Dauerhafte Integration in den Arbeitsalltag",
+                "duration": "0:20",
+                "summary": "Originaleinheit aus Woche 4 der DNL-Vertiefungsausbildung.",
+                "task": "Benennen Sie zwei bis drei wiederkehrende Situationen in Ihrer Arbeit, in denen die DNL künftig angewendet werden soll. Legen Sie für jede Situation fest, wann sie standardmäßig zur Anwendung kommt.",
+                "audio": "\/audio\/dnl-vertiefung\/A29.mp3"
+            },
+            {
+                "number": "VA-30",
+                "title": "Abschluss und Transferplan",
+                "duration": "0:49",
+                "summary": "Originaleinheit aus Woche 4 der DNL-Vertiefungsausbildung.",
+                "task": "Erstellen Sie Ihren schriftlichen Transferplan. Tragen Sie die wiederkehrenden Situationen ein sowie den nächsten konkreten Schritt für die zuvor bearbeitete Situation. Jeweils mit Zeitpunkt und Zuständigkeit.",
+                "audio": "\/audio\/dnl-vertiefung\/A30.mp3"
+            }
+        ],
+        "premiumSupport": true
+    },
+    "erfolgreich-gruenden": {
+        "slug": "erfolgreich-gruenden",
+        "categoryLabel": "Business",
+        "catalogTitle": "Erfolgreich gründen",
+        "access": "Drei Monate ab Freischaltung",
+        "workbook": "Premium-Unternehmerkurs · ausfüllbares Arbeitsbuch · 71 Seiten",
+        "units": [
+            {
+                "number": "A00",
+                "title": "Prolog – Bevor du beginnst",
+                "duration": "5:01",
+                "summary": "Du hältst deine Ausgangslage fest und bestimmst, was du mit dem Kurs tatsächlich prüfen willst.",
+                "task": "Beschreibe deine Ausgangslage, dein Prüfziel und das, was du bisher nur vermutest, aber noch nicht weißt.",
+                "audio": "\/audio\/erfolgreich-gruenden\/GRUENDER_A00.mp3"
+            },
+            {
+                "number": "A01",
+                "title": "Raus, bevor du planst",
+                "duration": "4:42",
+                "summary": "Du sammelst drei reale, dokumentierte Reaktionen auf deine rohe Idee – keine Vermutung und kein Feedback aus dem engen Umfeld.",
+                "task": "Formuliere deinen Ein-Satz-Entwurf, wähle Kontaktstufe A, B oder C und dokumentiere drei reale Außenkontakte.",
+                "audio": "\/audio\/erfolgreich-gruenden\/GRUENDER_A01.mp3"
+            },
+            {
+                "number": "A02",
+                "title": "Was das wirklich bedeutet",
+                "duration": "4:23",
+                "summary": "Du ordnest deine drei Beobachtungen sauber ein und prüfst die bequemste Einordnung real gegen.",
+                "task": "Ordne jede Beobachtung als Chance, Risiko oder unklar ein und dokumentiere die reale Gegenprüfung.",
+                "audio": "\/audio\/erfolgreich-gruenden\/GRUENDER_A02.mp3"
+            },
+            {
+                "number": "A03",
+                "title": "Die kleinste mögliche Entscheidung",
+                "duration": "4:06",
+                "summary": "Du formulierst einen Entscheidungssatz mit Zeit- und Geldlimit und lässt ihn auf Verständlichkeit prüfen.",
+                "task": "Formuliere deinen Entscheidungssatz mit Grenze, Termin und Prüfkriterium. Halte das Ergebnis der Verständlichkeitsprüfung fest.",
+                "audio": "\/audio\/erfolgreich-gruenden\/GRUENDER_A03.mp3"
+            },
+            {
+                "number": "A04",
+                "title": "Der erste echte Verkauf",
+                "duration": "3:36",
+                "summary": "Du sprichst mindestens ein reales Angebot aus und verlangst eine echte Entscheidung.",
+                "task": "Dokumentiere dein konkretes Angebot, die gewählte Kontaktstufe C und die tatsächliche Antwort.",
+                "audio": "\/audio\/erfolgreich-gruenden\/GRUENDER_A04.mp3"
+            },
+            {
+                "number": "A05",
+                "title": "Was es wert ist",
+                "duration": "4:49",
+                "summary": "Du legst einen begründeten Testpreis fest und erkennst die Gefahr eines zu niedrigen Preises.",
+                "task": "Berechne deinen Testpreis aus Zeit, Kosten und Leistung. Begründe, warum dieser Preis für den Markttest tragfähig ist.",
+                "audio": "\/audio\/erfolgreich-gruenden\/GRUENDER_A05.mp3"
+            },
+            {
+                "number": "A06",
+                "title": "Das Gespräch, das über Ja oder Nein entscheidet",
+                "duration": "",
+                "summary": "Du bereitest einen echten Markt- oder Verkaufstest vollständig vor und klärst mindestens einen realen Einwand mit einer Rückfrage.",
+                "task": "Bereite das reale Gespräch vor und dokumentiere Einwand, Rückfrage und tatsächliche Reaktion.",
+                "audio": "$undefined"
+            },
+            {
+                "number": "A07",
+                "title": "Nein sagen können",
+                "duration": "4:12",
+                "summary": "Du wertest reale Reaktionen aus und sprichst bei Bedarf eine reale, klare Absage aus.",
+                "task": "Halte fest, was du fortführst, veränderst oder bewusst ablehnst, und begründe deine Entscheidung mit den dokumentierten Reaktionen.",
+                "audio": "\/audio\/erfolgreich-gruenden\/GRUENDER_A07.mp3"
+            },
+            {
+                "number": "A08",
+                "title": "Ein Mensch, kein Team",
+                "duration": "5:04",
+                "summary": "Du erledigst eine reale, bisher aufgeschobene Aufgabe mit KI-Unterstützung und dokumentierst deine Kontrolle.",
+                "task": "Beschreibe die Aufgabe, den eingesetzten KI-Arbeitsauftrag, deine Prüfung und das tatsächlich übernommene Ergebnis.",
+                "audio": "\/audio\/erfolgreich-gruenden\/GRUENDER_A08.mp3"
+            },
+            {
+                "number": "A09",
+                "title": "Aus dem Test wird ein Ablauf",
+                "duration": "",
+                "summary": "Du vergleichst deinen geplanten mit dem tatsächlich erprobten Ablauf und baust daraus einen getesteten Fünf-Schritte-Ablauf.",
+                "task": "Dokumentiere Soll und Ist, führe den zweiten DNL-Durchlauf durch und formuliere deinen erprobten Fünf-Schritte-Ablauf.",
+                "audio": "$undefined"
+            },
+            {
+                "number": "A10",
+                "title": "Was dein Unternehmen wert ist",
+                "duration": "5:12",
+                "summary": "Du berechnest deinen Deckungsbeitrag und erkennst, was diese Zahl nicht aussagt.",
+                "task": "Berechne den Deckungsbeitrag anhand deiner realen Einnahmen und direkten Kosten. Notiere zusätzlich die Grenzen dieser Aussage.",
+                "audio": "\/audio\/erfolgreich-gruenden\/GRUENDER_A10.mp3"
+            },
+            {
+                "number": "A11",
+                "title": "Fokus, wenn es anstrengend wird",
+                "duration": "4:42",
+                "summary": "Du legst fest, was fortgeführt wird und was bewusst endet, vereinfacht oder nicht weiterverfolgt wird.",
+                "task": "Ordne deine Vorhaben in Fortführen, Vereinfachen und Beenden ein und begründe die wichtigsten Entscheidungen.",
+                "audio": "\/audio\/erfolgreich-gruenden\/GRUENDER_A11.mp3"
+            },
+            {
+                "number": "A12",
+                "title": "Der Punkt, an dem es ein Unternehmen ist",
+                "duration": "5:07",
+                "summary": "Du prüfst anhand der fünf Kriterien aus dem Lehrmanuskript, ob aus deinen Handlungen ein Unternehmen geworden ist.",
+                "task": "Prüfe die fünf Kriterien mit deinen Ergebnissen aus Kapitel 1 bis 11 und halte belegte sowie noch offene Punkte getrennt fest.",
+                "audio": "\/audio\/erfolgreich-gruenden\/GRUENDER_A12.mp3"
+            },
+            {
+                "number": "A13",
+                "title": "Der zweite Verkauf",
+                "duration": "4:52",
+                "summary": "Du erstellst eine Übergabemappe und führst ein reales Übergabegespräch als Belastungs- und Übergabeprüfung.",
+                "task": "Stelle deine Übergabemappe zusammen und dokumentiere Fragen, Unklarheiten und notwendige Verbesserungen aus dem realen Gespräch.",
+                "audio": "\/audio\/erfolgreich-gruenden\/GRUENDER_A13.mp3"
+            }
+        ],
+        "premiumSupport": true
+    },
+    "ernaehrung": {
+        "slug": "ernaehrung",
+        "categoryLabel": "Gesund Voraus",
+        "catalogTitle": "Ernährung",
+        "access": "Drei Monate ab Freischaltung",
+        "workbook": "Digitales Arbeitsmaterial",
+        "units": [
+            {
+                "number": "E01-A01",
+                "title": "Willkommen und Kurslogik",
+                "duration": "",
+                "summary": "Kurseinheit aus dem vollständigen Lehrgang.",
+                "task": "Audio- und Arbeitsmaterial werden im freigeschalteten Kundenkonto bereitgestellt."
+            },
+            {
+                "number": "E01-A02",
+                "title": "Sicherheit und Teilnahme",
+                "duration": "",
+                "summary": "Kurseinheit aus dem vollständigen Lehrgang.",
+                "task": "Audio- und Arbeitsmaterial werden im freigeschalteten Kundenkonto bereitgestellt."
+            },
+            {
+                "number": "E01-A03",
+                "title": "Dennis Geschichte und DNL",
+                "duration": "",
+                "summary": "Kurseinheit aus dem vollständigen Lehrgang.",
+                "task": "Audio- und Arbeitsmaterial werden im freigeschalteten Kundenkonto bereitgestellt."
+            },
+            {
+                "number": "E01-A04",
+                "title": "Ausgangsanalyse starten",
+                "duration": "",
+                "summary": "Kurseinheit aus dem vollständigen Lehrgang.",
+                "task": "Audio- und Arbeitsmaterial werden im freigeschalteten Kundenkonto bereitgestellt."
+            }
+        ],
+        "premiumSupport": true
+    },
+    "klar-entscheiden": {
+        "slug": "klar-entscheiden",
+        "categoryLabel": "Psychologie u0026 Prävention",
+        "catalogTitle": "Klar entscheiden",
+        "access": "Drei Monate ab Freischaltung",
+        "workbook": "Klar entscheiden · ausfüllbares Arbeitsbuch · 104 Seiten",
+        "units": [
+            {
+                "number": "A01.01",
+                "title": "Die Entscheidung benennen · Block 1",
+                "duration": "5:18",
+                "summary": "Du formulierst die konkrete Entscheidung, die du in diesem Kurs bearbeiten wirst.",
+                "task": "Halte fest, welche konkrete Entscheidung du treffen musst und woran du später erkennst, dass sie entschieden ist.",
+                "audio": "\/audio\/klar-entscheiden\/A01_Block_01.mp3"
+            },
+            {
+                "number": "A01.02",
+                "title": "Die Entscheidung benennen · Block 2",
+                "duration": "3:22",
+                "summary": "Du formulierst die konkrete Entscheidung, die du in diesem Kurs bearbeiten wirst.",
+                "task": "Halte fest, welche konkrete Entscheidung du treffen musst und woran du später erkennst, dass sie entschieden ist.",
+                "audio": "\/audio\/klar-entscheiden\/A01_Block_02.mp3"
+            },
+            {
+                "number": "A01.03",
+                "title": "Die Entscheidung benennen · Block 3",
+                "duration": "3:05",
+                "summary": "Du formulierst die konkrete Entscheidung, die du in diesem Kurs bearbeiten wirst.",
+                "task": "Halte fest, welche konkrete Entscheidung du treffen musst und woran du später erkennst, dass sie entschieden ist.",
+                "audio": "\/audio\/klar-entscheiden\/A01_Block_03.mp3"
+            },
+            {
+                "number": "A01.04",
+                "title": "Die Entscheidung benennen · Block 4",
+                "duration": "3:12",
+                "summary": "Du formulierst die konkrete Entscheidung, die du in diesem Kurs bearbeiten wirst.",
+                "task": "Halte fest, welche konkrete Entscheidung du treffen musst und woran du später erkennst, dass sie entschieden ist.",
+                "audio": "\/audio\/klar-entscheiden\/A01_Block_04.mp3"
+            },
+            {
+                "number": "A02.01",
+                "title": "Einfluss sichtbar machen · Block 1",
+                "duration": "3:59",
+                "summary": "Du machst sichtbar, wer beteiligt ist, wer Einfluss nimmt und wo deine eigene Verantwortung liegt.",
+                "task": "Notiere die beteiligten Personen, ihre Einflüsse und den Teil der Entscheidung, für den du selbst verantwortlich bist.",
+                "audio": "\/audio\/klar-entscheiden\/A02_Block_01.mp3"
+            },
+            {
+                "number": "A02.02",
+                "title": "Einfluss sichtbar machen · Block 2",
+                "duration": "3:49",
+                "summary": "Du machst sichtbar, wer beteiligt ist, wer Einfluss nimmt und wo deine eigene Verantwortung liegt.",
+                "task": "Notiere die beteiligten Personen, ihre Einflüsse und den Teil der Entscheidung, für den du selbst verantwortlich bist.",
+                "audio": "\/audio\/klar-entscheiden\/A02_Block_02.mp3"
+            },
+            {
+                "number": "A02.03",
+                "title": "Einfluss sichtbar machen · Block 3",
+                "duration": "3:39",
+                "summary": "Du machst sichtbar, wer beteiligt ist, wer Einfluss nimmt und wo deine eigene Verantwortung liegt.",
+                "task": "Notiere die beteiligten Personen, ihre Einflüsse und den Teil der Entscheidung, für den du selbst verantwortlich bist.",
+                "audio": "\/audio\/klar-entscheiden\/A02_Block_03.mp3"
+            },
+            {
+                "number": "A02.04",
+                "title": "Einfluss sichtbar machen · Block 4",
+                "duration": "3:27",
+                "summary": "Du machst sichtbar, wer beteiligt ist, wer Einfluss nimmt und wo deine eigene Verantwortung liegt.",
+                "task": "Notiere die beteiligten Personen, ihre Einflüsse und den Teil der Entscheidung, für den du selbst verantwortlich bist.",
+                "audio": "\/audio\/klar-entscheiden\/A02_Block_04.mp3"
+            },
+            {
+                "number": "A02.05",
+                "title": "Einfluss sichtbar machen · Block 5",
+                "duration": "3:52",
+                "summary": "Du machst sichtbar, wer beteiligt ist, wer Einfluss nimmt und wo deine eigene Verantwortung liegt.",
+                "task": "Notiere die beteiligten Personen, ihre Einflüsse und den Teil der Entscheidung, für den du selbst verantwortlich bist.",
+                "audio": "\/audio\/klar-entscheiden\/A02_Block_05.mp3"
+            },
+            {
+                "number": "A03.01",
+                "title": "Fakten, Deutungen, Prognosen und Interessen trennen · Block 1",
+                "duration": "2:53",
+                "summary": "Du sortierst deine Informationen, damit Vermutungen nicht unbemerkt wie Tatsachen behandelt werden.",
+                "task": "Ordne deine wichtigsten Aussagen den Kategorien Fakt, Deutung, Prognose oder Interesse zu.",
+                "audio": "\/audio\/klar-entscheiden\/A03_Block_01.mp3"
+            },
+            {
+                "number": "A03.02",
+                "title": "Fakten, Deutungen, Prognosen und Interessen trennen · Block 2",
+                "duration": "2:47",
+                "summary": "Du sortierst deine Informationen, damit Vermutungen nicht unbemerkt wie Tatsachen behandelt werden.",
+                "task": "Ordne deine wichtigsten Aussagen den Kategorien Fakt, Deutung, Prognose oder Interesse zu.",
+                "audio": "\/audio\/klar-entscheiden\/A03_Block_02.mp3"
+            },
+            {
+                "number": "A03.03",
+                "title": "Fakten, Deutungen, Prognosen und Interessen trennen · Block 3",
+                "duration": "2:57",
+                "summary": "Du sortierst deine Informationen, damit Vermutungen nicht unbemerkt wie Tatsachen behandelt werden.",
+                "task": "Ordne deine wichtigsten Aussagen den Kategorien Fakt, Deutung, Prognose oder Interesse zu.",
+                "audio": "\/audio\/klar-entscheiden\/A03_Block_03.mp3"
+            },
+            {
+                "number": "A03.04",
+                "title": "Fakten, Deutungen, Prognosen und Interessen trennen · Block 4",
+                "duration": "2:57",
+                "summary": "Du sortierst deine Informationen, damit Vermutungen nicht unbemerkt wie Tatsachen behandelt werden.",
+                "task": "Ordne deine wichtigsten Aussagen den Kategorien Fakt, Deutung, Prognose oder Interesse zu.",
+                "audio": "\/audio\/klar-entscheiden\/A03_Block_04.mp3"
+            },
+            {
+                "number": "A04.01",
+                "title": "Eigene Kriterien von Erwartungen trennen · Block 1",
+                "duration": "3:05",
+                "summary": "Du unterscheidest deine eigenen Entscheidungskriterien von Erwartungen anderer.",
+                "task": "Formuliere deine eigenen Kriterien und trenne davon die Erwartungen, die von außen an dich herangetragen werden.",
+                "audio": "\/audio\/klar-entscheiden\/A04_Block_01.mp3"
+            },
+            {
+                "number": "A04.02",
+                "title": "Eigene Kriterien von Erwartungen trennen · Block 2",
+                "duration": "3:06",
+                "summary": "Du unterscheidest deine eigenen Entscheidungskriterien von Erwartungen anderer.",
+                "task": "Formuliere deine eigenen Kriterien und trenne davon die Erwartungen, die von außen an dich herangetragen werden.",
+                "audio": "\/audio\/klar-entscheiden\/A04_Block_02.mp3"
+            },
+            {
+                "number": "A04.03",
+                "title": "Eigene Kriterien von Erwartungen trennen · Block 3",
+                "duration": "3:24",
+                "summary": "Du unterscheidest deine eigenen Entscheidungskriterien von Erwartungen anderer.",
+                "task": "Formuliere deine eigenen Kriterien und trenne davon die Erwartungen, die von außen an dich herangetragen werden.",
+                "audio": "\/audio\/klar-entscheiden\/A04_Block_03.mp3"
+            },
+            {
+                "number": "A04.04",
+                "title": "Eigene Kriterien von Erwartungen trennen · Block 4",
+                "duration": "3:06",
+                "summary": "Du unterscheidest deine eigenen Entscheidungskriterien von Erwartungen anderer.",
+                "task": "Formuliere deine eigenen Kriterien und trenne davon die Erwartungen, die von außen an dich herangetragen werden.",
+                "audio": "\/audio\/klar-entscheiden\/A04_Block_04.mp3"
+            },
+            {
+                "number": "A05.02",
+                "title": "Wahrnehmen und einordnen · Block 2",
+                "duration": "3:49",
+                "summary": "Du prüfst deine Wahrnehmung und ordnest die vorhandenen Informationen in die konkrete Entscheidungslage ein.",
+                "task": "Halte fest, was du tatsächlich wahrnimmst und welche Einordnung du daraus ableitest.",
+                "audio": "\/audio\/klar-entscheiden\/A05_Block_02.mp3"
+            },
+            {
+                "number": "A05.03",
+                "title": "Wahrnehmen und einordnen · Block 3",
+                "duration": "3:46",
+                "summary": "Du prüfst deine Wahrnehmung und ordnest die vorhandenen Informationen in die konkrete Entscheidungslage ein.",
+                "task": "Halte fest, was du tatsächlich wahrnimmst und welche Einordnung du daraus ableitest.",
+                "audio": "\/audio\/klar-entscheiden\/A05_Block_03.mp3"
+            },
+            {
+                "number": "A06.01",
+                "title": "Ausreichend sicher entscheiden · Block 1",
+                "duration": "3:15",
+                "summary": "Du bestimmst, welche Sicherheit für eine tragfähige Entscheidung ausreicht, ohne auf Vollständigkeit zu warten.",
+                "task": "Formuliere, welche Informationen für deine Entscheidung ausreichend sind und welche Unsicherheit bewusst bestehen bleibt.",
+                "audio": "\/audio\/klar-entscheiden\/A06_Block_01.mp3"
+            },
+            {
+                "number": "A06.02",
+                "title": "Ausreichend sicher entscheiden · Block 2",
+                "duration": "3:19",
+                "summary": "Du bestimmst, welche Sicherheit für eine tragfähige Entscheidung ausreicht, ohne auf Vollständigkeit zu warten.",
+                "task": "Formuliere, welche Informationen für deine Entscheidung ausreichend sind und welche Unsicherheit bewusst bestehen bleibt.",
+                "audio": "\/audio\/klar-entscheiden\/A06_Block_02.mp3"
+            },
+            {
+                "number": "A06.03",
+                "title": "Ausreichend sicher entscheiden · Block 3",
+                "duration": "3:04",
+                "summary": "Du bestimmst, welche Sicherheit für eine tragfähige Entscheidung ausreicht, ohne auf Vollständigkeit zu warten.",
+                "task": "Formuliere, welche Informationen für deine Entscheidung ausreichend sind und welche Unsicherheit bewusst bestehen bleibt.",
+                "audio": "\/audio\/klar-entscheiden\/A06_Block_03.mp3"
+            },
+            {
+                "number": "A06.04",
+                "title": "Ausreichend sicher entscheiden · Block 4",
+                "duration": "3:04",
+                "summary": "Du bestimmst, welche Sicherheit für eine tragfähige Entscheidung ausreicht, ohne auf Vollständigkeit zu warten.",
+                "task": "Formuliere, welche Informationen für deine Entscheidung ausreichend sind und welche Unsicherheit bewusst bestehen bleibt.",
+                "audio": "\/audio\/klar-entscheiden\/A06_Block_04.mp3"
+            },
+            {
+                "number": "A07.01",
+                "title": "Vom Entscheiden zum Handeln · Block 1",
+                "duration": "3:21",
+                "summary": "Du übersetzt deine Entscheidung in eine sichtbare und überprüfbare Handlung.",
+                "task": "Lege deinen ersten sichtbaren Handlungsschritt mit Termin und Prüfkriterium fest.",
+                "audio": "\/audio\/klar-entscheiden\/A07_Block_01.mp3"
+            },
+            {
+                "number": "A07.02",
+                "title": "Vom Entscheiden zum Handeln · Block 2",
+                "duration": "3:38",
+                "summary": "Du übersetzt deine Entscheidung in eine sichtbare und überprüfbare Handlung.",
+                "task": "Lege deinen ersten sichtbaren Handlungsschritt mit Termin und Prüfkriterium fest.",
+                "audio": "\/audio\/klar-entscheiden\/A07_Block_02.mp3"
+            },
+            {
+                "number": "A07.03",
+                "title": "Vom Entscheiden zum Handeln · Block 3",
+                "duration": "3:27",
+                "summary": "Du übersetzt deine Entscheidung in eine sichtbare und überprüfbare Handlung.",
+                "task": "Lege deinen ersten sichtbaren Handlungsschritt mit Termin und Prüfkriterium fest.",
+                "audio": "\/audio\/klar-entscheiden\/A07_Block_03.mp3"
+            },
+            {
+                "number": "A08.01",
+                "title": "Dein persönliches Entscheidungssystem · Block 1",
+                "duration": "2:57",
+                "summary": "Du sicherst die Arbeitsweise als persönliches System und prüfst die Abweichungs- und Akutregel.",
+                "task": "Fasse dein persönliches Entscheidungssystem zusammen und notiere, wann du den Standardablauf bewusst unterbrechen musst.",
+                "audio": "\/audio\/klar-entscheiden\/A08_Block_01.mp3"
+            },
+            {
+                "number": "A08.02",
+                "title": "Dein persönliches Entscheidungssystem · Block 2",
+                "duration": "3:07",
+                "summary": "Du sicherst die Arbeitsweise als persönliches System und prüfst die Abweichungs- und Akutregel.",
+                "task": "Fasse dein persönliches Entscheidungssystem zusammen und notiere, wann du den Standardablauf bewusst unterbrechen musst.",
+                "audio": "\/audio\/klar-entscheiden\/A08_Block_02.mp3"
+            },
+            {
+                "number": "A08.03",
+                "title": "Dein persönliches Entscheidungssystem · Block 3",
+                "duration": "2:58",
+                "summary": "Du sicherst die Arbeitsweise als persönliches System und prüfst die Abweichungs- und Akutregel.",
+                "task": "Fasse dein persönliches Entscheidungssystem zusammen und notiere, wann du den Standardablauf bewusst unterbrechen musst.",
+                "audio": "\/audio\/klar-entscheiden\/A08_Block_03.mp3"
+            }
+        ],
+        "premiumSupport": true
+    },
+    "presse-oeffentlichkeit": {
+        "slug": "presse-oeffentlichkeit",
+        "categoryLabel": "Erlebte Medienpraxis",
+        "catalogTitle": "Presse u0026 Öffentlichkeit",
+        "access": "Drei Monate ab Freischaltung",
+        "workbook": "Digitales Arbeitsmaterial",
+        "units": [
+            {
+                "number": "Tag 1",
+                "title": "Verstehen und zuspitzen",
+                "duration": "",
+                "summary": "Kurseinheit aus dem vollständigen Lehrgang.",
+                "task": "Audio- und Arbeitsmaterial werden im freigeschalteten Kundenkonto bereitgestellt."
+            },
+            {
+                "number": "Tag 2",
+                "title": "Material und Ansprache",
+                "duration": "",
+                "summary": "Kurseinheit aus dem vollständigen Lehrgang.",
+                "task": "Audio- und Arbeitsmaterial werden im freigeschalteten Kundenkonto bereitgestellt."
+            },
+            {
+                "number": "Tag 3",
+                "title": "Prüfen und nachbereiten",
+                "duration": "",
+                "summary": "Kurseinheit aus dem vollständigen Lehrgang.",
+                "task": "Audio- und Arbeitsmaterial werden im freigeschalteten Kundenkonto bereitgestellt."
+            },
+            {
+                "number": "Ergebnis",
+                "title": "Arbeitsfähige Presseansprache",
+                "duration": "",
+                "summary": "Kurseinheit aus dem vollständigen Lehrgang.",
+                "task": "Audio- und Arbeitsmaterial werden im freigeschalteten Kundenkonto bereitgestellt."
+            }
+        ],
+        "premiumSupport": true
+    },
+    "rauchfrei": {
+        "slug": "rauchfrei",
+        "categoryLabel": "Gesund Voraus",
+        "catalogTitle": "Rauchfrei",
+        "access": "Drei Monate ab Freischaltung",
+        "workbook": "Rauchstopp-Arbeitsbuch · 71 Seiten",
+        "units": [
+            {
+                "number": "A01",
+                "title": "Ankommen und Rauchstopptermin",
+                "duration": "6:03",
+                "summary": "Du startest mit der kostenlosen sechstägigen Vorbereitungsphase und legst deinen persönlichen Rauchstopptermin fest.",
+                "task": "Bearbeite den zugehörigen Abschnitt im Rauchstopp-Arbeitsbuch vollständig. Halte hier anschließend deine wichtigste persönliche Erkenntnis, Entscheidung oder nächste Handlung aus dieser Einheit fest.",
+                "audio": "\/audio\/rauchfrei\/01.mp3"
+            },
+            {
+                "number": "A02",
+                "title": "Deine Ausgangslage",
+                "duration": "1:58",
+                "summary": "Du hältst deine persönliche Ausgangslage fest und schaffst eine klare Grundlage für die nächsten Schritte.",
+                "task": "Bearbeite den zugehörigen Abschnitt im Rauchstopp-Arbeitsbuch vollständig. Halte hier anschließend deine wichtigste persönliche Erkenntnis, Entscheidung oder nächste Handlung aus dieser Einheit fest.",
+                "audio": "\/audio\/rauchfrei\/02.mp3"
+            },
+            {
+                "number": "A03a",
+                "title": "Dein Vier-Tage-Protokoll",
+                "duration": "2:56",
+                "summary": "Du beobachtest dein Rauchverhalten vier Tage lang systematisch mit dem vorgesehenen Protokoll.",
+                "task": "Bearbeite den zugehörigen Abschnitt im Rauchstopp-Arbeitsbuch vollständig. Halte hier anschließend deine wichtigste persönliche Erkenntnis, Entscheidung oder nächste Handlung aus dieser Einheit fest.",
+                "audio": "\/audio\/rauchfrei\/03.mp3"
+            },
+            {
+                "number": "A03b",
+                "title": "Deine Startphase abschließen",
+                "duration": "2:23",
+                "summary": "Du schließt die Startphase ab und bereitest den Übergang in das vollständige Arbeitsprogramm vor.",
+                "task": "Bearbeite den zugehörigen Abschnitt im Rauchstopp-Arbeitsbuch vollständig. Halte hier anschließend deine wichtigste persönliche Erkenntnis, Entscheidung oder nächste Handlung aus dieser Einheit fest.",
+                "audio": "\/audio\/rauchfrei\/04.mp3"
+            },
+            {
+                "number": "A04",
+                "title": "Deine vier Tage auswerten",
+                "duration": "5:01",
+                "summary": "Du wertest deine Beobachtungen aus und machst wiederkehrende Situationen sichtbar.",
+                "task": "Bearbeite den zugehörigen Abschnitt im Rauchstopp-Arbeitsbuch vollständig. Halte hier anschließend deine wichtigste persönliche Erkenntnis, Entscheidung oder nächste Handlung aus dieser Einheit fest.",
+                "audio": "\/audio\/rauchfrei\/05.mp3"
+            },
+            {
+                "number": "A05",
+                "title": "Deine Top fünf Auslöser",
+                "duration": "4:17",
+                "summary": "Du bestimmst die fünf Auslöser, die für deinen persönlichen Verlauf besonders wichtig sind.",
+                "task": "Bearbeite den zugehörigen Abschnitt im Rauchstopp-Arbeitsbuch vollständig. Halte hier anschließend deine wichtigste persönliche Erkenntnis, Entscheidung oder nächste Handlung aus dieser Einheit fest.",
+                "audio": "\/audio\/rauchfrei\/06.mp3"
+            },
+            {
+                "number": "A06",
+                "title": "Deine Abhängigkeit einschätzen",
+                "duration": "5:32",
+                "summary": "Du ordnest deine Ausgangssituation mit den dafür vorgesehenen Fragen im Arbeitsbuch ein.",
+                "task": "Bearbeite den zugehörigen Abschnitt im Rauchstopp-Arbeitsbuch vollständig. Halte hier anschließend deine wichtigste persönliche Erkenntnis, Entscheidung oder nächste Handlung aus dieser Einheit fest.",
+                "audio": "\/audio\/rauchfrei\/07.mp3"
+            },
+            {
+                "number": "A07",
+                "title": "Welche fachliche Unterstützung passt zu dir?",
+                "duration": "6:15",
+                "summary": "Du prüfst, welche zusätzliche fachliche Unterstützung für deine Situation sinnvoll sein kann.",
+                "task": "Bearbeite den zugehörigen Abschnitt im Rauchstopp-Arbeitsbuch vollständig. Halte hier anschließend deine wichtigste persönliche Erkenntnis, Entscheidung oder nächste Handlung aus dieser Einheit fest.",
+                "audio": "\/audio\/rauchfrei\/08.mp3"
+            },
+            {
+                "number": "A08",
+                "title": "Deine Wenn-Dann-Pläne",
+                "duration": "4:32",
+                "summary": "Du entwickelst konkrete Reaktionen für vorhersehbare Auslöser und Situationen.",
+                "task": "Bearbeite den zugehörigen Abschnitt im Rauchstopp-Arbeitsbuch vollständig. Halte hier anschließend deine wichtigste persönliche Erkenntnis, Entscheidung oder nächste Handlung aus dieser Einheit fest.",
+                "audio": "\/audio\/rauchfrei\/09.mp3"
+            },
+            {
+                "number": "A09",
+                "title": "Deine ersten Tage vorbereiten",
+                "duration": "3:43",
+                "summary": "Du bereitest deinen Alltag und dein Umfeld auf die ersten rauchfreien Tage vor.",
+                "task": "Bearbeite den zugehörigen Abschnitt im Rauchstopp-Arbeitsbuch vollständig. Halte hier anschließend deine wichtigste persönliche Erkenntnis, Entscheidung oder nächste Handlung aus dieser Einheit fest.",
+                "audio": "\/audio\/rauchfrei\/10.mp3"
+            },
+            {
+                "number": "A10",
+                "title": "Der Abend vor deinem Rauchstopptag",
+                "duration": "3:18",
+                "summary": "Du nutzt den Abend für die im Arbeitsbuch vorgesehene letzte Vorbereitung.",
+                "task": "Bearbeite den zugehörigen Abschnitt im Rauchstopp-Arbeitsbuch vollständig. Halte hier anschließend deine wichtigste persönliche Erkenntnis, Entscheidung oder nächste Handlung aus dieser Einheit fest.",
+                "audio": "\/audio\/rauchfrei\/11.mp3"
+            },
+            {
+                "number": "A11",
+                "title": "Dein Rauchstopptag",
+                "duration": "3:11",
+                "summary": "Du gehst strukturiert durch deinen persönlichen Rauchstopptag.",
+                "task": "Bearbeite den zugehörigen Abschnitt im Rauchstopp-Arbeitsbuch vollständig. Halte hier anschließend deine wichtigste persönliche Erkenntnis, Entscheidung oder nächste Handlung aus dieser Einheit fest.",
+                "audio": "\/audio\/rauchfrei\/12.mp3"
+            },
+            {
+                "number": "A12",
+                "title": "Tag 1 ohne Zigarette",
+                "duration": "2:39",
+                "summary": "Du hältst deine Erfahrungen am ersten rauchfreien Tag fest.",
+                "task": "Bearbeite den zugehörigen Abschnitt im Rauchstopp-Arbeitsbuch vollständig. Halte hier anschließend deine wichtigste persönliche Erkenntnis, Entscheidung oder nächste Handlung aus dieser Einheit fest.",
+                "audio": "\/audio\/rauchfrei\/13.mp3"
+            },
+            {
+                "number": "A13",
+                "title": "Tag 2 ohne Zigarette",
+                "duration": "2:39",
+                "summary": "Du arbeitest mit den vorgesehenen Aufgaben für deinen zweiten rauchfreien Tag weiter.",
+                "task": "Bearbeite den zugehörigen Abschnitt im Rauchstopp-Arbeitsbuch vollständig. Halte hier anschließend deine wichtigste persönliche Erkenntnis, Entscheidung oder nächste Handlung aus dieser Einheit fest.",
+                "audio": "\/audio\/rauchfrei\/14.mp3"
+            },
+            {
+                "number": "A14",
+                "title": "Tag 3: Bilanz der ersten Tage",
+                "duration": "5:32",
+                "summary": "Du ziehst eine erste sachliche Bilanz und bestimmst, was du weiterführen oder anpassen willst.",
+                "task": "Bearbeite den zugehörigen Abschnitt im Rauchstopp-Arbeitsbuch vollständig. Halte hier anschließend deine wichtigste persönliche Erkenntnis, Entscheidung oder nächste Handlung aus dieser Einheit fest.",
+                "audio": "\/audio\/rauchfrei\/15.mp3"
+            },
+            {
+                "number": "A15",
+                "title": "Woche 2 beginnt: Alltag ohne Zigarette",
+                "duration": "3:57",
+                "summary": "Du richtest den Blick auf wiederkehrende Alltagssituationen in der zweiten Woche.",
+                "task": "Bearbeite den zugehörigen Abschnitt im Rauchstopp-Arbeitsbuch vollständig. Halte hier anschließend deine wichtigste persönliche Erkenntnis, Entscheidung oder nächste Handlung aus dieser Einheit fest.",
+                "audio": "\/audio\/rauchfrei\/16.mp3"
+            },
+            {
+                "number": "A16",
+                "title": "Umgang mit starkem Rauchverlangen",
+                "duration": "3:20",
+                "summary": "Du bereitest dich mit dem Arbeitsbuch auf Phasen starken Rauchverlangens vor.",
+                "task": "Bearbeite den zugehörigen Abschnitt im Rauchstopp-Arbeitsbuch vollständig. Halte hier anschließend deine wichtigste persönliche Erkenntnis, Entscheidung oder nächste Handlung aus dieser Einheit fest.",
+                "audio": "\/audio\/rauchfrei\/17.mp3"
+            },
+            {
+                "number": "A17",
+                "title": "Soziale Situationen und Alkohol",
+                "duration": "3:19",
+                "summary": "Du planst deinen Umgang mit sozialen Situationen und Alkohol bewusst voraus.",
+                "task": "Bearbeite den zugehörigen Abschnitt im Rauchstopp-Arbeitsbuch vollständig. Halte hier anschließend deine wichtigste persönliche Erkenntnis, Entscheidung oder nächste Handlung aus dieser Einheit fest.",
+                "audio": "\/audio\/rauchfrei\/18.mp3"
+            },
+            {
+                "number": "A18",
+                "title": "Rauch-, Tabak- oder Produktnutzungsereignisse sachlich einordnen",
+                "duration": "4:39",
+                "summary": "Du ordnest ein Ereignis sachlich ein und leitest den nächsten konkreten Schritt ab.",
+                "task": "Bearbeite den zugehörigen Abschnitt im Rauchstopp-Arbeitsbuch vollständig. Halte hier anschließend deine wichtigste persönliche Erkenntnis, Entscheidung oder nächste Handlung aus dieser Einheit fest.",
+                "audio": "\/audio\/rauchfrei\/19.mp3"
+            },
+            {
+                "number": "A19",
+                "title": "Vier-Wochen-Bilanz",
+                "duration": "3:30",
+                "summary": "Du hältst nach vier Wochen deinen Stand und die wichtigsten Erfahrungen fest.",
+                "task": "Bearbeite den zugehörigen Abschnitt im Rauchstopp-Arbeitsbuch vollständig. Halte hier anschließend deine wichtigste persönliche Erkenntnis, Entscheidung oder nächste Handlung aus dieser Einheit fest.",
+                "audio": "\/audio\/rauchfrei\/20.mp3"
+            },
+            {
+                "number": "A20",
+                "title": "Freiwillige leichte Situation",
+                "duration": "3:34",
+                "summary": "Du bearbeitest die vorgesehene freiwillige Übung in einer bewusst leicht gewählten Situation.",
+                "task": "Bearbeite den zugehörigen Abschnitt im Rauchstopp-Arbeitsbuch vollständig. Halte hier anschließend deine wichtigste persönliche Erkenntnis, Entscheidung oder nächste Handlung aus dieser Einheit fest.",
+                "audio": "\/audio\/rauchfrei\/21.mp3"
+            },
+            {
+                "number": "A21",
+                "title": "Stress ohne Zigarette",
+                "duration": "3:40",
+                "summary": "Du untersuchst deine Reaktion auf Stress und planst eine passende Alternative.",
+                "task": "Bearbeite den zugehörigen Abschnitt im Rauchstopp-Arbeitsbuch vollständig. Halte hier anschließend deine wichtigste persönliche Erkenntnis, Entscheidung oder nächste Handlung aus dieser Einheit fest.",
+                "audio": "\/audio\/rauchfrei\/22.mp3"
+            },
+            {
+                "number": "A22",
+                "title": "Gewicht, Schlaf und Körpergefühl",
+                "duration": "3:43",
+                "summary": "Du beobachtest körperliche Veränderungen und hältst sie differenziert fest.",
+                "task": "Bearbeite den zugehörigen Abschnitt im Rauchstopp-Arbeitsbuch vollständig. Halte hier anschließend deine wichtigste persönliche Erkenntnis, Entscheidung oder nächste Handlung aus dieser Einheit fest.",
+                "audio": "\/audio\/rauchfrei\/23.mp3"
+            },
+            {
+                "number": "A23",
+                "title": "Bilanz nach sieben Wochen",
+                "duration": "4:33",
+                "summary": "Du prüfst deine Entwicklung nach sieben Wochen anhand des Arbeitsbuchs.",
+                "task": "Bearbeite den zugehörigen Abschnitt im Rauchstopp-Arbeitsbuch vollständig. Halte hier anschließend deine wichtigste persönliche Erkenntnis, Entscheidung oder nächste Handlung aus dieser Einheit fest.",
+                "audio": "\/audio\/rauchfrei\/24.mp3"
+            },
+            {
+                "number": "A24",
+                "title": "Zukünftige Risikosituationen vorbereiten",
+                "duration": "3:08",
+                "summary": "Du bereitest dich auf absehbare persönliche Risikosituationen vor.",
+                "task": "Bearbeite den zugehörigen Abschnitt im Rauchstopp-Arbeitsbuch vollständig. Halte hier anschließend deine wichtigste persönliche Erkenntnis, Entscheidung oder nächste Handlung aus dieser Einheit fest.",
+                "audio": "\/audio\/rauchfrei\/25.mp3"
+            },
+            {
+                "number": "A25",
+                "title": "Strukturierter Neustart – nur bei Bedarf",
+                "duration": "4:07",
+                "summary": "Du nutzt diesen Abschnitt nur dann, wenn ein strukturierter Neustart für dich erforderlich ist.",
+                "task": "Bearbeite den zugehörigen Abschnitt im Rauchstopp-Arbeitsbuch vollständig. Halte hier anschließend deine wichtigste persönliche Erkenntnis, Entscheidung oder nächste Handlung aus dieser Einheit fest.",
+                "audio": "\/audio\/rauchfrei\/26.mp3"
+            },
+            {
+                "number": "A26",
+                "title": "Persönlicher Dauerplan und Programmabschluss",
+                "duration": "4:23",
+                "summary": "Du schließt das Programm mit deinem persönlichen Dauerplan ab.",
+                "task": "Bearbeite den zugehörigen Abschnitt im Rauchstopp-Arbeitsbuch vollständig. Halte hier anschließend deine wichtigste persönliche Erkenntnis, Entscheidung oder nächste Handlung aus dieser Einheit fest.",
+                "audio": "\/audio\/rauchfrei\/27.mp3"
+            }
+        ],
+        "premiumSupport": true
+    },
+    "rhetorik-unter-druck": {
+        "slug": "rhetorik-unter-druck",
+        "categoryLabel": "Wirkung",
+        "catalogTitle": "Rhetorik unter Druck",
+        "access": "Drei Monate ab Freischaltung",
+        "workbook": "Digitales Arbeitsmaterial",
+        "units": [
+            {
+                "number": "A01",
+                "title": "Begrüßung, Kurslogik und ehrliche Erwartung",
+                "duration": "",
+                "summary": "Kurseinheit aus dem vollständigen Lehrgang.",
+                "task": "Audio- und Arbeitsmaterial werden im freigeschalteten Kundenkonto bereitgestellt."
+            },
+            {
+                "number": "A02",
+                "title": "Wahrnehmung, Interpretation und Wirkung trennen",
+                "duration": "",
+                "summary": "Kurseinheit aus dem vollständigen Lehrgang.",
+                "task": "Audio- und Arbeitsmaterial werden im freigeschalteten Kundenkonto bereitgestellt."
+            },
+            {
+                "number": "Training",
+                "title": "Einwände und Störungen beantworten",
+                "duration": "",
+                "summary": "Kurseinheit aus dem vollständigen Lehrgang.",
+                "task": "Audio- und Arbeitsmaterial werden im freigeschalteten Kundenkonto bereitgestellt."
+            },
+            {
+                "number": "Abschluss",
+                "title": "Selbstaufzeichnung und Rückmeldung",
+                "duration": "",
+                "summary": "Kurseinheit aus dem vollständigen Lehrgang.",
+                "task": "Audio- und Arbeitsmaterial werden im freigeschalteten Kundenkonto bereitgestellt."
+            }
+        ],
+        "premiumSupport": true
+    },
+    "rio-negro-2002": {
+        "slug": "rio-negro-2002",
+        "categoryLabel": "Audio-Abenteuer",
+        "catalogTitle": "Rio Negro 2002",
+        "access": "30 Tage ab Freischaltung",
+        "workbook": "Vollständiges ausfüllbares Expeditionsbuch · 32 Seiten",
+        "units": [
+            {
+                "number": "00",
+                "title": "Die Vermisstenmeldung",
+                "duration": "ca. 3 Min.",
+                "image": "\/images\/rio\/rio-action.jpg",
+                "caption": "Der Kontakt ist abgebrochen.",
+                "audio": "\/audio\/rio-negro-2002\/00.mp3",
+                "summary": "Originaletappe aus dem vollständigen Audio-Abenteuer.",
+                "task": "Audio, Originalmaterial und Arbeitsauftrag werden im freigeschalteten Kundenkonto bereitgestellt."
+            },
+            {
+                "number": "01",
+                "title": "Der Plan",
+                "duration": "ca. 4 Min.",
+                "image": "\/images\/rio\/planung-karte.jpg",
+                "caption": "Planung vor dem Aufbruch, 2002.",
+                "audio": "\/audio\/rio-negro-2002\/01.mp3",
+                "summary": "Originaletappe aus dem vollständigen Audio-Abenteuer.",
+                "task": "Audio, Originalmaterial und Arbeitsauftrag werden im freigeschalteten Kundenkonto bereitgestellt."
+            },
+            {
+                "number": "02",
+                "title": "Was mitmuss",
+                "duration": "ca. 3 Min.",
+                "image": "\/images\/rio\/technik.jpg",
+                "caption": "Kamera, Satellitentelefon und Ausrüstung.",
+                "audio": "\/audio\/rio-negro-2002\/02.mp3",
+                "summary": "Originaletappe aus dem vollständigen Audio-Abenteuer.",
+                "task": "Audio, Originalmaterial und Arbeitsauftrag werden im freigeschalteten Kundenkonto bereitgestellt."
+            },
+            {
+                "number": "03",
+                "title": "Am Rio Negro",
+                "duration": "ca. 4 Min.",
+                "image": "\/images\/rio\/karte-region.png",
+                "caption": "Die Region um Manaus und den Rio Negro.",
+                "audio": "\/audio\/rio-negro-2002\/03.mp3",
+                "summary": "Originaletappe aus dem vollständigen Audio-Abenteuer.",
+                "task": "Audio, Originalmaterial und Arbeitsauftrag werden im freigeschalteten Kundenkonto bereitgestellt."
+            },
+            {
+                "number": "04",
+                "title": "Allein auf dem Fluss",
+                "duration": "ca. 2 Min.",
+                "image": "\/images\/rio\/allein-mit-gepaeck-2002.jpg",
+                "caption": "Dennis allein mit seinem wasserdicht verpackten Gepäck im Rio Negro, 2002.",
+                "audio": "\/audio\/rio-negro-2002\/04.mp3",
+                "summary": "Originaletappe aus dem vollständigen Audio-Abenteuer.",
+                "task": "Audio, Originalmaterial und Arbeitsauftrag werden im freigeschalteten Kundenkonto bereitgestellt."
+            },
+            {
+                "number": "05",
+                "title": "Das Lager",
+                "duration": "ca. 2 Min.",
+                "image": "\/images\/rio\/lager.jpg",
+                "caption": "Hängematte, Ausrüstung und Regenwald.",
+                "audio": "\/audio\/rio-negro-2002\/05.mp3",
+                "summary": "Originaletappe aus dem vollständigen Audio-Abenteuer.",
+                "task": "Audio, Originalmaterial und Arbeitsauftrag werden im freigeschalteten Kundenkonto bereitgestellt."
+            },
+            {
+                "number": "06",
+                "title": "Ohne Vorwarnung",
+                "duration": "ca. 1 Min.",
+                "image": "\/images\/rio\/tropenregen.jpg",
+                "caption": "Tropenregen über dem Rio Negro.",
+                "audio": "\/audio\/rio-negro-2002\/06.mp3",
+                "summary": "Originaletappe aus dem vollständigen Audio-Abenteuer.",
+                "task": "Audio, Originalmaterial und Arbeitsauftrag werden im freigeschalteten Kundenkonto bereitgestellt."
+            },
+            {
+                "number": "07",
+                "title": "Meine Entscheidung",
+                "duration": "ca. 1 Min.",
+                "image": "\/images\/rio\/dennis-2002.jpg",
+                "caption": "Dennis während der Expedition 2002.",
+                "audio": "\/audio\/rio-negro-2002\/07.mp3",
+                "summary": "Originaletappe aus dem vollständigen Audio-Abenteuer.",
+                "task": "Audio, Originalmaterial und Arbeitsauftrag werden im freigeschalteten Kundenkonto bereitgestellt."
+            },
+            {
+                "number": "08",
+                "title": "Was bleibt",
+                "duration": "ca. 2 Min.",
+                "image": "\/images\/rio\/packsack.jpg",
+                "caption": "Der wasserdichte Packsack blieb.",
+                "audio": "\/audio\/rio-negro-2002\/08.mp3",
+                "summary": "Originaletappe aus dem vollständigen Audio-Abenteuer.",
+                "task": "Audio, Originalmaterial und Arbeitsauftrag werden im freigeschalteten Kundenkonto bereitgestellt."
+            },
+            {
+                "number": "09",
+                "title": "Vermisst",
+                "duration": "ca. 2 Min.",
+                "image": "\/images\/rio\/rio-boot.jpg",
+                "caption": "Während in Deutschland gesucht wurde.",
+                "audio": "\/audio\/rio-negro-2002\/09.mp3",
+                "summary": "Originaletappe aus dem vollständigen Audio-Abenteuer.",
+                "task": "Audio, Originalmaterial und Arbeitsauftrag werden im freigeschalteten Kundenkonto bereitgestellt."
+            },
+            {
+                "number": "10",
+                "title": "Der Weg heraus",
+                "duration": "ca. 1 Min.",
+                "image": "\/images\/rio\/orientierung.jpg",
+                "caption": "Orientierung im Regenwald.",
+                "audio": "\/audio\/rio-negro-2002\/10.mp3",
+                "summary": "Originaletappe aus dem vollständigen Audio-Abenteuer.",
+                "task": "Audio, Originalmaterial und Arbeitsauftrag werden im freigeschalteten Kundenkonto bereitgestellt."
+            },
+            {
+                "number": "11",
+                "title": "Deine Spur",
+                "duration": "ca. 2 Min.",
+                "image": "\/images\/rio\/dennis-fisch.jpg",
+                "caption": "Fischfang während der Expedition.",
+                "audio": "\/audio\/rio-negro-2002\/11.mp3",
+                "summary": "Originaletappe aus dem vollständigen Audio-Abenteuer.",
+                "task": "Audio, Originalmaterial und Arbeitsauftrag werden im freigeschalteten Kundenkonto bereitgestellt."
+            }
+        ],
+        "premiumSupport": false
+    },
+    "stress-und-ressourcen": {
+        "slug": "stress-und-ressourcen",
+        "categoryLabel": "Gesund Voraus",
+        "catalogTitle": "Stress und Ressourcen",
+        "access": "Drei Monate ab Freischaltung",
+        "workbook": "Arbeitsbuch Stress und Ressourcen · 22 Seiten",
+        "units": [
+            {
+                "number": "P01",
+                "title": "Orientierung und persönliche Standortbestimmung",
+                "duration": "8:12",
+                "summary": "Du bestimmst deinen aktuellen Stand und legst dein persönliches Ziel für die zehn Einheiten fest.",
+                "task": "Formuliere einen Satz, der beschreibt, was sich für dich nach zehn Einheiten spürbar verändert haben soll.",
+                "audio": "\/audio\/stress-und-ressourcen\/P01.mp3"
+            },
+            {
+                "number": "P02",
+                "title": "Belastende Situationen bewusst einordnen",
+                "duration": "6:52",
+                "summary": "Du unterscheidest, wie du eine Situation bewertest und welche Ressourcen du zur Bewältigung wahrnimmst.",
+                "task": "Beschreibe schriftlich, ob und warum du die gewählte Situation eher als Bedrohung oder als Herausforderung einordnest und welche Ressourcen dir bewusst werden oder fehlen.",
+                "audio": "\/audio\/stress-und-ressourcen\/P02.mp3"
+            },
+            {
+                "number": "P03",
+                "title": "Passende Bewältigungsstrategie wählen",
+                "duration": "6:06",
+                "summary": "Du unterscheidest problemorientiertes und emotionsorientiertes Coping und wählst eine passende Vorgehensweise.",
+                "task": "Entscheide dich für problem- oder emotionsorientiertes Coping und beschreibe einen konkreten Schritt, den du in den nächsten Tagen dafür umsetzt.",
+                "audio": "\/audio\/stress-und-ressourcen\/P03.mp3"
+            },
+            {
+                "number": "P04",
+                "title": "Persönliche Ressourcen sichtbar machen",
+                "duration": "5:48",
+                "summary": "Du erstellst eine Übersicht deiner persönlichen, sozialen und strukturellen Ressourcen.",
+                "task": "Liste für jede der drei Kategorien mindestens zwei konkrete Ressourcen auf, die dir tatsächlich zur Verfügung stehen.",
+                "audio": "\/audio\/stress-und-ressourcen\/P04.mp3"
+            },
+            {
+                "number": "P05",
+                "title": "Eine Ressource tatsächlich aktivieren",
+                "duration": "5:30",
+                "summary": "Du setzt eine vorhandene Ressource bewusst ein, statt sie nur zu kennen.",
+                "task": "Nutze in den nächsten Tagen eine persönliche, soziale oder strukturelle Ressource aktiv und halte fest, was du konkret getan hast.",
+                "audio": "\/audio\/stress-und-ressourcen\/P05.mp3"
+            },
+            {
+                "number": "P06",
+                "title": "Automatische Bewertungen neu formulieren",
+                "duration": "5:55",
+                "summary": "Du prüfst eine belastende automatische Bewertung und beziehst deine tatsächlichen Ressourcen ein.",
+                "task": "Formuliere eine automatische, belastende Bewertung schriftlich um und beziehe dabei deine tatsächlichen Ressourcen aus P04 und P05 ein.",
+                "audio": "\/audio\/stress-und-ressourcen\/P06.mp3"
+            },
+            {
+                "number": "P07",
+                "title": "Aufmerksamkeit lenken und Selbstwirksamkeit stärken",
+                "duration": "6:07",
+                "summary": "Du erprobst eine zweite Selbstregulationstechnik und beobachtest ihre Wirkung in einer Alltagssituation.",
+                "task": "Übe die bewusste Aufmerksamkeitslenkung mindestens einmal in einer belastenden Alltagssituation und halte fest, was dir dabei auffällt.",
+                "audio": "\/audio\/stress-und-ressourcen\/P07.mp3"
+            },
+            {
+                "number": "P08",
+                "title": "Einen konkreten Handlungsplan entwickeln",
+                "duration": "5:51",
+                "summary": "Du machst aus einer hilfreichen Technik ein konkret wiederholbares Verhalten.",
+                "task": "Lege fest, welche Technik du in welcher wiederkehrenden Situation wie oft anwendest - so konkret, dass keine weitere Vorbereitung nötig ist.",
+                "audio": "\/audio\/stress-und-ressourcen\/P08.mp3"
+            },
+            {
+                "number": "P09",
+                "title": "Mit Rückschritten konstruktiv umgehen",
+                "duration": "5:36",
+                "summary": "Du planst einen einfachen Wiedereinstieg, bevor ein Rückschritt entsteht.",
+                "task": "Lege schriftlich fest, was du konkret tust, wenn du die Technik aus deinem Plan einmal nicht anwendest: einen klaren nächsten Schritt ohne Selbstvorwurf.",
+                "audio": "\/audio\/stress-und-ressourcen\/P09.mp3"
+            },
+            {
+                "number": "P10",
+                "title": "Auswertung und persönlicher Transfer",
+                "duration": "6:01",
+                "summary": "Du blickst auf deine Entwicklung zurück und entscheidest, was nach dem Kurs bestehen bleibt.",
+                "task": "Formuliere schriftlich, welche der beiden Techniken du beibehältst und in welcher konkreten, wiederkehrenden Situation du sie weiter anwendest.",
+                "audio": "\/audio\/stress-und-ressourcen\/P10.mp3"
+            }
+        ],
+        "premiumSupport": true
+    }
+}

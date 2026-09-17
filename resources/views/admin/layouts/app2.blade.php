@@ -5,6 +5,7 @@
     <meta charSet="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <meta name="csrf-token" content="{{ csrf_token() }}"/>
+    <link rel="stylesheet" href="{{ asset('frontend') }}/assets/index-ChrHLfZ9.css"/>
     <link rel="stylesheet" href="{{ asset('admin') }}/assets/index-D96dYb_L.css" data-rsc-css-href="{{ asset('admin') }}/assets/index-D96dYb_L.css"
           data-precedence="vite-rsc/importer-resources"/>
     <link rel="modulepreload" href="{{ asset('admin') }}/assets/layout-segment-context-C4NyleVc.js" crossorigin=""/>

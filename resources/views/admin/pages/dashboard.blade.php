@@ -3,20 +3,31 @@
 @section('contents')
     <main class="admin-workspace" id="admin-page-top">
         {{-- Topbar (Reference A Exact Header with Role & Logout) --}}
+        {{-- Topbar (Photo 1 Exact Header: • ADMIN-KONTO DENNIS BESSELER • KUNDENZUGÄNGE) --}}
         <header class="admin-topbar">
             <div>
-                <span>Interne Verwaltung</span>
-                <strong>DENNIS BESSELER · KURSVERWALTUNG</strong>
+                @if($isStaffPreview ?? false)
+                    <span class="account-role-badge is-staff">MITARBEITER-KONTO</span>
+                    <strong>ARBEITSFLÄCHE</strong>
+                @else
+                    <span class="account-role-badge is-admin">ADMIN-KONTO</span>
+                    <strong>DENNIS BESSELER · KUNDENZUGÄNGE</strong>
+                @endif
             </div>
             <nav>
-                <span class="account-role-badge {{ Auth::user()->isAdmin() ? 'is-admin' : 'is-staff' }}">
-                    {{ Auth::user()->isAdmin() ? 'Hauptadministrator' : 'Mitarbeiter' }}
-                </span>
-                <a href="{{ route('home') }}" target="_blank" rel="noreferrer">Zum Kursportal ↗</a>
-                <form method="POST" action="{{ route('verwaltung.logout') }}" style="display:inline; margin:0; padding:0;">
-                    @csrf
-                    <button type="submit" class="admin-logout-button">Abmelden</button>
-                </form>
+                @if($isStaffPreview ?? false)
+                    <a href="{{ route('admin.dashboard') }}">← ZURÜCK ZUR ADMIN-VERWALTUNG</a>
+                @else
+                    <a href="{{ route('home') }}" target="_blank" rel="noreferrer">
+                        KURSPORTAL ÖFFNEN
+                    </a>
+                    <form method="POST" action="{{ route('verwaltung.logout') }}" style="display:inline; margin:0; padding:0;">
+                        @csrf
+                        <button type="submit" class="admin-logout-button">
+                            ABMELDEN
+                        </button>
+                    </form>
+                @endif
             </nav>
         </header>
 
@@ -73,7 +84,7 @@
             </div>
         @endif
 
-        @if($errors->any())
+        @if(isset($errors) && $errors->any())
             <div style="background:#7f1d1d; color:#fca5a5; padding:1rem 1.5rem; border-radius:8px; margin:1rem 2rem;">
                 <ul style="margin:0; padding-left:1.25rem;">
                     @foreach($errors->all() as $error)
@@ -83,46 +94,43 @@
             </div>
         @endif
 
-        {{-- Index Navigation (Reference A Exact Sequence) --}}
+        {{-- Index Navigation (Exact Reference A Styles from index-D96dYb_L.css) --}}
         <nav class="admin-index" id="admin-navigation" aria-label="Inhaltsverzeichnis">
             <div class="admin-index-links">
-                @if(Auth::user()->isAdmin())
-                    <a href="#arbeitsmittel"><span>00</span>Bank &amp; Cloud</a>
-                    <a href="#mitarbeiter"><span>MA</span>Mitarbeiter ({{ $staffMembers->count() }})</a>
-                    <a href="#naechste-version"><span>NV</span>Nächste Version ({{ $versionNotes->count() }})</a>
-                    <a href="#pinnwand"><span>01</span>Notizen ({{ $adminNotes->count() }})</a>
-                    <a href="#datenaustausch"><span>DT</span>Datentausch</a>
-                @endif
-                <a href="#zugangsanfragen"><span>02</span>Anfragen ({{ $accessRequests->count() }})</a>
-                @if(Auth::user()->isAdmin() || Auth::user()->hasPermission('view_customers'))
-                    <a href="#kunden"><span>03</span>Kunden ({{ $customers->count() }})</a>
-                @endif
-                @if(Auth::user()->isAdmin() || Auth::user()->hasPermission('create_customers'))
-                    <a href="#anlegen"><span>04</span>Anlegen</a>
-                @endif
-                @if(Auth::user()->isAdmin())
-                    <a href="#auslieferung"><span>05</span>Auslieferung</a>
-                    <a href="#medien"><span>ME</span>Medien &amp; Lektionen</a>
-                    <a href="#sicherheit"><span>06</span>Ablauf</a>
-                    <a href="#hauptadmin-sicherheit"><span>SI</span>Admin-Sicherheit</a>
-                    <a href="https://dennisbesseler.papierkram.de/login?email=mail%40besseler.de" target="_blank" rel="noreferrer"><span>RE</span>Rechnungen</a>
+                @if(!($isStaffPreview ?? false) && Auth::user()->isAdmin())
+                    <a href="#arbeitsmittel"><span>00</span> Bank &amp; Cloud</a>
+                    <a href="#mitarbeiter"><span>MA</span> Mitarbeiter</a>
+                    <a href="#hauptadmin-sicherheit"><span>SI</span> Admin-Sicherheit</a>
+                    <a href="#datenaustausch"><span>DT</span> Datentausch</a>
+                    <a href="#zugangsanfragen"><span>02</span> Anfragen</a>
+                    <a href="#kunden"><span>03</span> Kunden</a>
+                    <a href="#anlegen"><span>04</span> Anlegen</a>
+                    <a href="#auslieferung"><span>05</span> Auslieferung</a>
+                    <a href="#sicherheit"><span>06</span> Ablauf</a>
+                    <a href="#naechste-version"><span>NV</span> Nächste Version</a>
+                    <a href="#pinnwand"><span>01</span> Notizen</a>
+                    <a href="https://dennisbesseler.papierkram.de/login?email=mail%40besseler.de" target="_blank" rel="noreferrer"><span>RE</span> Rechnungen</a>
+                @else
+                    {{-- Staff Navigation (Exact match to Reference A /verwaltung/mitarbeiter-vorschau) --}}
+                    <a href="#arbeitsmittel"><span>00</span> Bank &amp; Cloud</a>
+                    <a href="#sicherheit"><span>02</span> Sicherheit</a>
+                    <a href="#anlegen"><span>03</span> Anlegen</a>
+                    <a href="#kunden"><span>04</span> Bearbeiten</a>
+                    <a href="#auslieferung"><span>05</span> Kurslinks</a>
+                    <a href="#zugangsanfragen"><span>06</span> Support</a>
+                    <a href="#pinnwand"><span>01</span> Notizen</a>
+                    <a href="https://dennisbesseler.papierkram.de/login?email=mail%40besseler.de" target="_blank" rel="noreferrer"><span>RE</span> Rechnungen</a>
                 @endif
             </div>
 
-            {{-- Zeitmessung / Timer (5 Input Fields + Rotation Rule) --}}
-            <style>
-                .work-timer-panel {
-                    z-index: 10005 !important;
-                    bottom: 5.5rem !important;
-                    max-height: calc(100vh - 150px) !important;
-                }
-            </style>
-            <div class="work-timer is-compact" id="admin-work-timer-wrapper">
+            <div class="work-timer is-compact">
                 <button class="work-timer-toggle" id="admin-timer-toggle-btn" type="button" aria-expanded="false" onclick="toggleAdminWorkTimerPanel()">
-                    <span id="admin-timer-label">Timer</span>
+                    <span id="admin-timer-toggle-label">Timer</span>
                     <b id="admin-timer-clock">00:00:00</b>
                 </button>
-                <div class="work-timer-panel" id="admin-timer-panel" style="display: none; z-index: 10005 !important; bottom: 5.5rem !important; max-height: calc(100vh - 150px) !important;">
+
+                {{-- Timer Panel --}}
+                <div class="work-timer-panel" id="admin-timer-panel" style="display: none;">
                     <div class="work-timer-panel-head">
                         <strong>Zeitmessung</strong>
                         <button type="button" aria-label="Timer minimieren" onclick="toggleAdminWorkTimerPanel(false)">
@@ -132,90 +140,94 @@
 
                     {{-- Active Running Box --}}
                     <div class="work-timer-running" id="admin-timer-running-box" style="display: none;">
-                        <span id="admin-timer-status-headline" data-i18n-de="Aktuelle Zeitmessung" data-i18n-en="Current Time Tracking">Aktuelle Zeitmessung</span>
-                        <strong id="admin-timer-active-subject" style="color: #0f172a;">Kundenbetreuung</strong>
+                        <span id="admin-timer-status-headline">Aktuelle Zeitmessung</span>
+                        <strong id="admin-timer-active-subject">Kundenbetreuung</strong>
                         <div id="admin-timer-active-activities" style="font-size: 0.8rem; color: #334155; margin-top: 0.25rem;"></div>
-                        <b id="admin-timer-big-clock" class="notranslate" translate="no" style="color: #0f172a;">00:00:00</b>
+                        <b id="admin-timer-big-clock" class="notranslate" translate="no">00:00:00</b>
                         <div style="display: flex; gap: 0.5rem; justify-content: center; margin-top: 0.5rem; flex-wrap: wrap;">
-                            <button type="button" id="admin-timer-pause-btn" onclick="adminPauseTimer()" style="background: #d97706; color: #fff; border: none; padding: 6px 14px; border-radius: 4px; font-size: 0.85rem; font-weight: 600; cursor: pointer;" data-i18n-de="❚❚ Pausieren" data-i18n-en="❚❚ Pause">❚❚ Pausieren</button>
-                            <button type="button" id="admin-timer-resume-btn" onclick="adminResumeTimer()" style="display: none; background: #16a34a; color: #fff; border: none; padding: 6px 14px; border-radius: 4px; font-size: 0.85rem; font-weight: 600; cursor: pointer;" data-i18n-de="▶ Fortsetzen" data-i18n-en="▶ Resume">▶ Fortsetzen</button>
-                            <button type="button" onclick="adminStopTimer()" style="background: #dc2626; color: #fff; border: none; padding: 6px 14px; border-radius: 4px; font-size: 0.85rem; font-weight: 600; cursor: pointer;" data-i18n-de="Zeit stoppen" data-i18n-en="Stop Timer">Zeit stoppen</button>
+                            <button type="button" id="admin-timer-pause-btn" onclick="adminPauseTimer()" style="background: #d97706; color: #fff;">❚❚ Pausieren</button>
+                            <button type="button" id="admin-timer-resume-btn" onclick="adminResumeTimer()" style="display: none; background: #16a34a; color: #fff;">▶ Fortsetzen</button>
+                            <button type="button" onclick="adminStopTimer()" style="background: #bd1717; color: #fff;">Zeit stoppen</button>
                         </div>
                     </div>
 
                     {{-- Start Form (5 Eingabefelder für Tätigkeitsangaben entsprechend Referenz A) --}}
                     <form id="admin-timer-start-form" onsubmit="adminStartTimer(event)">
-                        <div style="display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 0.6rem;">
-                            <label style="margin: 0;">
-                                <span style="font-size: 0.78rem; font-weight: 600; color: #475569; display: block; margin-bottom: 2px;" data-i18n-de="1. Haupttätigkeit / Betreff *" data-i18n-en="1. Main Activity / Subject *">1. Haupttätigkeit / Betreff *</span>
-                                <input required maxlength="120" id="admin-timer-input-1" placeholder="Wofür wird die Zeit gestoppt? (z. B. Kundenbetreuung)" data-i18n-placeholder-de="Wofür wird die Zeit gestoppt? (z. B. Kundenbetreuung)" data-i18n-placeholder-en="What is the time stopped for? (e.g. Customer Support)">
-                            </label>
-                            <label style="margin: 0;">
-                                <span style="font-size: 0.78rem; font-weight: 600; color: #475569; display: block; margin-bottom: 2px;" data-i18n-de="2. Tätigkeit / Vorgang" data-i18n-en="2. Activity / Process">2. Tätigkeit / Vorgang</span>
-                                <input maxlength="120" id="admin-timer-input-2" placeholder="Zusätzliche Tätigkeit oder Anlass" data-i18n-placeholder-de="Zusätzliche Tätigkeit oder Anlass" data-i18n-placeholder-en="Additional activity or occasion">
-                            </label>
-                            <label style="margin: 0;">
-                                <span style="font-size: 0.78rem; font-weight: 600; color: #475569; display: block; margin-bottom: 2px;" data-i18n-de="3. Tätigkeit / Bereich" data-i18n-en="3. Activity / Area">3. Tätigkeit / Bereich</span>
-                                <input maxlength="120" id="admin-timer-input-3" placeholder="Zusätzlicher Arbeitsbereich / Grund" data-i18n-placeholder-de="Zusätzlicher Arbeitsbereich / Grund" data-i18n-placeholder-en="Additional workspace / reason">
-                            </label>
-                            <label style="margin: 0;">
-                                <span style="font-size: 0.78rem; font-weight: 600; color: #475569; display: block; margin-bottom: 2px;" data-i18n-de="4. Tätigkeit / Details" data-i18n-en="4. Activity / Details">4. Tätigkeit / Details</span>
-                                <input maxlength="120" id="admin-timer-input-4" placeholder="Zusätzlicher Vorgang / Ticket" data-i18n-placeholder-de="Zusätzlicher Vorgang / Ticket" data-i18n-placeholder-en="Additional process / ticket">
-                            </label>
-                            <label style="margin: 0;">
-                                <span style="font-size: 0.78rem; font-weight: 600; color: #475569; display: block; margin-bottom: 2px;" data-i18n-de="5. Tätigkeit / Notiz" data-i18n-en="5. Activity / Note">5. Tätigkeit / Notiz</span>
-                                <input maxlength="120" id="admin-timer-input-5" placeholder="Abschließende Notiz / Ergänzung" data-i18n-placeholder-de="Abschließende Notiz / Ergänzung" data-i18n-placeholder-en="Closing note / supplement">
-                            </label>
-                            @if(Auth::user()->isAdmin() && isset($staffMembers) && $staffMembers->count() > 0)
-                            <label style="margin: 0;">
-                                <span style="font-size: 0.78rem; font-weight: 600; color: #475569; display: block; margin-bottom: 2px;" data-i18n-de="Mitarbeiterzuordnung (Optional)" data-i18n-en="Employee Assignment (Optional)">Mitarbeiterzuordnung (Optional)</span>
-                                <select id="admin-timer-staff-select" style="width: 100%; padding: 8px 10px; background: #ffffff; color: #1e293b; border: 1px solid #bbb7ae; font-size: 0.85rem;">
-                                    <option value="" data-i18n-de="Für mich selbst erfassen ({{ Auth::user()->name }})" data-i18n-en="Record for myself ({{ Auth::user()->name }})">Für mich selbst erfassen ({{ Auth::user()->name }})</option>
-                                    @foreach($staffMembers as $staff)
-                                        <option value="{{ $staff->id }}">{{ $staff->name }} ({{ $staff->username }})</option>
-                                    @endforeach
-                                </select>
-                            </label>
-                            @endif
-                        </div>
-                        <button type="submit" id="admin-timer-start-submit-btn" data-i18n-de="Zeitmessung starten" data-i18n-en="Start Time Tracking">Zeitmessung starten</button>
+                        <label>
+                            <span>1. Haupttätigkeit / Betreff *</span>
+                            <input required maxlength="120" id="admin-timer-input-1" placeholder="Wofür wird die Zeit gestoppt? (z. B. Kundenbetreuung)">
+                        </label>
+                        <label>
+                            <span>2. Tätigkeit / Vorgang</span>
+                            <input maxlength="120" id="admin-timer-input-2" placeholder="Zusätzliche Tätigkeit oder Anlass">
+                        </label>
+                        <label>
+                            <span>3. Tätigkeit / Bereich</span>
+                            <input maxlength="120" id="admin-timer-input-3" placeholder="Zusätzlicher Arbeitsbereich / Grund">
+                        </label>
+                        <label>
+                            <span>4. Tätigkeit / Details</span>
+                            <input maxlength="120" id="admin-timer-input-4" placeholder="Zusätzlicher Vorgang / Ticket">
+                        </label>
+                        <label>
+                            <span>5. Tätigkeit / Notiz</span>
+                            <input maxlength="120" id="admin-timer-input-5" placeholder="Abschließende Notiz / Ergänzung">
+                        </label>
+                        @if(Auth::user()->isAdmin() && isset($staffMembers) && $staffMembers->count() > 0)
+                        <label>
+                            <span>Mitarbeiterzuordnung (Optional)</span>
+                            <select id="admin-timer-staff-select">
+                                <option value="">Für mich selbst erfassen ({{ Auth::user()->name }})</option>
+                                @foreach($staffMembers as $staff)
+                                    <option value="{{ $staff->id }}">{{ $staff->name }} ({{ $staff->username }})</option>
+                                @endforeach
+                            </select>
+                        </label>
+                        @endif
+                        <button type="submit" id="admin-timer-start-submit-btn">Zeitmessung starten</button>
                     </form>
 
-                    <p role="alert" id="admin-timer-alert" style="display: none; color: #f87171; font-size: 0.82rem; margin-top: 0.5rem;"></p>
+                    <p role="alert" id="admin-timer-alert" style="display: none;"></p>
 
                     {{-- History (Max 3 Completed Measurements - Rotation Rule Enforced) --}}
                     <div class="work-timer-history">
-                        <div style="display: flex !important; justify-content: space-between !important; align-items: center !important; margin-bottom: 0.25rem !important; background: transparent !important; padding: 0 !important; border: none !important;">
-                            <span data-i18n-de="Die drei letzten Messungen" data-i18n-en="The Last Three Measurements">Die drei letzten Messungen</span>
-                            <button type="button" onclick="copyTimerHistorySummary()" style="background: #ffffff; border: 1px solid #bbb7ae; color: #1e293b; font-size: 0.72rem; padding: 3px 8px; border-radius: 4px; cursor: pointer; font-weight: 600;" data-i18n-de="Zusammenfassung kopieren" data-i18n-en="Copy Summary">Zusammenfassung kopieren</button>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span>Die drei letzten Messungen</span>
+                            <button type="button" onclick="copyTimerHistorySummary()" style="background: #ece9e2; color: #171715; font-size: 0.62rem; padding: 2px 6px; min-height: 24px; border: 1px solid #bbb7ae;">Kopieren</button>
                         </div>
-                        <p class="work-timer-limit" role="note" data-i18n-de="Wichtig: Es werden höchstens drei abgeschlossene Zeitmessungen gespeichert. Sobald eine vierte Messung abgeschlossen wird, wird der älteste Eintrag automatisch gelöscht." data-i18n-en="Important: A maximum of three completed time measurements are stored. As soon as a fourth measurement is completed, the oldest entry is automatically deleted.">
+                        <p class="work-timer-limit" role="note">
                             Wichtig: Es werden höchstens drei abgeschlossene Zeitmessungen gespeichert. Sobald eine vierte Messung abgeschlossen wird, wird der älteste Eintrag automatisch gelöscht.
                         </p>
-                        <div id="admin-timer-history-container" style="display: flex !important; flex-direction: column !important; gap: 0.6rem !important; width: 100% !important; background: transparent !important; padding: 0 !important; border: none !important;">
-                            <small style="color:#64748b;" data-i18n-de="Noch keine abgeschlossene Zeitmessung." data-i18n-en="No completed time measurements yet.">Noch keine abgeschlossene Zeitmessung.</small>
+                        <div id="admin-timer-history-container">
+                            <small style="color:#64748b;">Noch keine abgeschlossene Zeitmessung.</small>
                         </div>
                     </div>
 
                     {{-- Send to Dennis --}}
                     <div class="work-timer-send">
-                        <strong data-i18n-de="An Dennis übergeben" data-i18n-en="Hand over to Dennis">An Dennis übergeben</strong>
-                        <small data-i18n-de="Es öffnet sich Ihr eigenes E-Mail-Programm. Das Portal versendet nichts automatisch." data-i18n-en="Your email client will open. The portal does not send anything automatically.">Es öffnet sich Ihr eigenes E-Mail-Programm. Das Portal versendet nichts automatisch.</small>
+                        <strong>An Dennis übergeben</strong>
+                        <small>Es öffnet sich Ihr eigenes E-Mail-Programm. Das Portal versendet nichts automatisch.</small>
                         <label>
                             <input type="checkbox" id="admin-timer-cc-check" onchange="toggleAdminSendBtn()">
-                            <span data-i18n-de="Ich weiß, dass ich mir im geöffneten E-Mail-Programm über „Cc/Kopie“ eine Kopie an meine eigene Adresse senden kann." data-i18n-en="I know that I can send a copy to my own email address via &quot;Cc/Copy&quot; in the opened email client.">Ich weiß, dass ich mir im geöffneten E-Mail-Programm über „Cc/Kopie“ eine Kopie an meine eigene Adresse senden kann.</span>
+                            <span>Ich weiß, dass ich mir im geöffneten E-Mail-Programm über „Cc/Kopie“ eine Kopie an meine eigene Adresse senden kann.</span>
                         </label>
-                        <button type="button" id="admin-timer-send-btn" disabled onclick="adminSendTimerMail()" data-i18n-de="E-Mail vorbereiten" data-i18n-en="Prepare Email">E-Mail vorbereiten</button>
+                        <button type="button" id="admin-timer-send-btn" disabled onclick="adminSendTimerMail()">E-Mail vorbereiten</button>
                     </div>
                 </div>
             </div>
+
             <a class="portal-jump-arrow portal-jump-down" href="#admin-page-end" aria-label="Zum unteren Ende des Verwaltungsbereichs">
                 <span aria-hidden="true">↓</span>
             </a>
         </nav>
 
+        @if($isStaffPreview ?? false)
+            <div class="staff-preview-banner" style="background: #fef3c7; color: #92400e; padding: 0.85rem clamp(1rem, 4vw, 4rem); font-weight: 700; font-size: 0.95rem; border-bottom: 1px solid #fde68a;">
+                Schreibgeschützte Prüfansicht
+            </div>
+        @endif
+
         {{-- 00 Bank Card --}}
-        @if(Auth::user()->isAdmin())
         <section class="admin-bank-card" id="arbeitsmittel" aria-labelledby="business-account-title">
             <div>
                 <p class="eyebrow">Interne Zahlungsdaten</p>
@@ -244,6 +256,7 @@
             </div>
         </section>
 
+        @if(!($isStaffPreview ?? false) && Auth::user()->isAdmin())
         {{-- Staff Portal Link Card --}}
         <section class="admin-staff-portal-link" aria-labelledby="staff-portal-link-title">
             <div>
@@ -260,19 +273,29 @@
         </section>
         @endif
 
-        {{-- Admin Hero --}}
-        <section class="admin-hero">
-            <p class="eyebrow">Kundenverwaltung</p>
-            <h1>Kunden anlegen.<br/>Kurse freigeben.<br/>Zugänge steuern.</h1>
-            <p>Wartungsarme Kundenverwaltung mit bewusst minimalen personenbezogenen Daten.</p>
-            <div class="admin-warning">
-                <strong>Datensparsam aufgebaut</strong>
-                <span>Gespeichert werden nur Vorname, technischer Benutzername, Kunden-/Rechnungsnummer sowie Kurs-, Laufzeit- und Gerätedaten. Nach Ablauf der letzten Freigabe wird das Portalkonto automatisch gelöscht; die gesetzlich erforderliche Rechnung bleibt getrennt in der Buchhaltung.</span>
-            </div>
-        </section>
+        {{-- Hero Section --}}
+        @if($isStaffPreview ?? false)
+            <section class="staff-hero" style="padding: 3rem clamp(1rem, 4vw, 4rem); background: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+                <div>
+                    <p class="eyebrow" style="color: #0284c7; font-weight: 800; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.08em; margin-bottom: 0.5rem;">Begrenzter Arbeitsbereich</p>
+                    <h1 style="font-size: 2.5rem; font-weight: 700; line-height: 1.1; margin: 0 0 1rem; color: #0f172a;">Kundenzugänge<br>bearbeiten.</h1>
+                    <p style="color: #64748b; font-size: 0.95rem; max-width: 600px; line-height: 1.5; margin: 0;">Nur die vom Administrator freigegebenen Tätigkeiten sind möglich. Mitarbeiterkonten, Berechtigungen und geschützte Kursinhalte sind technisch ausgeschlossen.</p>
+                </div>
+            </section>
+        @else
+            <section class="admin-hero">
+                <p class="eyebrow">Kundenverwaltung</p>
+                <h1>Kunden anlegen.<br/>Kurse freigeben.<br/>Zugänge steuern.</h1>
+                <p>Wartungsarme Kundenverwaltung mit bewusst minimalen personenbezogenen Daten.</p>
+                <div class="admin-warning">
+                    <strong>Datensparsam aufgebaut</strong>
+                    <span>Gespeichert werden nur Vorname, technischer Benutzername, Kunden-/Rechnungsnummer sowie Kurs-, Laufzeit- und Gerätedaten. Nach Ablauf der letzten Freigabe wird das Portalkonto automatisch gelöscht; die gesetzlich erforderliche Rechnung bleibt getrennt in der Buchhaltung.</span>
+                </div>
+            </section>
+        @endif
 
         {{-- MA Mitarbeiter (Vollständige Mitarbeiterverwaltung entsprechend Referenz A) --}}
-        @if(Auth::user()->isAdmin())
+        @if(!($isStaffPreview ?? false) && Auth::user()->isAdmin())
         <section class="admin-section admin-staff" id="mitarbeiter">
             <header>
                 <div>
@@ -352,7 +375,7 @@
                             <b>{{ $staff->occupation ?: 'Mitarbeiter' }}</b>
                         </header>
 
-                        <form method="POST" action="{{ route('admin.staff.update', $staff->id) }}">
+                        <form method="POST" action="{{ route('admin.staff.update', $staff->id) }}" id="staff-form-{{ $staff->id }}">
                             @csrf
                             <div class="admin-staff-fields">
                                 <label>
@@ -398,45 +421,117 @@
                             </fieldset>
 
                             <label class="staff-delete-confirm">
-                                <input type="checkbox" id="drive-revoked-{{ $staff->id }}" onchange="document.getElementById('staff-delete-btn-{{ $staff->id }}').disabled = !this.checked">
+                                <input type="checkbox" id="staff-del-check-{{ $staff->id }}" onchange="document.getElementById('staff-del-btn-{{ $staff->id }}').disabled = !this.checked">
                                 <span>Der Google-Drive-Zugriff dieses Mitarbeiters wurde entfernt.</span>
                             </label>
 
                             <footer>
                                 <button type="submit">Änderungen speichern</button>
-                                <button type="button" onclick="if(confirm('Neues sicheres Passwort für Mitarbeiter \'{{ addslashes($staff->name) }}\' erzeugen? Alle bestehenden Sitzungen werden beendet.')) document.getElementById('staff-pw-form-{{ $staff->id }}').submit();">Neues Passwort</button>
-                                <button type="button" onclick="document.getElementById('staff-toggle-form-{{ $staff->id }}').submit();">{{ $staff->is_active ? 'Zugang sperren' : 'Zugang mit neuen Daten aktivieren' }}</button>
-                                <button type="button" class="danger-button" id="staff-delete-btn-{{ $staff->id }}" disabled onclick="if(confirm('Mitarbeiterkonto unwiderruflich löschen?')) document.getElementById('staff-del-form-{{ $staff->id }}').submit();">Mitarbeiterkonto löschen</button>
+                                <button type="button" onclick="document.getElementById('staff-pw-form-{{ $staff->id }}').submit()">Neues Passwort</button>
+                                <button type="button" onclick="document.getElementById('staff-toggle-form-{{ $staff->id }}').submit()">{{ $staff->is_active ? 'Zugang sperren' : 'Zugang mit neuen Daten aktivieren' }}</button>
+                                <button class="danger-button" type="button" id="staff-del-btn-{{ $staff->id }}" disabled onclick="if(confirm('Mitarbeiterkonto unwiderruflich löschen?')) document.getElementById('staff-delete-form-{{ $staff->id }}').submit()">Mitarbeiterkonto löschen</button>
                             </footer>
                         </form>
 
-                        {{-- Hidden secondary action forms --}}
                         <form id="staff-pw-form-{{ $staff->id }}" method="POST" action="{{ route('admin.staff.reset-password', $staff->id) }}" style="display:none;">
                             @csrf
                         </form>
                         <form id="staff-toggle-form-{{ $staff->id }}" method="POST" action="{{ route('admin.staff.toggle-active', $staff->id) }}" style="display:none;">
                             @csrf
                         </form>
-                        <form id="staff-del-form-{{ $staff->id }}" method="POST" action="{{ route('admin.staff.delete', $staff->id) }}" style="display:none;">
+                        <form id="staff-delete-form-{{ $staff->id }}" method="POST" action="{{ route('admin.staff.delete', $staff->id) }}" style="display:none;">
                             @csrf
                             @method('DELETE')
-                            <input type="hidden" name="cloud_access_revoked" value="1">
+                            <input type="hidden" name="drive_revoked_confirmed" value="1">
                         </form>
                     </article>
                 @empty
-                    <p>Noch keine Mitarbeiterkonten angelegt.</p>
+                    <p class="staff-empty">Noch keine Mitarbeiterkonten angelegt.</p>
                 @endforelse
             </div>
+
+            {{-- Staff Time Tracking Overview Table --}}
+            <div style="margin-top: 3rem; background: #ffffff; border: 1px solid #d6d1c7; border-radius: 4px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
+                <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.5rem;">
+                    <div>
+                        <h3 style="font-size: 1.1rem; color: #11110f; margin: 0; font-weight: 700;">Erfasste Mitarbeiterzeiten &amp; Aktivitäten</h3>
+                        <span style="font-size: 0.8rem; color: #64748b;">Übersicht der übertragenen Arbeitszeitmessungen für Abrechnung und Nachweis.</span>
+                    </div>
+                    <span style="font-size: 0.75rem; font-weight: 700; color: #0284c7; background: #e0f2fe; padding: 0.2rem 0.6rem; border-radius: 3px;">
+                        Letzte {{ $staffTimeEntries->count() }} Einträge
+                    </span>
+                </div>
+
+                @if($staffTimeEntries->count() > 0)
+                    <div style="overflow-x: auto;">
+                        <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem; text-align: left;">
+                            <thead>
+                                <tr style="border-bottom: 2px solid #e2e8f0; color: #475569; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em;">
+                                    <th style="padding: 0.65rem 0.5rem;">Datum / Beginn</th>
+                                    <th style="padding: 0.65rem 0.5rem;">Mitarbeiter</th>
+                                    <th style="padding: 0.65rem 0.5rem;">Haupttätigkeit</th>
+                                    <th style="padding: 0.65rem 0.5rem;">Tätigkeitsdetails</th>
+                                    <th style="padding: 0.65rem 0.5rem; text-align: right;">Dauer</th>
+                                    <th style="padding: 0.65rem 0.5rem; text-align: center;">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($staffTimeEntries as $entry)
+                                <tr style="border-bottom: 1px solid #f1f5f9; color: #1e293b;">
+                                    <td style="padding: 0.65rem 0.5rem; font-weight: 600;">
+                                        {{ $entry->started_at ? $entry->started_at->format('d.m.Y H:i') : '–' }}
+                                    </td>
+                                    <td style="padding: 0.65rem 0.5rem;">
+                                        <strong>{{ $entry->assignedStaff->name ?? ($entry->user->name ?? 'Dennis') }}</strong>
+                                    </td>
+                                    <td style="padding: 0.65rem 0.5rem; font-weight: 500;">
+                                        {{ $entry->activity_1 ?: ($entry->subject ?: ($entry->activity_description ?: '–')) }}
+                                    </td>
+                                    <td style="padding: 0.65rem 0.5rem; color: #64748b; font-size: 0.8rem; max-width: 320px;">
+                                        @php
+                                            $acts = $entry->activities_list;
+                                        @endphp
+                                        @if(count($acts) > 0)
+                                            {{ implode(' · ', $acts) }}
+                                        @elseif(is_array($entry->activities) && count($entry->activities) > 0)
+                                            {{ implode(' · ', $entry->activities) }}
+                                        @else
+                                            –
+                                        @endif
+                                    </td>
+                                    <td style="padding: 0.65rem 0.5rem; text-align: right; font-family: monospace; font-weight: 700; color: #0f172a;">
+                                        {{ sprintf('%02d:%02d:%02d', floor($entry->duration_seconds / 3600), floor(($entry->duration_seconds % 3600) / 60), $entry->duration_seconds % 60) }}
+                                    </td>
+                                    <td style="padding: 0.65rem 0.5rem; text-align: center;">
+                                        @if($entry->status === 'running')
+                                            <span style="background: #dcfce7; color: #15803d; padding: 0.15rem 0.5rem; border-radius: 2px; font-size: 0.72rem; font-weight: 700;">Läuft</span>
+                                        @elseif($entry->status === 'paused')
+                                            <span style="background: #fef3c7; color: #b45309; padding: 0.15rem 0.5rem; border-radius: 2px; font-size: 0.72rem; font-weight: 700;">Pausiert</span>
+                                        @else
+                                            <span style="background: #f1f5f9; color: #475569; padding: 0.15rem 0.5rem; border-radius: 2px; font-size: 0.72rem; font-weight: 700;">Beendet</span>
+                                        @endif
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                @else
+                    <p style="font-size: 0.85rem; color: #64748b; font-style: italic; margin: 0;">Bisher wurden keine Mitarbeiterzeiten erfasst.</p>
+                @endif
+            </div>
         </section>
+        @endif
 
         {{-- NV Nächste Version (Dauerhaft) --}}
+        @if(!($isStaffPreview ?? false) && Auth::user()->isAdmin())
         <section class="admin-section admin-version-pinboard" id="naechste-version" aria-labelledby="version-pinboard-title">
             <header>
                 <div>
                     <span>NV</span>
                     <p class="eyebrow">Nur Dennis · dauerhaft</p>
                 </div>
-                <h2 id="version-pinboard-title">Ideen für die nächste Portal-Version</h2>
+                <h2>Ideen für die nächste Portalversion</h2>
             </header>
             <p class="version-pinboard-intro">Dieser feste Planungsblock bleibt ausschließlich in Dennis’ Administrationsbereich sichtbar. Seine Einträge werden nicht automatisch gelöscht. Ein Eintrag kann nur nach ausdrücklicher Löschbestätigung entfernt werden.</p>
             
@@ -447,36 +542,43 @@
                 <button type="submit">Dauerhaft eintragen</button>
             </form>
 
-            <div class="version-note-list" style="margin-top:1.5rem;">
+            <div class="version-note-list">
                 @forelse($versionNotes as $vNote)
-                    <div style="background:#1e293b; padding:1.25rem; border-radius:8px; margin-bottom:1rem; border-left:4px solid #38bdf8;">
-                        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-                            <strong style="color:#f8fafc; font-size:1.1rem;">{{ $vNote->title }}</strong>
+                    <article class="version-note-card">
+                        <span>Dauerhafter Planungseintrag</span>
+                        <h3>{{ $vNote->title }}</h3>
+                        <p>{{ $vNote->body }}</p>
+                        <footer>
                             <form method="POST" action="{{ route('admin.version-notes.delete', $vNote->id) }}" onsubmit="return confirm('Möchten Sie diesen dauerhaften Eintrag wirklich entfernen?');">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" style="background:transparent; color:#ef4444; border:1px solid #ef4444; padding:0.25rem 0.6rem; border-radius:4px; cursor:pointer;">Entfernen</button>
+                                <button class="danger-button" type="submit">Löschen · Bestätigung nötig</button>
                             </form>
-                        </div>
-                        <p style="color:#cbd5e1; margin-top:0.5rem; white-space:pre-wrap;">{{ $vNote->body }}</p>
-                        <small style="color:#64748b;">Eingetragen am {{ $vNote->created_at->format('d.m.Y H:i') }} Uhr</small>
-                    </div>
+                        </footer>
+                    </article>
                 @empty
                     <p class="version-note-empty">Noch keine Änderung für die nächste Portalversion eingetragen.</p>
                 @endforelse
             </div>
         </section>
+        @endif
 
         {{-- 01 Notizen (10-Tage automatische Löschung) --}}
         <section class="admin-section admin-service admin-pinboard" id="pinnwand">
             <header>
                 <div>
                     <span>01</span>
-                    <p class="eyebrow">Persönliche Admin-Notizen</p>
+                    <p class="eyebrow">{{ ($isStaffPreview ?? false) ? 'Persönliche Notizen' : 'Persönliche Admin-Notizen' }}</p>
                 </div>
                 <h2>Eigene Arbeitsnotizen festhalten.</h2>
             </header>
-            <p class="pinboard-intro">Nur dein Administratorkonto sieht diese Notizen. Mitarbeiterkonten sehen sie nicht. Maximal fünf persönliche Notizen bleiben gespeichert; nach zehn Tagen werden sie automatisch gelöscht.</p>
+            <p class="pinboard-intro">
+                @if($isStaffPreview ?? false)
+                    Nur du siehst diese Notizen. Andere Mitarbeitende und der Administrator sehen sie in ihren Portalen nicht. Es bleiben höchstens fünf persönliche Notizen gespeichert; jede Notiz wird nach zehn Tagen automatisch gelöscht.
+                @else
+                    Nur dein Administratorkonto sieht diese Notizen. Mitarbeiterkonten sehen sie nicht. Maximal fünf persönliche Notizen bleiben gespeichert; nach zehn Tagen werden sie automatisch gelöscht.
+                @endif
+            </p>
             
             <form method="POST" action="{{ route('admin.notes.store') }}" class="note-form" id="admin-pinboard-form">
                 @csrf
@@ -505,6 +607,7 @@
             </div>
         </section>
 
+        @if(!($isStaffPreview ?? false) && Auth::user()->isAdmin())
         {{-- DT Datentausch (Exact Position 5 in Reference A) --}}
         <section class="admin-section cloud-transfer" id="datenaustausch" aria-labelledby="admin-cloud-transfer-title">
             <header>
@@ -512,7 +615,7 @@
                     <span>DT</span>
                     <p class="eyebrow">Gemeinsamer Arbeitsordner</p>
                 </div>
-                <h2 id="admin-cloud-transfer-title">Dateien einfach übertragen.</h2>
+                <h2 id="admin-cloud-transfer-title">Dateien einfach übergeben.</h2>
             </header>
             <div class="cloud-transfer-grid">
                 <div class="cloud-transfer-main">
@@ -668,8 +771,8 @@
                             @csrf
                             <select name="course_slug" id="assign-course-{{ $customer->id }}" onchange="updateAssignCourseDates({{ $customer->id }})" required>
                                 <option value="">Kurs auswählen</option>
-                                @foreach($courses as $c)
-                                    <option value="{{ $c->slug }}" data-duration="{{ $c->duration_days ?: 120 }}">{{ $c->catalog_title ?: $c->title }}</option>
+                                @foreach($courses->where('order', '<=', 11)->sortBy('order') as $c)
+                                    <option value="{{ $c->slug }}" data-duration="{{ $c->duration_days ?: 120 }}">{{ $c->catalog_title }}</option>
                                 @endforeach
                             </select>
                             <input type="date" name="starts_at" id="assign-start-{{ $customer->id }}" value="{{ date('Y-m-d', strtotime('+14 days')) }}" required aria-label="Startdatum" onchange="recalcAssignCourseEndDate({{ $customer->id }})"/>
@@ -758,9 +861,9 @@
                     <span>Kurs zuweisen (optional)</span>
                     <select name="course_slug" id="new-cust-course-select" onchange="handleNewCustCourse(this)">
                         <option value="">Noch keinen Kurs zuweisen</option>
-                        @foreach($courses as $course)
+                        @foreach($courses->where('order', '<=', 11)->sortBy('order') as $course)
                             <option value="{{ $course->slug }}" data-duration="{{ $course->duration_days ?: 120 }}" {{ old('course_slug') == $course->slug ? 'selected' : '' }}>
-                                {{ $course->catalog_title ?: $course->title }}
+                                {{ $course->catalog_title }}
                             </option>
                         @endforeach
                     </select>
@@ -818,13 +921,13 @@
                     <strong>Geschützte Kursauslieferung</strong>
                     <span>Als Administrator öffnest du hier die echte Kursansicht mit einer klar gekennzeichneten Admin-Prüfansicht.</span>
                 </div>
-                @foreach($courses as $course)
+                @foreach($courses->where('order', '<=', 11)->sortBy('order') as $course)
                     <article>
                         <div>
-                            <strong>{{ $course->catalog_title ?: $course->title }}</strong>
+                            <strong>{{ $course->catalog_title }}</strong>
                             <span>Nur interne Administrator-Prüfansicht</span>
                         </div>
-                        <nav aria-label="Auslieferung {{ $course->catalog_title ?: $course->title }}">
+                        <nav aria-label="Auslieferung {{ $course->catalog_title }}">
                             <a href="{{ url('/kurs/' . $course->slug) }}" target="_blank" rel="noreferrer">Wie der Kunde ansehen</a>
                         </nav>
                     </article>
@@ -837,14 +940,14 @@
                     <strong>Kursseiten</strong>
                     <span>Je Kurs getrennt: öffentliche Kursseite auf der Website und echter geschützter Kurszugang in diesem Portal.</span>
                 </div>
-                @foreach($courses as $course)
+                @foreach($courses->where('order', '<=', 11)->sortBy('order') as $course)
                     <article>
-                        <strong>{{ $course->catalog_title ?: $course->title }}</strong>
+                        <strong>{{ $course->catalog_title }}</strong>
                         <div class="public-course-address">
                             <span>Öffentliche Kursseite</span>
-                            <code>{{ url('/kurse/' . $course->slug) }}</code>
-                            <a href="{{ url('/kurse/' . $course->slug) }}" target="_blank" rel="noreferrer">Öffnen</a>
-                            <button type="button" onclick="copyToClipboard('{{ url('/kurse/' . $course->slug) }}', this)">Kopieren</button>
+                            <code>{{ $course->public_course_url }}</code>
+                            <a href="{{ $course->public_course_url }}" target="_blank" rel="noreferrer">Öffnen</a>
+                            <button type="button" onclick="copyToClipboard('{{ $course->public_course_url }}', this)">Kopieren</button>
                         </div>
                         <div class="public-course-address">
                             <span>Echter Kurszugang</span>
@@ -900,9 +1003,9 @@
                     </nav>
                     <div class="admin-compact-courses">
                         <strong>Geschützte Kundenkurse</strong>
-                        @foreach($courses as $c)
+                        @foreach($courses->where('order', '<=', 11)->sortBy('order') as $c)
                             <div>
-                                <span>{{ $c->catalog_title ?: $c->title }}</span>
+                                <span>{{ $c->catalog_title }}</span>
                                 <nav>
                                     <a href="{{ route('course.show', $c->slug) }}" target="_blank" rel="noreferrer">Kundenkurs</a>
                                 </nav>
@@ -914,7 +1017,7 @@
         </section>
 
         {{-- ME Medien & Kursinhalte verwalten (Audio, PDF, Video, Text) --}}
-        @if(Auth::user()->isAdmin())
+        @if(!($isStaffPreview ?? false) && Auth::user()->isAdmin())
         <section class="admin-section admin-public" id="medien" style="margin-top: 2rem;">
             <header>
                 <div>
@@ -1092,46 +1195,57 @@
         </section>
         @endif
 
-        {{-- 06 Ablauf (Reference A exact articles) --}}
-        <section class="admin-section admin-backend" id="sicherheit">
-            <header>
-                <div>
-                    <span>06</span>
-                    <p class="eyebrow">Arbeitsprozess</p>
+        {{-- 06 Ablauf / Arbeitsprozess (Photo 13 Exact Match: Dark Card & 6 Clean Cards) --}}
+        <section class="admin-section admin-backend" id="sicherheit" style="background: #141412; color: #ffffff; padding: 3.5rem clamp(1.5rem, 5vw, 4rem); border-top: 1px solid #262624;">
+            <header style="margin-bottom: 2rem;">
+                <div style="display: flex; align-items: baseline; gap: 0.75rem; margin-bottom: 0.75rem;">
+                    <span style="color: #38bdf8; font-size: 2.2rem; font-weight: 850; line-height: 1; letter-spacing: -0.02em;">06</span>
+                    <span style="color: #38bdf8; font-size: 0.78rem; font-weight: 850; letter-spacing: 0.1em; text-transform: uppercase;">ARBEITSPROZESS</span>
                 </div>
-                <h2>Einfach und nachvollziehbar.</h2>
+                <h2 style="color: #ffffff; font-size: 2.75rem; font-weight: 700; margin: 0; letter-spacing: -0.03em; line-height: 1.15;">
+                    Einfach und nachvollziehbar.
+                </h2>
             </header>
-            <div class="backend-functions">
-                <article>
-                    <strong>Ein Gerät</strong>
-                    <span>Das erste erfolgreiche Login bindet das Kundenkonto an dieses Gerät.</span>
+
+            {{-- 6 Cards Grid (Photo 13: 4 Columns top row, 2 cards bottom row) --}}
+            <div class="backend-functions" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border: 1px solid #333330; background: #141412;">
+                <article style="border: 1px solid #333330; padding: 1.5rem; background: transparent; display: flex; flex-direction: column; gap: 0.65rem; min-height: 160px;">
+                    <strong style="color: #ffffff; font-size: 0.95rem; font-weight: 700;">Ein Gerät</strong>
+                    <span style="color: #a1a1aa; font-size: 0.8rem; line-height: 1.5;">Das erste erfolgreiche Login bindet das Kundenkonto an dieses Gerät.</span>
                 </article>
-                <article>
-                    <strong>Kein Geräte-Reset</strong>
-                    <span>Bei Gerätewechsel das alte Kundenkonto vollständig löschen.</span>
+
+                <article style="border: 1px solid #333330; padding: 1.5rem; background: transparent; display: flex; flex-direction: column; gap: 0.65rem; min-height: 160px;">
+                    <strong style="color: #ffffff; font-size: 0.95rem; font-weight: 700;">Kein Geräte-Reset</strong>
+                    <span style="color: #a1a1aa; font-size: 0.8rem; line-height: 1.5;">Bei Gerätewechsel das alte Kundenkonto vollständig löschen.</span>
                 </article>
-                <article>
-                    <strong>Neu anlegen</strong>
-                    <span>Neues Konto, neue Zugangsdaten, Kurs und Laufzeit bewusst neu vergeben.</span>
+
+                <article style="border: 1px solid #333330; padding: 1.5rem; background: transparent; display: flex; flex-direction: column; gap: 0.65rem; min-height: 160px;">
+                    <strong style="color: #ffffff; font-size: 0.95rem; font-weight: 700;">Neu anlegen</strong>
+                    <span style="color: #a1a1aa; font-size: 0.8rem; line-height: 1.5;">Neues Konto, neue Zugangsdaten, Kurs und Laufzeit bewusst neu vergeben.</span>
                 </article>
-                <article>
-                    <strong>Datensparsam</strong>
-                    <span>Vorname und Kunden-/Rechnungsnummer ermöglichen die pseudonymisierte Zuordnung. Abgelaufene Konten werden automatisch entfernt; Buchungsbelege bleiben nur nach gesetzlicher Frist erhalten.</span>
+
+                <article style="border: 1px solid #333330; padding: 1.5rem; background: transparent; display: flex; flex-direction: column; gap: 0.65rem; min-height: 160px;">
+                    <strong style="color: #ffffff; font-size: 0.95rem; font-weight: 700;">Datensparsam</strong>
+                    <span style="color: #a1a1aa; font-size: 0.8rem; line-height: 1.5;">Vorname und Kunden-/Rechnungsnummer ermöglichen die pseudonymisierte Zuordnung. Abgelaufene Konten werden automatisch entfernt; Buchungsbelege bleiben nur nach gesetzlicher Frist erhalten.</span>
                 </article>
-                <article>
-                    <strong>Passwort vergessen</strong>
-                    <span>Rechnungsnummer und Kurs ordnen die Anfrage zu. Neues Passwort erst nach Abgleich über die Buchhaltung übermitteln.</span>
+
+                <article style="border: 1px solid #333330; padding: 1.5rem; background: transparent; display: flex; flex-direction: column; gap: 0.65rem; min-height: 160px; grid-column: span 1;">
+                    <strong style="color: #ffffff; font-size: 0.95rem; font-weight: 700;">Passwort vergessen</strong>
+                    <span style="color: #a1a1aa; font-size: 0.8rem; line-height: 1.5;">Rechnungsnummer und Kurs ordnen die Anfrage zu. Neues Passwort erst nach Abgleich über die Buchhaltung übermitteln.</span>
                 </article>
-                <article class="integration-pending">
-                    <strong>Papierkram-Rechnungen</strong>
-                    <span>Mitarbeiter müssen vor der ersten Anmeldung von Dennis als Benutzer bei Papierkram freigeschaltet werden. Bei technischen Login-, Passwort- oder Systemproblemen hilft ausschließlich der Papierkram-Support.</span>
-                    <a href="https://dennisbesseler.papierkram.de/login?email=mail%40besseler.de" target="_blank" rel="noreferrer">Papierkram öffnen ↗</a>
-                    <a href="https://hilfe.papierkram.de/system-status/" target="_blank" rel="noreferrer">Papierkram-Support ↗</a>
+
+                <article class="integration-pending" style="border: 1px solid #333330; padding: 1.5rem; background: transparent; display: flex; flex-direction: column; gap: 0.65rem; min-height: 160px; grid-column: span 1;">
+                    <strong style="color: #ffffff; font-size: 0.95rem; font-weight: 700;">Papierkram-Rechnungen</strong>
+                    <span style="color: #a1a1aa; font-size: 0.8rem; line-height: 1.5;">Mitarbeiter müssen vor der ersten Anmeldung von Dennis als Benutzer bei Papierkram freigeschaltet werden. Bei technischen Login-, Passwort- oder Systemproblemen hilft ausschließlich der Papierkram-Support.</span>
+                    <div style="margin-top: 0.5rem; display: flex; flex-direction: column; gap: 0.4rem; border-top: 1px solid #333330; padding-top: 0.6rem;">
+                        <a href="https://dennisbesseler.papierkram.de/login?email=mail%40besseler.de" target="_blank" rel="noreferrer" style="color: #ffffff; font-size: 0.72rem; font-weight: 850; text-transform: uppercase; letter-spacing: 0.05em; text-decoration: none;">PAPIERKRAM ÖFFNEN ↗</a>
+                        <a href="https://hilfe.papierkram.de/system-status/" target="_blank" rel="noreferrer" style="color: #ffffff; font-size: 0.72rem; font-weight: 850; text-transform: uppercase; letter-spacing: 0.05em; text-decoration: none; border-top: 1px solid #262624; padding-top: 0.4rem;">PAPIERKRAM-SUPPORT ↗</a>
+                    </div>
                 </article>
             </div>
 
             {{-- Audit-Protokoll für Gerätebindung & Sicherheit direkt in Sektion 06 --}}
-            @if(Auth::user()->isAdmin())
+            @if(!($isStaffPreview ?? false) && Auth::user()->isAdmin())
             <div style="margin-top:2rem; background:#0f172a; border:1px solid #334155; border-radius:8px; padding:1.25rem;">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; flex-wrap:wrap; gap:0.5rem;">
                     <div>
@@ -1161,7 +1275,7 @@
                                 @foreach($auditLogs as $log)
                                     <tr style="border-bottom:1px solid #334155; color:#f8fafc;">
                                         <td style="padding:0.55rem 0.85rem; color:#94a3b8; white-space:nowrap; font-size:0.8rem;">
-                                            {{ $log->created_at->format('d.m.Y H:i:s') }}
+                                             {{ $log->created_at->format('d.m.Y H:i:s') }}
                                         </td>
                                         <td style="padding:0.55rem 0.85rem;">
                                             @if(str_contains($log->event, 'REJECTED') || str_contains($log->event, 'FAILED'))
@@ -1193,59 +1307,65 @@
             @endif
         </section>
 
-        {{-- SI Admin-Sicherheit (Position 11 in Reference A) --}}
-        @if(Auth::user()->isAdmin())
-        <section class="admin-section admin-security-settings" id="hauptadmin-sicherheit">
-            <header>
-                <div>
-                    <span>SI</span>
-                    <p class="eyebrow">Nur Hauptadministrator</p>
+        {{-- 08 Hauptadmin-Sicherheit (100% Forensic Match to Reference A) --}}
+        @if(!($isStaffPreview ?? false) && Auth::user()->isAdmin())
+        <section class="admin-section admin-security-settings" id="hauptadmin-sicherheit" style="background: #f2eee5; border-top: 1px solid #d2cabd; padding: clamp(4rem, 8vw, 8rem) clamp(1rem, 6vw, 7rem); scroll-margin-top: 82px;">
+            <header style="border-bottom: 1px solid #d4cfc5; grid-template-columns: auto 1fr; align-items: end; gap: clamp(2rem, 4vw, 4rem); padding-bottom: 1.5rem; margin-bottom: 3rem; display: grid;">
+                <div style="align-items: center; gap: 1rem; display: flex;">
+                    <span style="color: var(--academy); font-size: 3rem; font-weight: 200;">08</span>
+                    <h2 style="letter-spacing: -.055em; margin: 0; font-size: clamp(2.8rem, 5vw, 5.5rem); font-weight: 300; line-height: .9; white-space: nowrap;">
+                        Hauptadmin-<br/>Sicherheit.
+                    </h2>
                 </div>
-                <h2>Hauptadmin-<br/>Sicherheit.</h2>
+                <p style="color: var(--muted); max-width: 780px; margin: 0; line-height: 1.6; font-size: 1.15rem;">
+                    Das Admin-Passwort kann hier sicher geändert werden. Der vierstellige Sicherheitscode bleibt fest hinterlegt und wird im Portal niemals angezeigt. Eine Passwortänderung beendet alle Hauptadmin-Sitzungen.
+                </p>
             </header>
-            <p>Das Admin-Passwort kann hier sicher geändert werden. Der vierstellige Sicherheitscode bleibt fest hinterlegt und wird im Portal niemals angezeigt. Eine Passwortänderung beendet alle Hauptadmin-Sitzungen.</p>
 
             <div class="admin-security-grid">
-                <form method="POST" action="{{ route('admin.change-password') }}" autoComplete="off">
+                <form method="POST" action="{{ route('admin.change-password') }}" autoComplete="off" style="background: #f8f5ee; border: 0; border-top: 7px solid #2460a0; padding: clamp(1.5rem, 3.5vw, 3rem); max-width: 560px; box-shadow: none; border-radius: 0; display: flex; flex-direction: column; gap: 1.15rem;">
                     @csrf
-                    <h3>Admin-Passwort ändern</h3>
-                    <p>Mindestens 12 Zeichen mit Groß- und Kleinbuchstaben, Zahl und Sonderzeichen.</p>
+                    <div>
+                        <h3 style="font-size: 1.25rem; font-weight: 700; color: #11110f; margin: 0 0 0.35rem;">Admin-Passwort ändern</h3>
+                        <p style="font-size: 0.85rem; color: #6f6a61; margin: 0; line-height: 1.5;">Mindestens 12 Zeichen mit Groß- und Kleinbuchstaben, Zahl und Sonderzeichen.</p>
+                    </div>
 
                     @if(session('password_success'))
-                        <div style="background:#14532d; color:#86efac; padding:0.75rem; border-radius:4px; margin-bottom:1rem;">
+                        <div style="background:#14532d; color:#86efac; padding:0.75rem; border-radius:4px;">
                             ✓ {{ session('password_success') }}
                         </div>
                     @endif
 
-                    <label>
-                        <span>Bisheriges Admin-Passwort</span>
-                        <input type="password" name="current_password" required autoComplete="current-password">
+                    <label style="gap: 0.35rem; display: grid;">
+                        <span style="font-size: 0.62rem; font-weight: 850; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);">Bisheriges Admin-Passwort</span>
+                        <input type="password" name="current_password" required autoComplete="current-password" style="background: #fff; border: 1px solid #c9c5bc; width: 100%; min-height: 50px; padding: 0.8rem; box-sizing: border-box;">
                     </label>
 
-                    <label>
-                        <span>Bisheriger Sicherheitscode</span>
-                        <input type="password" name="security_code" required inputmode="numeric" pattern="[0-9]{4}" maxlength="4" placeholder="4-stelliger Zahlencode">
-                        <small>Zusätzliche Sicherheitsprüfung für den Hauptadministrator.</small>
+                    <label style="gap: 0.35rem; display: grid;">
+                        <span style="font-size: 0.62rem; font-weight: 850; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);">Bisheriger Sicherheitscode</span>
+                        <input type="password" name="security_code" required inputmode="numeric" pattern="[0-9]{4}" maxlength="4" style="background: #fff; border: 1px solid #c9c5bc; width: 100%; min-height: 50px; padding: 0.8rem; box-sizing: border-box;">
                     </label>
 
-                    <label>
-                        <span>Neues Admin-Passwort</span>
-                        <input type="password" name="new_password" required minlength="12" maxLength="128" autoComplete="new-password">
+                    <label style="gap: 0.35rem; display: grid;">
+                        <span style="font-size: 0.62rem; font-weight: 850; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);">Neues Admin-Passwort</span>
+                        <input type="password" name="new_password" required minlength="12" maxLength="128" autoComplete="new-password" style="background: #fff; border: 1px solid #c9c5bc; width: 100%; min-height: 50px; padding: 0.8rem; box-sizing: border-box;">
                     </label>
 
-                    <label>
-                        <span>Neues Admin-Passwort wiederholen</span>
-                        <input type="password" name="new_password_confirmation" required minlength="12" maxLength="128" autoComplete="new-password">
+                    <label style="gap: 0.35rem; display: grid;">
+                        <span style="font-size: 0.62rem; font-weight: 850; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);">Neues Passwort wiederholen</span>
+                        <input type="password" name="new_password_confirmation" required minlength="12" maxLength="128" autoComplete="new-password" style="background: #fff; border: 1px solid #c9c5bc; width: 100%; min-height: 50px; padding: 0.8rem; box-sizing: border-box;">
                     </label>
 
-                    <button type="submit">Passwort verbindlich ändern</button>
+                    <button type="submit" style="background: #2460a0; color: #fff; border: 0; min-height: 50px; padding: 1.1rem; font-size: 0.72rem; font-weight: 850; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; margin-top: 0.5rem;">
+                        Sicher ändern
+                    </button>
                 </form>
             </div>
         </section>
         @endif
 
         {{-- AL Audit-Protokoll (Sicherheits- & Geräte-Ereignisse bei gezieltem Aufruf) --}}
-        @if(Auth::user()->isAdmin() && (request()->has('audit_page') || request()->has('audit')))
+        @if(!($isStaffPreview ?? false) && Auth::user()->isAdmin() && (request()->has('audit_page') || request()->has('audit')))
         <section class="admin-section" id="audit-log">
             <header>
                 <div>
@@ -1342,7 +1462,7 @@
     {{-- Work Timer Script (5 Input Fields + Rotation Rule + Copy + Mailto) --}}
     <script>
         function copyToClipboard(text, button) {
-            navigator.clipboard.writeText(text).then(() => {
+            function showSuccess() {
                 const orig = button.innerText;
                 button.innerText = 'Kopiert!';
                 button.style.background = '#16a34a';
@@ -1352,9 +1472,29 @@
                     button.style.background = '';
                     button.style.color = '';
                 }, 2000);
-            }).catch(err => {
-                console.error('Kopieren fehlgeschlagen: ', err);
-            });
+            }
+            function fallbackCopy(str) {
+                const ta = document.createElement('textarea');
+                ta.value = str;
+                ta.style.position = 'fixed';
+                ta.style.left = '-9999px';
+                document.body.appendChild(ta);
+                ta.focus();
+                ta.select();
+                try {
+                    document.execCommand('copy');
+                    showSuccess();
+                } catch (e) {
+                    console.error('Fallback copy failed', e);
+                }
+                document.body.removeChild(ta);
+            }
+
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(text).then(showSuccess).catch(() => fallbackCopy(text));
+            } else {
+                fallbackCopy(text);
+            }
         }
 
         // Toggle employee delete button based on Google Drive revocation checkbox
@@ -1735,33 +1875,83 @@
             const check = document.getElementById('admin-timer-cc-check');
             const btn = document.getElementById('admin-timer-send-btn');
             if (btn && check) {
-                btn.disabled = (!check.checked || adminTimerState.completed.length === 0);
+                btn.disabled = !check.checked;
             }
         }
 
         function adminSendTimerMail() {
-            if (!adminTimerState.completed || adminTimerState.completed.length === 0) return;
             const isEn = localStorage.getItem('portal_lang') === 'en' || document.documentElement.classList.contains('translated-ltr');
             
+            // Gather current inputs if filled
+            const act1 = document.getElementById('admin-timer-input-1')?.value.trim();
+            const act2 = document.getElementById('admin-timer-input-2')?.value.trim();
+            const act3 = document.getElementById('admin-timer-input-3')?.value.trim();
+            const act4 = document.getElementById('admin-timer-input-4')?.value.trim();
+            const act5 = document.getElementById('admin-timer-input-5')?.value.trim();
+            const currentInputs = [act1, act2, act3, act4, act5].filter(Boolean);
+
             let e = [
                 isEn ? 'Hello Dennis,' : 'Hallo Dennis,',
                 '',
                 isEn ? 'I hereby submit the following time information:' : 'hiermit übermittle ich folgende Zeitinformationen:',
-                '',
-                ...adminTimerState.completed.slice(0, 3).map((item, idx) => {
+                ''
+            ];
+
+            if (adminTimerState.completed && adminTimerState.completed.length > 0) {
+                e.push(isEn ? '--- Completed Measurements (Max 3) ---' : '--- Abgeschlossene Zeitmessungen (Max 3) ---');
+                adminTimerState.completed.slice(0, 3).forEach((item, idx) => {
                     const startStr = item.started_at_formatted || (item.started_at ? new Date(item.started_at).toLocaleString(isEn ? 'en-US' : 'de-DE') : '');
                     const endStr = item.stopped_at_formatted || (item.ended_at ? new Date(item.ended_at).toLocaleString(isEn ? 'en-US' : 'de-DE') : startStr);
-                    const acts = item.activities && item.activities.length > 0 ? item.activities.join(' · ') : (item.subject || item.activity_description || (isEn ? 'Activity' : 'Tätigkeit'));
-                    return `${idx + 1}. ${item.subject || item.activity_description || (isEn ? 'Activity' : 'Tätigkeit')}\n   ${isEn ? 'Details' : 'Details'}: ${acts}\n   ${isEn ? 'Start' : 'Beginn'}: ${startStr}\n   ${isEn ? 'End' : 'Ende'}: ${endStr}\n   ${isEn ? 'Duration' : 'Dauer'}: ${formatTimerHuman(item.duration_seconds || 0)}`;
-                }),
-                '',
-                isEn ? 'This message is for internal information purposes only.' : 'Diese Nachricht dient ausschließlich der internen Information.',
-                '',
-                isEn ? 'Best regards' : 'Viele Grüße'
-            ].join('\n');
+                    const acts = item.activities && item.activities.length > 0 
+                        ? item.activities.map((a, i) => `   ${i+1}. ${a}`).join('\n') 
+                        : `   - ${item.subject || item.activity_description || (isEn ? 'Activity' : 'Tätigkeit')}`;
+                    const staff = item.assigned_staff_name ? ` (${isEn ? 'Staff:' : 'Mitarbeiter:'} ${item.assigned_staff_name})` : '';
+                    e.push(`${idx + 1}. ${item.subject || item.activity_description || (isEn ? 'Activity' : 'Tätigkeit')}${staff}`);
+                    e.push(`${isEn ? 'Activities:' : 'Tätigkeiten:'}\n${acts}`);
+                    e.push(`   ${isEn ? 'Start' : 'Beginn'}: ${startStr}`);
+                    e.push(`   ${isEn ? 'End' : 'Ende'}: ${endStr}`);
+                    e.push(`   ${isEn ? 'Duration' : 'Dauer'}: ${formatTimerHuman(item.duration_seconds || 0)}`);
+                    e.push('');
+                });
+            }
 
-            const subject = isEn ? 'Internal Time Information' : 'Interne Zeitinformation';
-            window.location.href = `mailto:dennis@besseler.de?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(e)}`;
+            if (adminTimerState.active && (adminTimerState.active.status === 'running' || adminTimerState.active.status === 'paused')) {
+                e.push(isEn ? '--- Currently Running / Paused Measurement ---' : '--- Aktuell laufende / pausierte Zeitmessung ---');
+                e.push(`${isEn ? 'Status:' : 'Status:'} ${adminTimerState.active.status}`);
+                e.push(`${isEn ? 'Subject:' : 'Haupttätigkeit:'} ${adminTimerState.active.subject || adminTimerState.active.activity_description}`);
+                if (adminTimerState.active.activities && adminTimerState.active.activities.length > 0) {
+                    e.push(`${isEn ? 'Activities:' : 'Tätigkeiten:'}\n` + adminTimerState.active.activities.map((a, i) => `   ${i+1}. ${a}`).join('\n'));
+                }
+                e.push(`${isEn ? 'Current Duration:' : 'Bisherige Dauer:'} ${formatTimerHuman(adminTimerState.durationSeconds || 0)}`);
+                e.push('');
+            }
+
+            if (currentInputs.length > 0 && (!adminTimerState.active || adminTimerState.active.status === 'stopped')) {
+                e.push(isEn ? '--- Entered Activities (Pending) ---' : '--- Eingegebene Tätigkeiten ---');
+                currentInputs.forEach((a, i) => e.push(`   ${i+1}. ${a}`));
+                e.push('');
+            }
+
+            if ((!adminTimerState.completed || adminTimerState.completed.length === 0) && !adminTimerState.active && currentInputs.length === 0) {
+                e.push(isEn ? '(No completed time measurements recorded yet. Notice of time handover.)' : '(Bisher noch keine abgeschlossene Zeitmessung hinterlegt. Benachrichtigung zur Zeitübergabe.)');
+                e.push('');
+            }
+
+            e.push(isEn ? 'This message is for internal information purposes only.' : 'Diese Nachricht dient ausschließlich der internen Information.');
+            e.push('');
+            e.push(isEn ? 'Best regards,' : 'Viele Grüße,');
+            e.push('{{ Auth::user()->name }}');
+
+            const dateStr = new Date().toLocaleDateString('de-DE');
+            const subject = `${isEn ? 'Time Tracking Handover' : 'Zeitmessung Übergabe'} - {{ Auth::user()->name }} - ${dateStr}`;
+            const userEmail = '{{ Auth::user()->email ?? "" }}';
+            let mailto = `mailto:dennis@besseler.de?subject=${encodeURIComponent(subject)}`;
+            if (userEmail) {
+                mailto += `&cc=${encodeURIComponent(userEmail)}`;
+            }
+            mailto += `&body=${encodeURIComponent(e.join('\n'))}`;
+
+            window.location.href = mailto;
         }
 
         // React to global language changes

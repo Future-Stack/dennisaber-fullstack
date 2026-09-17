@@ -478,16 +478,16 @@ class DennisCoursePortalTest extends TestCase
             'lessonSlug' => $audioLesson->slug,
         ]));
         $response->assertStatus(200);
-        $response->assertSee('Audiolektion (MP3)');
-        $response->assertSee('id="audio-play-btn"', false);
+        $response->assertSee('Original MP3');
+        $response->assertSee('unit-audio-player', false);
         $response->assertDontSee('id="lesson-video"', false);
-        $response->assertSee('watermark-overlay-layer', false);
+        $response->assertSee('course-customer-watermark', false);
         $response->assertSee('Missbrauch melden');
         $response->assertSee('id="abuse-modal"', false);
 
-        // 2. Lesson with Companion PDF Workbook
-        $response->assertSee('id="companion-pdf-wrapper"', false);
-        $response->assertSee('01_Uebersicht_und_Lernleitfaden.pdf');
+        // 2. Unwanted Companion PDF box is removed to match reference portal
+        $response->assertDontSee('id="companion-pdf-wrapper"', false);
+        $response->assertDontSee('Begleitendes Arbeitsblatt / PDF');
     }
 
     /**
@@ -558,4 +558,107 @@ class DennisCoursePortalTest extends TestCase
         $response = $this->get('/admin/dashboard?audit_page=2');
         $response->assertStatus(200);
     }
+
+    public function test_time_tracking_5_fields_rotation_and_staff_management(): void
+    {
+        $admin = User::where('role', 'admin')->first();
+        $this->actingAs($admin);
+
+        // 1. Enforce strict 5 entries rotation: completing 5 entries should leave exactly 3 in database
+        for ($i = 1; $i <= 5; $i++) {
+            $startRes = $this->postJson(route('time-tracking.start'), [
+                'activity_1' => "Activity {$i} Part 1",
+                'activity_2' => "Activity {$i} Part 2",
+                'activity_3' => "Activity {$i} Part 3",
+                'activity_4' => "Activity {$i} Part 4",
+                'activity_5' => "Activity {$i} Part 5",
+            ]);
+            $startRes->assertStatus(200);
+
+            $stopRes = $this->postJson(route('time-tracking.stop.active'));
+            $stopRes->assertStatus(200);
+        }
+
+        // Must have at most 3 completed time entries in the database (oldest deleted)
+        $completedCount = \App\Models\TimeEntry::whereIn('status', ['stopped', 'completed'])->count();
+        $this->assertEquals(3, $completedCount);
+
+        // Verify the newest entries exist (entries 3, 4, 5) and entry 1 is deleted
+        $remainingDescriptions = \App\Models\TimeEntry::whereIn('status', ['stopped', 'completed'])->pluck('activity_1')->toArray();
+        $this->assertNotContains('Activity 1 Part 1', $remainingDescriptions);
+        $this->assertContains('Activity 5 Part 1', $remainingDescriptions);
+
+        // 2. Admin dashboard renders Section MA and staff time entries
+        $dashRes = $this->get('/admin/dashboard');
+        $dashRes->assertStatus(200);
+        $dashRes->assertSee('Mitarbeiter sicher einsetzen');
+        $dashRes->assertSee('Erfasste Mitarbeiterzeiten &amp; Aktivitäten', false);
+        $dashRes->assertSee('Activity 5 Part 1');
+
+        // 3. Kopierschutz page matches reference
+        $kopierRes = $this->get('/kopierschutz');
+        $kopierRes->assertStatus(200);
+        $kopierRes->assertSee('Technisches Kursportal');
+        $kopierRes->assertSee('So sieht dein persönlicher Kopierschutz aus.');
+        $kopierRes->assertSee('Gerät 1 von 1 registriert');
+
+        // 4. Test authenticated media stream for dnl-kompakt
+        $streamRes = $this->get(route('media.stream', [
+            'courseSlug' => 'dnl-kompakt',
+            'lessonSlug' => 'einfuehrung-und-orientierung',
+            'type' => 'audio',
+        ]));
+        $streamRes->assertStatus(200);
+        $streamRes->assertHeader('Content-Type', 'audio/mpeg');
+
+        // 5. Staff preview route for admin
+        $previewRes = $this->actingAs($admin)->get('/verwaltung/mitarbeiter-vorschau');
+        $previewRes->assertStatus(200);
+        $previewRes->assertSee('MITARBEITER-KONTO');
+        $previewRes->assertSee('ARBEITSFLÄCHE');
+        $previewRes->assertSee('Schreibgeschützte Prüfansicht');
+        $previewRes->assertDontSee('Nur Administrator');
+    }
+
+    /**
+     * Test Rio Negro 2002 Player matches Reference Portal 1:1
+     */
+    public function test_rio_negro_2002_player_matches_reference_portal_1_to_1(): void
+    {
+        $admin = User::where('role', 'admin')->first();
+        $this->actingAs($admin);
+
+        $res = $this->get('/kurs/rio-negro-2002');
+        $res->assertStatus(200);
+
+        // Sidebar and step progress
+        $res->assertSee('Audio-Abenteuer');
+        $res->assertSee('Rio Negro 2002');
+        $res->assertSee('Schritt 1 von 14');
+        $res->assertSee('00 · Die Vermisstenmeldung');
+
+        // Customer details and watermark
+        $res->assertSee('course-customer-watermark', false);
+        $res->assertSee('Rech-Nr.: ADMIN-PRÜFANSICHT');
+        $res->assertSee('Administrator-Prüfansicht');
+        $res->assertSee('200 € Hinweisprämie');
+        $res->assertSee('Rechtsverletzung an Dennis melden');
+        $res->assertSee('Offizielle Onlinewache der Polizei');
+
+        // Main unit content
+        $res->assertSee('rio-action.jpg');
+        $res->assertSee('Persönliche Lizenz · keine Weitergabe');
+        $res->assertSee('story-instruction', false);
+        $res->assertSee('Alarm');
+        $res->assertSee('So arbeitest du in dieser Etappe');
+        $res->assertSee('Erfasse die Ausgangslage. Noch ist nicht klar, was am Rio Negro geschehen ist.');
+        $res->assertSee('Die Vermisstenmeldung');
+        $res->assertSee('unit-audio-player', false);
+
+        // Underscore URL route compatibility
+        $res2 = $this->get('/kurs/rio_negro_2002?step=1');
+        $res2->assertStatus(200);
+        $res2->assertSee('00 · Die Vermisstenmeldung');
+    }
 }
+
