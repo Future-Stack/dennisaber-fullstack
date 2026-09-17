@@ -205,13 +205,13 @@
 
                     {{-- Send to Dennis --}}
                     <div class="work-timer-send">
-                        <strong>An Dennis übergeben</strong>
-                        <small>Es öffnet sich Ihr eigenes E-Mail-Programm. Das Portal versendet nichts automatisch.</small>
+                        <strong data-i18n-de="An Dennis übergeben" data-i18n-en="Hand over to Dennis">An Dennis übergeben</strong>
+                        <small data-i18n-de="Es öffnet sich Ihr eigenes E-Mail-Programm. Das Portal versendet nichts automatisch." data-i18n-en="Your email client will open. The portal does not send anything automatically.">Es öffnet sich Ihr eigenes E-Mail-Programm. Das Portal versendet nichts automatisch.</small>
                         <label>
                             <input type="checkbox" id="admin-timer-cc-check" onchange="toggleAdminSendBtn()">
-                            <span>Ich weiß, dass ich mir im geöffneten E-Mail-Programm über „Cc/Kopie“ eine Kopie an meine eigene Adresse senden kann.</span>
+                            <span data-i18n-de="Ich weiß, dass ich mir im geöffneten E-Mail-Programm über „Cc/Kopie“ eine Kopie an meine eigene Adresse senden kann." data-i18n-en="I know that I can send a copy to my own email address via &quot;Cc/Copy&quot; in the opened email client.">Ich weiß, dass ich mir im geöffneten E-Mail-Programm über „Cc/Kopie“ eine Kopie an meine eigene Adresse senden kann.</span>
                         </label>
-                        <button type="button" id="admin-timer-send-btn" disabled onclick="adminSendTimerMail()">E-Mail vorbereiten</button>
+                        <button type="button" id="admin-timer-send-btn" disabled onclick="adminSendTimerMail()" data-i18n-de="E-Mail vorbereiten" data-i18n-en="Prepare Email">E-Mail vorbereiten</button>
                     </div>
                 </div>
             </div>
@@ -615,7 +615,7 @@
                     <span>DT</span>
                     <p class="eyebrow">Gemeinsamer Arbeitsordner</p>
                 </div>
-                <h2 id="admin-cloud-transfer-title">Dateien einfach übergeben.</h2>
+                <h2 id="admin-cloud-transfer-title">Dateien einfach übertragen.</h2>
             </header>
             <div class="cloud-transfer-grid">
                 <div class="cloud-transfer-main">
